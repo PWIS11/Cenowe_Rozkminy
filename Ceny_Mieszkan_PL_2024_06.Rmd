@@ -1,16 +1,89 @@
 ---
-title: ""
+title: "Analiza cen mieszkań w Polsce"
 date: "`r Sys.Date()`"
+author: "Piotr Wiśniewski - lider zespołu, Izabela Reszka, Klaudia Woźniak"
 output:
-  rmdformats::downcute:
-    self_contained: true
-    default_style: "light"
-    downcute_theme: "default"
+  html_document:
+    theme: cerulean
+    highlight: tango
+    highlight_color: "goldenrod"
+    toc: true
+    toc_float: true
 ---
-
 
 ```{r setup, include=FALSE}
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
+# **Cel projektu**
+
+Celem naszego projektu jest analiza cen mieszkań w największych miastach Polski, uwzględniając różnorodne czynniki, które mogą wpływać na wartość nieruchomości. Wykorzystamy metody analizy danych, aby odpowiedzieć na kluczowe pytania, takie jak:
+
+-   *Od czego zależy cena mieszkań?*
+
+-   *Jakie różnice w cenach występują pomiędzy miastami?*
+
+-   *Czy odległość od centrum lub interesujących miejsc (POI) ma znaczenie dla wartości nieruchomości?*
+
+-   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są najbardziej cenione?*
+
+Projekt zakłada zarówno przeprowadzenie analiz takich jak ...... NAPISZEMY JAKIE ANALIZY ROBIMY ???
+
+## **Opis danych**
+
+Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa mieszkań.
+
+**Miasta w zbiorze danych:** Warszawa, Łódź, Kraków, Wrocław, Poznań, Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
+
+**Główne pola w zbiorze danych:**
+
+-   ***Lokalizacja i charakterystyka nieruchomości:***
+
+    -   Miasto, typ budynku, wielkość w metrach kwadratowych, liczba pokoi, piętro, rok budowy.
+
+-   ***Informacje kontekstowe:***
+
+    -   Odległość od centrum miasta, liczba interesujących punktów w promieniu 500 metrów (np. szkoły, apteki, restauracje) oraz odległość do najbliższego punktu.
+
+-   ***Cechy nieruchomości:***
+
+    -   Stan mieszkania, rodzaj własności, obecność udogodnień (np. winda, balkon, miejsce parkingowe, ochrona).
+
+-   ***Cena ofertowa:***
+
+    -   Cena sprzedaży lub miesięczny czynsz.
+
+#### **Znaczenie projektu**
+
+Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
+
+# **MOŻE DODAMY PLAN ANALIZY ORAZ JAKIE WYNIKI ZAKŁĄDAMY ???????**
+
+```{r}
+# przygotowanie danych 
+dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
+
+# zmieniam id żeby było po kolei 1,2,3,4.... a nie takie znaki jakie byly wcześniej 
+dane$id <- 1:nrow(dane)
+
+# licze ile jest wartosci NA w zbiorze
+# Liczba braków danych (NA + "")
+sum(is.na(dane))
+
+#puste wiersze --- kolumna condition, buildingMaterial i pewnie inne
+sum(dane == "", na.rm = TRUE)
+
+#mysle że dobrze by bylo zmienic puste wiersze na wartosci NA
+
+# Zamiana pustych ciągów na NA
+dane[dane == ""] <- NA
+
+sum(is.na(dane))
+
+str(dane)
+
+
+# (sum(is.na(dane)) / (ncol(dane) * nrow(dane))) * 100 -- procent jaki stanowią wartosci NA w zbiorze, mysle że można je usunąć
+
+```
