@@ -28,9 +28,31 @@ Celem naszego projektu jest analiza cen mieszkań w największych miastach Polsk
 
 -   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są najbardziej cenione?*
 
-Projekt zakłada zarówno przeprowadzenie analiz takich jak ...... NAPISZEMY JAKIE ANALIZY ROBIMY ???
+### **Analizy w projekcie**
 
-## **Opis danych**
+Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
+
+-   Badanie zależności między cechami mieszkań (takimi jak lokalizacja, powierzchnia, liczba pokoi) a ich ceną.
+
+-   Porównanie cen nieruchomości pomiędzy największymi polskimi miastami, w celu wykazania kluczowych różnic regionalnych.
+
+-   Modelowanie predykcyjne, które pozwoli oszacować cenę mieszkań na podstawie wybranych zmiennych, takich jak odległość od centrum czy stan mieszkania.
+
+-   Wykorzystanie interaktywnych wizualizacji, takich jak mapy i wykresy, aby przedstawić wyniki w przystępny sposób.
+
+### **Hipotezy i oczekiwane wyniki**
+
+1.  **Odległość od centrum miasta:** Zakładamy, że im bliżej centrum, tym wyższa cena mieszkań, choć siła tego wpływu może różnić się w zależności od miasta.
+
+2.  **Cechy nieruchomości:** Udogodnienia takie jak balkon, winda czy miejsce parkingowe znacząco podnoszą wartość mieszkań, zwłaszcza w dużych miastach.
+
+3.  **Różnice regionalne:** Miasta o wyższym poziomie urbanizacji i rozwiniętej infrastrukturze (np. Warszawa, Kraków, Wrocław) mają wyższe ceny mieszkań w porównaniu do mniejszych miejscowości.
+
+4.  **Rok budowy:** Starsze mieszkania, wymagające remontu, są z reguły tańsze, chyba że znajdują się w prestiżowych lokalizacjach.
+
+Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki wpływające na ceny mieszkań oraz umożliwią stworzenie użytecznych modeli predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
+
+# **Opis danych**
 
 Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa mieszkań.
 
@@ -54,11 +76,9 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
 
     -   Cena sprzedaży lub miesięczny czynsz.
 
-#### **Znaczenie projektu**
+### **Znaczenie projektu**
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
-
-# **MOŻE DODAMY PLAN ANALIZY ORAZ JAKIE WYNIKI ZAKŁĄDAMY ???????**
 
 ```{r}
 # przygotowanie danych 
