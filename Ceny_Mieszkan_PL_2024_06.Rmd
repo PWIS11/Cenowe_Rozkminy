@@ -16,6 +16,32 @@ output:
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
+```{r setup, include=FALSE}
+# Instalacja wymaganych pakietów
+
+if (!requireNamespace("httr", quietly = TRUE)) install.packages("httr")
+if (!requireNamespace("jsonlite", quietly = TRUE)) install.packages("jsonlite")
+if (!requireNamespace("tidygeocoder", quietly = TRUE)) install.packages("tidygeocoder")
+if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
+if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
+if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2")
+if (!requireNamespace("scales", quietly = TRUE)) install.packages("scales")
+
+```
+
+```{r libraries}
+
+library(httr)
+library(jsonlite)
+library(tidygeocoder)
+library(dplyr)
+library(sf)
+library(ggplot2)
+library(scales)
+
+```
+
+
 # **Cel projektu**
 
 Celem naszego projektu jest analiza cen mieszkań w największych miastach Polski, uwzględniając różnorodne czynniki, które mogą wpływać na wartość nieruchomości. Wykorzystamy metody analizy danych, aby odpowiedzieć na kluczowe pytania, takie jak:
@@ -106,4 +132,77 @@ str(dane)
 
 # (sum(is.na(dane)) / (ncol(dane) * nrow(dane))) * 100 -- procent jaki stanowią wartosci NA w zbiorze, mysle że można je usunąć
 
+
+# Dodanie kolumny z ceną za metr kwadratowy
+dane$pricePerSquareMeter <- dane$price / dane$squareMeters
+
+# Dodanie kolumny z wiekiem mieszkania
+currentYear <- format(Sys.Date(), "%Y")
+dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
+
+# Tworzenie kategorii wieku mieszkań
+dane$buildingCategory <- cut(
+  dane$buildingAge,
+  breaks = c(-Inf, 5, 20, 50, Inf),
+  labels = c("Nowe", "Średnie", "Stare", "Zabytkowe"),
+  right = FALSE
+)
+
+# Konwersja na character, dodanie "Nieokreślone", a następnie ponownie na factor
+dane$buildingCategory <- as.character(dane$buildingCategory)
+dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
+dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe", "Nieokreślone"))
+
+# Sprawdzenie wyników
+table(dane$buildingCategory)
+
+
+# Wczytanie granic admistracyjnych województw
+gml_file <- "ms_A01_Granice_wojewodztw.gml"
+
+# Wczytanie danych przestrzennych
+wojewodztwa <- st_read(gml_file)
+
+# Tworzenie punktów z danych (longitude i latitude)
+punkty <- st_as_sf(dane, coords = c("longitude", "latitude"), crs = 4326)
+
+# Dopasowanie układu współrzędnych punktów do układu pliku GML
+punkty <- st_transform(punkty, st_crs(wojewodztwa))
+
+# Dopasowanie punktów do granic województw
+dane_with_region <- st_join(punkty, wojewodztwa)
+
+# Dodanie kolumny 'wojewodztwo' na podstawie JPT_NAZWA_
+dane$wojewodztwo <- dane_with_region$JPT_NAZWA_
+
+# Sprawdzenie wyników
+head(dane$wojewodztwo)
+
+# Obliczenie średniej ceny za metr kwadratowy na województwo
+srednie_ceny_m2 <- dane %>%
+  group_by(wojewodztwo) %>%
+  summarise(srednia_cena_m2 = mean(pricePerSquareMeter, na.rm = TRUE))
+
+# Połączenie danych o cenach z granicami województw
+wojewodztwa <- wojewodztwa %>%
+  left_join(srednie_ceny_m2, by = c("JPT_NAZWA_" = "wojewodztwo"))
+
+# Obliczenie centroidów województw dla etykiet
+wojewodztwa_centroidy <- wojewodztwa %>%
+  st_centroid() %>%
+  mutate(label = JPT_NAZWA_)
+
+
+# Tworzenie mapy choropleth
+
+ggplot(data = wojewodztwa) +
+  geom_sf(aes(fill = srednia_cena_m2), color = "black", size = 0.2) +
+  scale_fill_gradient(name = "Śr. cena za m² (PLN)", 
+                      low = "white", high = "red", na.value = "gray",
+                      labels = label_number(big.mark = " ", decimal.mark = ",")) +
+  geom_sf_text(data = wojewodztwa_centroidy, aes(label = label), size = 3, color = "black") +
+  theme_minimal() +
+  labs(title = "Średnia cena za m² w Polsce według województw",
+       caption = "Źródło: Twoje dane") +
+  theme(legend.position = "right")
 ```
