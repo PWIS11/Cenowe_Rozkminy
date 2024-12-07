@@ -107,31 +107,55 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
 
 ```{r}
-# przygotowanie danych 
+# Przygotowanie i wczytanie danych 
 dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
 
-# zmieniam id żeby było po kolei 1,2,3,4.... a nie takie znaki jakie byly wcześniej 
+# Zmiana id na liczby rosnące, zaczynające się od cyfry 1
 dane$id <- 1:nrow(dane)
 
-# licze ile jest wartosci NA w zbiorze
+# Sprawdzenie ile mamy wartości NA w naszym zbiorze "dane"
 # Liczba braków danych (NA + "")
 sum(is.na(dane))
 
-#puste wiersze --- kolumna condition, buildingMaterial i pewnie inne
+# Zbadanie ilości pustych wierszy, np. kolumna condition, buildingMaterial...
 sum(dane == "", na.rm = TRUE)
-
-#mysle że dobrze by bylo zmienic puste wiersze na wartosci NA
 
 # Zamiana pustych ciągów na NA
 dane[dane == ""] <- NA
 
+#Sprawdzenie ile finalnie jest NA w zbiorze "dane"
 sum(is.na(dane))
-
 str(dane)
 
+# Analiza % brakujących danych 
+colSums(is.na(dane)) / nrow(dane) * 100
 
-# (sum(is.na(dane)) / (ncol(dane) * nrow(dane))) * 100 -- procent jaki stanowią wartosci NA w zbiorze, mysle że można je usunąć
+# Obliczanie % brakujących danych w każdej kolumnie i ich zestawienie
+missing_data <- colSums(is.na(dane)) / nrow(dane) * 100
 
+missing_df <- data.frame(
+column = names(missing_data),
+missing_percent = missing_data
+)
+
+# Najwyższy % brakujących danych;
+# Największe braki w: kondycji, materiale budowniczym, typie, podłodze, wieku nieruchomości, posiadniu windy, odległości do uczelni; 
+# reszta braków <1%
+missing_df <- missing_df %>%
+arrange(desc(missing_percent))
+braki_procentowe_w_obserwacjach_df <- missing_df
+
+# Sprawdzenie jakie mamy miasta w danych i w których mamy najwięcej NA
+unique(dane$city)
+miasta_na <- dane %>%
+group_by(city) %>%
+summarize(liczba_na = sum(is.na(city), na.rm = TRUE)) %>%
+arrange(desc(liczba_na))
+miasta_na <- table(is.na(dane$city), dane$city)
+
+ 
+  
+  
 
 # Dodanie kolumny z ceną za metr kwadratowy
 dane$pricePerSquareMeter <- dane$price / dane$squareMeters
