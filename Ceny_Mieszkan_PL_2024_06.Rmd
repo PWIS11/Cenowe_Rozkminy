@@ -14,9 +14,7 @@ output:
 ```{r setup, include=FALSE}
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
-```
 
-```{r setup, include=FALSE}
 # Instalacja wymaganych pakietów
 
 if (!requireNamespace("httr", quietly = TRUE)) install.packages("httr")
@@ -40,7 +38,6 @@ library(ggplot2)
 library(scales)
 
 ```
-
 
 # **Cel projektu**
 
@@ -105,6 +102,8 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
 ### **Znaczenie projektu**
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
+
+
 
 ```{r}
 # przygotowanie danych 
