@@ -14,11 +14,7 @@ output:
 ```{r setup, include=FALSE}
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
-```
-
-```{r setup, include=FALSE}
-# Instalacja wymaganych pakietów
-
+# Instalacja Pakietów
 if (!requireNamespace("httr", quietly = TRUE)) install.packages("httr")
 if (!requireNamespace("jsonlite", quietly = TRUE)) install.packages("jsonlite")
 if (!requireNamespace("tidygeocoder", quietly = TRUE)) install.packages("tidygeocoder")
@@ -26,11 +22,16 @@ if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
 if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
 if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2")
 if (!requireNamespace("scales", quietly = TRUE)) install.packages("scales")
+if (!requireNamespace("tidyverse", quietly = TRUE)) install.packages("tidyverse")
+if (!requireNamespace("naniar", quietly = TRUE)) install.packages("naniar")
+if (!requireNamespace("VIM", quietly = TRUE)) install.packages("VIM")
+if (!requireNamespace("outliers", quietly = TRUE)) install.packages("outliers")
+if (!requireNamespace("caret", quietly = TRUE)) install.packages("caret")
+if (!requireNamespace("mice", quietly = TRUE)) install.packages("mice")
 
 ```
 
-```{r libraries}
-
+```{r libraries, include=FALSE}
 library(httr)
 library(jsonlite)
 library(tidygeocoder)
@@ -38,9 +39,13 @@ library(dplyr)
 library(sf)
 library(ggplot2)
 library(scales)
-
+library(tidyverse)
+library(naniar)
+library(VIM)
+library(outliers)
+library(caret)
+library(mice)
 ```
-
 
 # **Cel projektu**
 
@@ -106,63 +111,70 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
 
-```{r}
+# **Data wrangling**
+
+### **Obserwacje brakujące**
+
+```{r wstepna_obrobka_danych}
 # Przygotowanie i wczytanie danych 
 dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
 
 # Zmiana id na liczby rosnące, zaczynające się od cyfry 1
 dane$id <- 1:nrow(dane)
 
-# Dane brakujące
-# Sprawdzenie ile mamy wartości NA w naszym zbiorze "dane"
-# Liczba braków danych (NA + "")
-sum(is.na(dane))
-
-# Zbadanie ilości pustych wierszy, np. kolumna condition, buildingMaterial...
-sum(dane == "", na.rm = TRUE)
-
 # Zamiana pustych ciągów na NA
 dane[dane == ""] <- NA
+```
 
-#Sprawdzenie ile finalnie jest NA w zbiorze "dane"
-sum(is.na(dane))
-str(dane)
+```{r obserwacje_brakujace_wykresy, echo=FALSE}
+missing_summary <- miss_var_summary(dane)
 
-# Analiza % brakujących danych 
-colSums(is.na(dane)) / nrow(dane) * 100
+ggplot(missing_summary, aes(x = reorder(variable, -pct_miss), y = pct_miss)) +
+  geom_bar(stat = "identity", fill = "plum2") +
+  coord_flip() +
+  labs(title = "Procent brakujących wartości w kolumnach",
+       x = "Kolumny",
+       y = "Procent braków (%)") +
+  theme_minimal()
 
-# Obliczanie % brakujących danych w każdej kolumnie i ich zestawienie
-missing_data <- colSums(is.na(dane)) / nrow(dane) * 100
+vis_miss(dane)
+```
 
-missing_df <- data.frame(
-column = names(missing_data),
-missing_percent = missing_data
-)
+Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na kilka grup pod względem liczby braków:
 
-# Najwyższy % brakujących danych;
-# Największe braki w: kondycji, materiale budowniczym, typie, podłodze, wieku nieruchomości, posiadaniu windy, odległości do uczelni; 
-# reszta braków <1%
-missing_df <- missing_df %>%
-arrange(desc(missing_percent))
+-   **Bardzo duża liczba braków:** condition (74.0%) i buildingMaterial (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się usunąć kolumnę condition, a dla buildingMaterial zastosujemy imputację najczęstszą wartością.
 
-# Sprawdzenie jakie mamy miasta w danych i w których mamy najwięcej NA
-unique(dane$city)
-miasta_na <- dane %>%
-group_by(city) %>%
-summarize(liczba_na = sum(is.na(city), na.rm = TRUE)) %>%
-arrange(desc(liczba_na))
-miasta_na <- table(is.na(dane$city), dane$city)
+-   **Umiarkowana liczba braków:** type (20.5%), floor (16.6%), buildYear (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą najczęstszej wartości dla zmiennych kategorycznych (type) oraz medianą dla zmiennych liczbowych (floor, buildYear).
+
+-   **Niewielka liczba braków:** Kolumny takie jak hasElevator (4.46%) czy collegeDistance (2.72%) zostaną uzupełnione medianą.
+
+-   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1% braków zostaną imputowane prostymi metodami (medianą lub najczęstszą wartością).
+
+-   **Kolumny bez braków:** Pozostałe zmienne, takie jak price, squareMeters czy rooms, są kompletne i nie wymagają dodatkowych działań.
+
+```{r wzorce_brakow}
+aggr(dane, col = c("green", "tomato"), numbers = TRUE, sortVars = TRUE,
+     labels = names(data), cex.axis = 0.7, gap = 3, ylab = c("Procent braków", "Wzorce braków"))
 
 # Pozbycie się kolumny "condition", gdzie procent "NA" wynosi ok. 74%
-dane$condition <- NA 
-dane <- subset(dane, select = -condition)
+# dane$condition <- NA 
+# dane <- subset(dane, select = -condition)
 
+# Heatmapa braków w danych
+gg_miss_var(dane, show_pct = TRUE)
+```
 
+Klasyfikacja braków danych w zbiorze:
 
+-   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich jak hasElevator i collegeDistance są losowe i wynikają z technicznych pominięć w zbieraniu danych.
 
-# Dane odstające
+-   **MAR (Missing At Random)**: Braki w kolumnach condition, buildingMaterial, oraz floor wynikają z powiązań między zmiennymi, np. type i floorCount.
 
+-   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
 
+### **Obserwacje odstające**
+
+```{r dodatkowe_kolumny1}
 # Dodanie kolumny z ceną za metr kwadratowy
 dane$pricePerSquareMeter <- dane$price / dane$squareMeters
 
@@ -184,9 +196,10 @@ dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
 dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe", "Nieokreślone"))
 
 # Sprawdzenie wyników
-table(dane$buildingCategory)
+#table(dane$buildingCategory)
+```
 
-
+```{r dodanie_nowych_danych}
 # Wczytanie granic admistracyjnych województw
 gml_file <- "ms_A01_Granice_wojewodztw.gml"
 
@@ -206,7 +219,7 @@ dane_with_region <- st_join(punkty, wojewodztwa)
 dane$wojewodztwo <- dane_with_region$JPT_NAZWA_
 
 # Sprawdzenie wyników
-head(dane$wojewodztwo)
+#head(dane$wojewodztwo)
 
 # Obliczenie średniej ceny za metr kwadratowy na województwo
 srednie_ceny_m2 <- dane %>%
@@ -221,10 +234,10 @@ wojewodztwa <- wojewodztwa %>%
 wojewodztwa_centroidy <- wojewodztwa %>%
   st_centroid() %>%
   mutate(label = JPT_NAZWA_)
+```
 
-
+```{r wykres_choropleth}
 # Tworzenie mapy choropleth
-
 ggplot(data = wojewodztwa) +
   geom_sf(aes(fill = srednia_cena_m2), color = "black", size = 0.2) +
   scale_fill_gradient(name = "Śr. cena za m² (PLN)", 
@@ -236,26 +249,3 @@ ggplot(data = wojewodztwa) +
        caption = "Źródło: Twoje dane") +
   theme(legend.position = "right")
 ```
-
-```{r}
-install.packages(c("tidyverse", "naniar", "VIM", "outliers", "caret", "mice"))
-```
-
-```{r}
-library(tidyverse)
-library(naniar)
-library(VIM)
-library(outliers)
-library(caret)
-```
-
-```{r}
-dane[dane == ""] <- NA
-miss_var_summary(dane)
-vis_miss(dane)
-gg_miss_upset(dane)
-sum(is.na(dane$floor))
-sum(is.na(dane$condition))
-sum(is.na(dane$type))
-```
-
