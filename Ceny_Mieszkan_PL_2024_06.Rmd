@@ -113,6 +113,7 @@ dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
 # Zmiana id na liczby rosnące, zaczynające się od cyfry 1
 dane$id <- 1:nrow(dane)
 
+# Dane brakujące
 # Sprawdzenie ile mamy wartości NA w naszym zbiorze "dane"
 # Liczba braków danych (NA + "")
 sum(is.na(dane))
@@ -143,7 +144,6 @@ missing_percent = missing_data
 # reszta braków <1%
 missing_df <- missing_df %>%
 arrange(desc(missing_percent))
-braki_procentowe_w_obserwacjach_df <- missing_df
 
 # Sprawdzenie jakie mamy miasta w danych i w których mamy najwięcej NA
 unique(dane$city)
@@ -153,13 +153,14 @@ summarize(liczba_na = sum(is.na(city), na.rm = TRUE)) %>%
 arrange(desc(liczba_na))
 miasta_na <- table(is.na(dane$city), dane$city)
 
-# Pozbywamy się wierszy z NA, zostawiamy zmienne z samymi pełnymi danymi
-library(tidyr)
-czyste_dane <- dane %>%
-drop_na()
+# Pozbycie się kolumny "condition", gdzie procent "NA" wynosi ok. 74%
+dane$condition <- NA 
+dane <- subset(dane, select = -condition)
 
 
 
+
+# Dane odstające
 
 
 # Dodanie kolumny z ceną za metr kwadratowy
@@ -255,6 +256,6 @@ vis_miss(dane)
 gg_miss_upset(dane)
 sum(is.na(dane$floor))
 sum(is.na(dane$condition))
-
+sum(is.na(dane$type))
 ```
 
