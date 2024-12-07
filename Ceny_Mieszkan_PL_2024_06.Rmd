@@ -14,7 +14,9 @@ output:
 ```{r setup, include=FALSE}
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
+```
 
+```{r setup, include=FALSE}
 # Instalacja wymaganych pakietów
 
 if (!requireNamespace("httr", quietly = TRUE)) install.packages("httr")
@@ -38,6 +40,7 @@ library(ggplot2)
 library(scales)
 
 ```
+
 
 # **Cel projektu**
 
@@ -103,8 +106,6 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
 
-
-
 ```{r}
 # Przygotowanie i wczytanie danych 
 dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
@@ -138,7 +139,7 @@ missing_percent = missing_data
 )
 
 # Najwyższy % brakujących danych;
-# Największe braki w: kondycji, materiale budowniczym, typie, podłodze, wieku nieruchomości, posiadniu windy, odległości do uczelni; 
+# Największe braki w: kondycji, materiale budowniczym, typie, podłodze, wieku nieruchomości, posiadaniu windy, odległości do uczelni; 
 # reszta braków <1%
 missing_df <- missing_df %>%
 arrange(desc(missing_percent))
@@ -152,9 +153,14 @@ summarize(liczba_na = sum(is.na(city), na.rm = TRUE)) %>%
 arrange(desc(liczba_na))
 miasta_na <- table(is.na(dane$city), dane$city)
 
- 
-  
-  
+# Pozbywamy się wierszy z NA, zostawiamy zmienne z samymi pełnymi danymi
+library(tidyr)
+czyste_dane <- dane %>%
+drop_na()
+
+
+
+
 
 # Dodanie kolumny z ceną za metr kwadratowy
 dane$pricePerSquareMeter <- dane$price / dane$squareMeters
@@ -229,3 +235,26 @@ ggplot(data = wojewodztwa) +
        caption = "Źródło: Twoje dane") +
   theme(legend.position = "right")
 ```
+
+```{r}
+install.packages(c("tidyverse", "naniar", "VIM", "outliers", "caret", "mice"))
+```
+
+```{r}
+library(tidyverse)
+library(naniar)
+library(VIM)
+library(outliers)
+library(caret)
+```
+
+```{r}
+dane[dane == ""] <- NA
+miss_var_summary(dane)
+vis_miss(dane)
+gg_miss_upset(dane)
+sum(is.na(dane$floor))
+sum(is.na(dane$condition))
+
+```
+
