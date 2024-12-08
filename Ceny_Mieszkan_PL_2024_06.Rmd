@@ -219,6 +219,24 @@ Klasyfikacja braków danych w zbiorze:
 ### **Obserwacje odstające**
 ```{r Identyfikacja_danych_odstających}
 
+znajdz_odstajace <- function(kolumna) {
+  if (is.numeric(kolumna)) {
+    Q1 <- quantile(kolumna, 0.25, na.rm = TRUE)
+    Q3 <- quantile(kolumna, 0.75, na.rm = TRUE)
+    IQR <- Q3 - Q1
+    dolna_granica <- Q1 - 1.5 * IQR
+    gorna_granica <- Q3 + 1.5 * IQR
+    
+    which(kolumna < dolna_granica | kolumna > gorna_granica)
+  } else {
+    return(NULL)
+  }
+}
+
+odstajace <- lapply(dane, znajdz_odstajace)
+
+print(odstajace)
+
 
 
 ```
