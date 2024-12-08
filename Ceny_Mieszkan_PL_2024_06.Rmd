@@ -28,7 +28,7 @@ if (!requireNamespace("VIM", quietly = TRUE)) install.packages("VIM")
 if (!requireNamespace("outliers", quietly = TRUE)) install.packages("outliers")
 if (!requireNamespace("caret", quietly = TRUE)) install.packages("caret")
 if (!requireNamespace("mice", quietly = TRUE)) install.packages("mice")
-
+if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
 ```
 
 ```{r libraries, include=FALSE}
@@ -45,6 +45,7 @@ library(VIM)
 library(outliers)
 library(caret)
 library(mice)
+library(gridExtra)
 ```
 
 # **Cel projektu**
@@ -126,6 +127,32 @@ dane$id <- 1:nrow(dane)
 dane[dane == ""] <- NA
 ```
 
+```{r dodatkowe_kolumny1}
+# Dodanie kolumny z ceną za metr kwadratowy
+dane$pricePerSquareMeter <- dane$price / dane$squareMeters
+
+# Dodanie kolumny z wiekiem mieszkania
+currentYear <- format(Sys.Date(), "%Y")
+dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
+
+# Tworzenie kategorii wieku mieszkań
+dane$buildingCategory <- cut(
+  dane$buildingAge,
+  breaks = c(-Inf, 5, 20, 50, Inf),
+  labels = c("Nowe", "Średnie", "Stare", "Zabytkowe"),
+  right = FALSE
+)
+
+# Konwersja na character, dodanie "Nieokreślone", a następnie ponownie na factor
+dane$buildingCategory <- as.character(dane$buildingCategory)
+dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
+dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe", "Nieokreślone"))
+
+# Sprawdzenie wyników
+#table(dane$buildingCategory)
+```
+
+
 ```{r obserwacje_brakujace_wykresy, echo=FALSE}
 missing_summary <- miss_var_summary(dane)
 
@@ -196,30 +223,28 @@ Klasyfikacja braków danych w zbiorze:
 
 ```
 
-```{r dodatkowe_kolumny1}
-# Dodanie kolumny z ceną za metr kwadratowy
-dane$pricePerSquareMeter <- dane$price / dane$squareMeters
+```{r obs_odst_wizualizacja}
+par(mfrow = c(1, 3))
+ploti1 <- boxplot(dane$squareMeters, main = "Outliers in Square Meters", col = "skyblue")
+ploti2 <- boxplot(dane$price, main = "Outliers in Price", col = "plum")
+ploti3 <- boxplot(dane$pricePerSquareMeter, main = "Outliers in pricePerSquareMeter", col = "peachpuff")
+par(mfrow = c(1, 1))
 
-# Dodanie kolumny z wiekiem mieszkania
-currentYear <- format(Sys.Date(), "%Y")
-dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
 
-# Tworzenie kategorii wieku mieszkań
-dane$buildingCategory <- cut(
-  dane$buildingAge,
-  breaks = c(-Inf, 5, 20, 50, Inf),
-  labels = c("Nowe", "Średnie", "Stare", "Zabytkowe"),
-  right = FALSE
-)
+# library(outliers)
+# 
+# # Test Grubbsa dla kolumny squareMeters
+# grubbs.test(dane$squareMeters)
+# 
+# # Test Grubbsa dla kolumny price
+# grubbs.test(dane$price)
 
-# Konwersja na character, dodanie "Nieokreślone", a następnie ponownie na factor
-dane$buildingCategory <- as.character(dane$buildingCategory)
-dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
-dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe", "Nieokreślone"))
-
-# Sprawdzenie wyników
-#table(dane$buildingCategory)
 ```
+
+
+
+
+
 
 ```{r dodanie_nowych_danych}
 # Wczytanie granic admistracyjnych województw
