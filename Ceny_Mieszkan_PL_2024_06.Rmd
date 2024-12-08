@@ -157,11 +157,28 @@ aggr(dane, col = c("green", "tomato"), numbers = TRUE, sortVars = TRUE,
      labels = names(data), cex.axis = 0.7, gap = 3, ylab = c("Procent braków", "Wzorce braków"))
 
 # Pozbycie się kolumny "condition", gdzie procent "NA" wynosi ok. 74%
-# dane$condition <- NA 
-# dane <- subset(dane, select = -condition)
+dane$condition <- NA 
+dane <- subset(dane, select = -condition)
 
 # Heatmapa braków w danych
 gg_miss_var(dane, show_pct = TRUE)
+
+```
+
+```{r Imputacja_mediany_braków}
+# Zastąpienie NA najczęstszą wartością 
+calculate_median <- function(x) {
+  if (is.numeric(x)) {
+    return(median(x, na.rm = TRUE)) 
+  } else if (is.character(x) || is.factor(x)) {
+    return(names(sort(table(x), decreasing = TRUE))[1]) 
+  }
+}
+all_cols <- colnames(dane)  
+
+for (col in all_cols) {
+  dane[[col]][is.na(dane[[col]])] <- calculate_median(dane[[col]])
+}
 ```
 
 Klasyfikacja braków danych w zbiorze:
@@ -173,6 +190,11 @@ Klasyfikacja braków danych w zbiorze:
 -   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
 
 ### **Obserwacje odstające**
+```{r Identyfikacja_danych_odstających}
+
+
+
+```
 
 ```{r dodatkowe_kolumny1}
 # Dodanie kolumny z ceną za metr kwadratowy
