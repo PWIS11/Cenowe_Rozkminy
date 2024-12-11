@@ -194,8 +194,8 @@ gg_miss_var(dane, show_pct = TRUE)
 `````````
 
 
-```{r Imputacja_mediany_braków}
-# Zastąpienie NA najczęstszą wartością 
+```{r Zastąpienie_braków_medianą}
+
 calculate_median <- function(x) {
   if (is.numeric(x)) {
     return(median(x, na.rm = TRUE)) 
@@ -207,7 +207,9 @@ all_cols <- colnames(dane)
 
 for (col in all_cols) {
   dane[[col]][is.na(dane[[col]])] <- calculate_median(dane[[col]])
+
 }
+
 ```
 
 Klasyfikacja braków danych w zbiorze:
@@ -240,8 +242,17 @@ ploti16 <- boxplot(dane$collegeDistance, main = "Outliers in CollegeDistance", c
 ploti17 <- boxplot(dane$pharmacyDistance, main = "Outliers in PharmacyDistance", col = "lavenderblush2")
 par(mfrow = c(1, 1))
 
+
 # Test Grubbsa dla każdej zmiennej
+
 library(outliers)
+
+variables <- c("squareMeters", "price", "pricePerSquareMeter", "rooms", "floor", 
+               "floorCount", "buildingAge", "latitude", "longitude", "centreDistance", 
+               "schoolDistance", "clinicDistance", "postOfficeDistance", 
+               "kindergartenDistance", "restaurantDistance", "collegeDistance", 
+               "pharmacyDistance")
+
 
 for (var in variables) {
   cat("\nTest Grubbsa dla zmiennej:", var, "\n")
@@ -249,12 +260,6 @@ for (var in variables) {
   print(test_result)
   
 }
-variables <- c("squareMeters", "price", "pricePerSquareMeter", "rooms", "floor", 
-               "floorCount", "buildingAge", "latitude", "longitude", "centreDistance", 
-               "schoolDistance", "clinicDistance", "postOfficeDistance", 
-               "kindergartenDistance", "restaurantDistance", "collegeDistance", 
-               "pharmacyDistance")
-
 
 # Mediana i średnia dla price
 median_price <- median(dane$price)
@@ -275,7 +280,7 @@ cat("Mediana dla pricePerSquareMeter: ", median_pricePerSquareMeter, "\n")
 cat("Średnia dla pricePerSquareMeter: ", mean_pricePerSquareMeter, "\n")
 
 # Mediana i średnia dla BuildingAge
-median_buildingage <- median(dane$buildingAge)
+median_buildingAge <- median(dane$buildingAge)
 mean_buildingAge <- mean(dane$buildingAge)
 cat("Mediana dla buildingAge: ", median_buildingAge, "\n")
 cat("Średnia dla buildingAge: ", mean_buildingAge, "\n")
