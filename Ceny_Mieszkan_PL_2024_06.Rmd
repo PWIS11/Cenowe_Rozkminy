@@ -29,6 +29,8 @@ if (!requireNamespace("outliers", quietly = TRUE)) install.packages("outliers")
 if (!requireNamespace("caret", quietly = TRUE)) install.packages("caret")
 if (!requireNamespace("mice", quietly = TRUE)) install.packages("mice")
 if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
+if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
+
 ```
 
 ```{r libraries, include=FALSE}
@@ -46,6 +48,7 @@ library(outliers)
 library(caret)
 library(mice)
 library(gridExtra)
+library(dlookr)
 ```
 
 # **Cel projektu**
@@ -131,32 +134,6 @@ dane$id <- 1:nrow(dane)
 dane[dane == ""] <- NA
 ```
 
-```{r dodatkowe_kolumny1}
-# Dodanie kolumny z ceną za metr kwadratowy
-dane$pricePerSquareMeter <- dane$price / dane$squareMeters
-
-# Dodanie kolumny z wiekiem mieszkania
-currentYear <- format(Sys.Date(), "%Y")
-dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
-
-# Tworzenie kategorii wieku mieszkań
-dane$buildingCategory <- cut(
-  dane$buildingAge,
-  breaks = c(-Inf, 5, 20, 50, Inf),
-  labels = c("Nowe", "Średnie", "Stare", "Zabytkowe"),
-  right = FALSE
-)
-
-# Konwersja na character, dodanie "Nieokreślone", a następnie ponownie na factor
-dane$buildingCategory <- as.character(dane$buildingCategory)
-dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
-dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe", "Nieokreślone"))
-
-#sprawdzić czy nieokreślone ma dalej sens po uzupełnieniu danych
-
-# Sprawdzenie wyników
-#table(dane$buildingCategory)
-```
 
 ```{r obserwacje_brakujace_wykresy, echo=FALSE}
 missing_summary <- miss_var_summary(dane)
@@ -197,51 +174,44 @@ aggr(dane, col = c("green", "tomato"), numbers = TRUE, sortVars = TRUE,
 # Zastąpenie danych NA; Imputacja medianą oraz najczęstszą wartością
 
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością}
-
-# Imputacja medianą brakujących danych dla:
-
-#dochod<-imputate_na(carseats, Income, method = "median")
-
 # floor
-median_floor <- median(dane$floor, na.rm = TRUE)
-dane$floor[is.na(dane$floor)] <- median_floor
+dane$floor<-imputate_na(dane, floor, method = "median")
+#median(dane$floor)
 
 # buildYear
-median_buildYear <- median(dane$buildYear, na.rm = TRUE)
-dane$buildYear[is.na(dane$buildYear)] <- median_buildYear
+dane$buildYear<-imputate_na(dane, buildYear, method = "median")
+#median(dane$buildYear)
 
 # hasElevator 
-median_hasElevator <- median(dane$hasElevator, na.rm = TRUE)
-dane$hasElevator[is.na(dane$hasElevator)] <- median_hasElevator
+dane$hasElevator<-imputate_na(dane, hasElevator, method = "median")
+#median(dane$hasElevator)
 
 # collegeDistance 
-median_collegeDistance <- median(dane$collegeDistance, na.rm = TRUE)
-dane$collegeDistance[is.na(dane$collegeDistance)] <- median_collegeDistance
-
+dane$collegeDistance<-imputate_na(dane, collegeDistance, method = "median")
+#median(dane$collegeDistance)
 
 # Imputacja brakujących danych na najczęstszą wartość w:
 
+#table(na.omit(dane$type))
+#table(na.omit(dane$buildingMaterial))
+
+dane$type[is.na(dane$type)] <- "blockOfFlats"
+dane$buildingMaterial[is.na(dane$buildingMaterial)] <- "brick"
+
+dane$type <- factor(dane$type)
+dane$buildingMaterial <- factor(dane$buildingMaterial)
+
 # buildingMaterial
-mode_buildingMaterial <- names(sort(table(dane$buildingMaterial), decreasing = TRUE))[1]
-dane$buildingMaterial[is.na(dane$buildingMaterial)] <- mode_buildingMaterial
-
+#dane$buildingMaterial<-imputate_na(dane, buildingMaterial, method = "mode") -----> wyskakuje błąd
 # type
-mode_type <- names(sort(table(dane$type), decreasing = TRUE))[1]
-dane$type[is.na(dane$type)] <- mode_type
+#dane$type <- imputate_na(dane, xvar = type, method = "mode")
 
-# Dla wszystkich pozostałych kolumn, które mają mniej niż 1% NA 
-
-impute_mode <- function(x) {
-  if (any(is.na(x))) {
-    mode_value <- names(sort(table(x), decreasing = TRUE))[1]
-    x[is.na(x)] <- mode_value
-  }
-  return(x)
-}
-
-dane[] <- lapply(dane, impute_mode)
+# Pozbycie się kolumny "condition", gdzie procent "NA" wynosi ok. 74%
+dane$condition <- NA
+dane <- subset(dane, select = -condition)
 
 ```
+
 
 Klasyfikacja braków danych w zbiorze:
 
@@ -250,6 +220,35 @@ Klasyfikacja braków danych w zbiorze:
 -   **MAR (Missing At Random)**: Braki w kolumnach condition, buildingMaterial, oraz floor wynikają z powiązań między zmiennymi, np. type i floorCount.
 
 -   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
+
+
+```{r dodatkowe_kolumny1}
+# Dodanie kolumny z ceną za metr kwadratowy
+dane$pricePerSquareMeter <- dane$price / dane$squareMeters
+
+# Dodanie kolumny z wiekiem mieszkania
+currentYear <- format(Sys.Date(), "%Y")
+dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
+
+# Tworzenie kategorii wieku mieszkań
+dane$buildingCategory <- cut(
+  dane$buildingAge,
+  breaks = c(-Inf, 5, 20, 50, Inf),
+  labels = c("Nowe", "Średnie", "Stare", "Zabytkowe"),
+  right = FALSE
+)
+
+# Konwersja na character, dodanie "Nieokreślone", a następnie ponownie na factor
+dane$buildingCategory <- as.character(dane$buildingCategory)
+dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
+dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe", "Nieokreślone"))
+
+#table(na.omit(dane$buildingCategory))
+#sprawdzić czy nieokreślone ma dalej sens po uzupełnieniu danych
+
+# Sprawdzenie wyników
+#table(dane$buildingCategory)
+```
 
 ### **Obserwacje odstające**
 
