@@ -190,7 +190,9 @@ dane <- subset(dane, select = -condition)
 # Heatmapa braków w danych
 gg_miss_var(dane, show_pct = TRUE)
 
-```
+
+`````````
+
 
 ```{r Imputacja_mediany_braków}
 # Zastąpienie NA najczęstszą wartością 
@@ -217,51 +219,105 @@ Klasyfikacja braków danych w zbiorze:
 -   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
 
 ### **Obserwacje odstające**
-```{r Identyfikacja_danych_odstających}
-
-znajdz_odstajace <- function(kolumna) {
-  if (is.numeric(kolumna)) {
-    Q1 <- quantile(kolumna, 0.25, na.rm = TRUE)
-    Q3 <- quantile(kolumna, 0.75, na.rm = TRUE)
-    IQR <- Q3 - Q1
-    dolna_granica <- Q1 - 1.5 * IQR
-    gorna_granica <- Q3 + 1.5 * IQR
-    
-    which(kolumna < dolna_granica | kolumna > gorna_granica)
-  } else {
-    return(NULL)
-  }
-}
-
-odstajace <- lapply(dane, znajdz_odstajace)
-
-print(odstajace)
-
-
-
-```
-
 ```{r obs_odst_wizualizacja}
 par(mfrow = c(1, 3))
 ploti1 <- boxplot(dane$squareMeters, main = "Outliers in Square Meters", col = "skyblue")
 ploti2 <- boxplot(dane$price, main = "Outliers in Price", col = "plum")
 ploti3 <- boxplot(dane$pricePerSquareMeter, main = "Outliers in pricePerSquareMeter", col = "peachpuff")
+ploti4 <- boxplot(dane$rooms, main = "Outliers in Rooms", col = "palegreen2")
+ploti5 <- boxplot(dane$floor, main = "Outliers in Floors", col = "powderblue")
+ploti6 <- boxplot(dane$floorCount, main = "Outliers in FloorCount", col = "thistle3")
+ploti7 <- boxplot(dane$buildingAge, main = "Outliers in BuildingAge", col = "salmon")
+ploti8 <- boxplot(dane$latitude, main = "Outliers in Latitude", col = "cadetblue3")
+ploti9 <- boxplot(dane$longitude, main = "Outliers in Longitude", col = "pink1")
+ploti10 <- boxplot(dane$centreDistance, main = "Outliers in CentreDistance", col = "pink4")
+ploti11 <- boxplot(dane$schoolDistance, main = "Outliers in SchoolDistance", col = "pink")
+ploti12 <- boxplot(dane$clinicDistance, main = "Outliers in ClinicDistance", col = "orange")
+ploti13 <- boxplot(dane$postOfficeDistance, main = "Outliers in PostOfficeDistance", col = "coral")
+ploti14 <- boxplot(dane$kindergartenDistance, main = "Outliers in KindergardenDistance", col = "lavender")
+ploti15 <- boxplot(dane$restaurantDistance, main = "Outliers in RestaurantDistance", col = "khaki")
+ploti16 <- boxplot(dane$collegeDistance, main = "Outliers in CollegeDistance", col = "indianred")
+ploti17 <- boxplot(dane$pharmacyDistance, main = "Outliers in PharmacyDistance", col = "lavenderblush2")
 par(mfrow = c(1, 1))
 
+# Test Grubbsa dla każdej zmiennej
+library(outliers)
 
-# library(outliers)
-# 
-# # Test Grubbsa dla kolumny squareMeters
-# grubbs.test(dane$squareMeters)
-# 
-# # Test Grubbsa dla kolumny price
-# grubbs.test(dane$price)
+for (var in variables) {
+  cat("\nTest Grubbsa dla zmiennej:", var, "\n")
+  test_result <- grubbs.test(dane[[var]])
+  print(test_result)
+  
+}
+variables <- c("squareMeters", "price", "pricePerSquareMeter", "rooms", "floor", 
+               "floorCount", "buildingAge", "latitude", "longitude", "centreDistance", 
+               "schoolDistance", "clinicDistance", "postOfficeDistance", 
+               "kindergartenDistance", "restaurantDistance", "collegeDistance", 
+               "pharmacyDistance")
+
+
+# Mediana i średnia dla price
+median_price <- median(dane$price)
+mean_price <- mean(dane$price)
+cat("Mediana dla price: ", median_price, "\n")
+cat("Średnia dla price: ", mean_price, "\n")
+
+# Mediana i średnia dla SquareMeters
+median_squareMeters <- median(dane$squareMeters)
+mean_squareMeters <- mean(dane$squareMeters)
+cat("Mediana dla squareMeters: ", median_squareMeters, "\n")
+cat("Średnia dla squareMeters: ", mean_squareMeters, "\n")
+
+# Mediana i średnia dla pricePerSquareMeter
+median_pricePerSquareMeter <- median(dane$pricePerSquareMeter)
+mean_pricePerSquareMeter <- mean(dane$pricePerSquareMeter)
+cat("Mediana dla pricePerSquareMeter: ", median_pricePerSquareMeter, "\n")
+cat("Średnia dla pricePerSquareMeter: ", mean_pricePerSquareMeter, "\n")
+
+# Mediana i średnia dla BuildingAge
+median_buildingage <- median(dane$buildingAge)
+mean_buildingAge <- mean(dane$buildingAge)
+cat("Mediana dla buildingAge: ", median_buildingAge, "\n")
+cat("Średnia dla buildingAge: ", mean_buildingAge, "\n")
+
+# Mediana i średnia dla Latitude
+median_latitude <- median(dane$latitude)
+mean_latitude <- mean(dane$latitude)
+cat("Mediana dla Latitude: ", median_latitude, "\n")
+cat("Średnia dla Latitude: ", mean_latitude, "\n")
+
+# Mediana i średnia dla Longitude
+median_longitude <- median(dane$longitude)
+mean_longitude <- mean(dane$longitude)
+cat("Mediana dla Longitude: ", median_longitude, "\n")
+cat("Średnia dla Longitude: ", mean_longitude, "\n")
+
 
 ```
+Do analizy obserwacji odstających posłużono się testem Grubbsa. W teście stwierdzono, że: 
 
+1) dla squareMaters wartość 150 jest odstającą. Jednakże z p-value wynoszącym 0.06864, co jest większe niż 0.05, uznano, że nie jest to wartość, którą należy odrzucić. Choć mediana dla squareMeters wynosi 52.81, a średnia 56.97, te wartości nie wskazują na silne odchylenie, co sugeruje, że wartość 150 nie jest skrajnie różna od pozostałych danych.
 
+2) dla price wartość 3 000 000 jest wartością odstającą. Wartość p (0.004775) jest poniżej progu 0.05, co oznacza, że wynik jest statystycznie istotny. Należy ją traktować jako rzadki, ale możliwy przypadek bardzo drogiej nieruchomości. Boxplot pokazuje, że ta wartość nie jest błędem, lecz wynikiem specyficznej sytuacji na rynku.
 
+3) dla pricePerSquareMeter Test Grubbsa stwierdził, że najwyższa wartość 30 702.75 jest potencjalną wartością odstającą. Wynik p-value (1) sugeruje, że nie powinniśmy odrzucać hipotezy zerowej, przez co nie uznano tej wartości za wartość odstającą i mieści się ona w ogólnym rozkładzie. 
 
+4) dla rooms Test Grubbsa wykazał, że wartość 6 jest wartością odstającą (p-value=1), jednakże jednostka mieszkalna posiadająca 6 pomieszczeń zdarza się i nie jest błędem, a rzadkim przypadkiem, który mieści się w ogólnym rozkładzie. 
+
+5) dla floor odstająca wartość to 29, jednakże nie może zostać pominięta w badaniach zbioru, gdyż nie wynika z błędu, a z rzadkiej sytuacji, gdy nieruchomość znajduje się w wieżowcu na 29 pietrze. Dla floorCount zastosowano podobną zasadę.
+
+6) dla buildingAge obserwacja odstająca wynosi 174. Nie jest to wynikiem błędu; w danych sprzedaży znalazły się również nieruchomości zabytkowe, mające ponad 50 lat. Mimo tego, że wartość ta jest znacząco wyższa od mediany i średniej, powinna zostać w badanym zbiorze. Tak znaczące ekstremum może wskazywać na wyjątkową pod względem wieku nieruchomość, np. dworek, zamek, kamienicę. 
+
+7) dla Latitude obserwacją odstającą jest 54.58287; jednakże nie odbiega istotnie od przeciętnych wartości w zbiorze. 
+
+8) dla Longitude obserwacja odstająca jest 14.4471272; nie odbiega jednak ona znacząco od średniej i mediany w tym zbiorze. 
+
+9) w CentreDistance, SchoolDistance, ClinicDistance, PostOfficeDistance, KindergardenDsitance, RestaurantDistance, CollegeDistance oraz PharamcyDistance zaobserwowane odstające co prawda są oddalone od reszty danych, jednak ich odległość nie jest wystarczająco duża, by znacząco wpłynęły na ogólną charakterystykę danych zbiorów. Z tego względu zostały one uwzględnione w dalszej analizie, ponieważ mogą reprezentować istotne, choć rzadkie przypadki w danych.
+
+ 
+ Pomimo zauważenia kilku obserwacji odstających w naszym zbiorze danych, żadna z nich nie została wykluczona z dalszej analizy. Żadna z obserwacji nie odbiega znacząco od średnich w danych rozkładach i mieszczą się w ich schemacie. 
+ 
+ W kontekście rynku nieruchomości takie wartości mogą być naturalne, choć rzadkie, i stanowić istotną część analizowanych danych. Nie są one błędami pomiarów, a wzięte pod uwagę znacznie uatrakcyjnią i oddadzą rzeczywisty obraz naszych badań.
 
 
 ```{r dodanie_nowych_danych}
