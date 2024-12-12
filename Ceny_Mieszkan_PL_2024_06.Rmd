@@ -167,34 +167,27 @@ print(vismiss)
 ```
 
 
-```{r obserwacje_brakujace_wykresy, echo=FALSE}
-```
-
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na kilka grup pod względem liczby braków:
 
 -   **Bardzo duża liczba braków:** condition (74.0%) i buildingMaterial (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się usunąć kolumnę condition, a dla buildingMaterial zastosujemy imputację najczęstszą wartością.
 
 -   **Umiarkowana liczba braków:** type (20.5%), floor (16.6%), buildYear (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą najczęstszej wartości dla zmiennych kategorycznych (type) oraz medianą dla zmiennych liczbowych (floor, buildYear).
 
--   **Niewielka liczba braków:** Kolumny takie jak hasElevator (4.46%) czy collegeDistance (2.72%) zostaną uzupełnione medianą.
+-   **Niewielka liczba braków:** Kolumny takie jak hasElevator (4.46%) czy collegeDistance (2.72%) zostaną uzupełnione odpowiednio modą i medianą. 
 
 -   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1% braków zostaną imputowane prostymi metodami (medianą lub najczęstszą wartością).
 
 -   **Kolumny bez braków:** Pozostałe zmienne, takie jak price, squareMeters czy rooms, są kompletne i nie wymagają dodatkowych działań.
 
 ```{r wzorce_brakow}
-aggr(dane, col = c("green", "tomato"), numbers = TRUE, sortVars = TRUE,
+aggr(dane, col = c("lightyellow", "orchid3"), numbers = TRUE, sortVars = TRUE,
      labels = names(data), cex.axis = 0.7, gap = 3, ylab = c("Procent braków", "Wzorce braków"))
-
-# Pozbycie się kolumny "condition", gdzie procent "NA" wynosi ok. 74%
-#dane$condition <- NA 
-#dane <- subset(dane, select = -condition)
-
 ```
 
 # Zastąpenie danych NA; Imputacja medianą oraz najczęstszą wartością
 
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością}
+################################################################################
 # floor
 dane$floor<-imputate_na(dane, floor, method = "median")
 #median(dane$floor)
@@ -203,34 +196,29 @@ dane$floor<-imputate_na(dane, floor, method = "median")
 dane$buildYear<-imputate_na(dane, buildYear, method = "median")
 #median(dane$buildYear)
 
-# hasElevator 
-dane$hasElevator<-imputate_na(dane, hasElevator, method = "median")
-#median(dane$hasElevator)
-
 # collegeDistance 
 dane$collegeDistance<-imputate_na(dane, collegeDistance, method = "median")
 #median(dane$collegeDistance)
+################################################################################
 
-# Imputacja brakujących danych na najczęstszą wartość w:
-
-#table(na.omit(dane$type))
-#table(na.omit(dane$buildingMaterial))
+#table(na.omit(dane$type)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
+#table(na.omit(dane$buildingMaterial)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
+#table(na.omit(dane$hasElevator))
 
 dane$type[is.na(dane$type)] <- "blockOfFlats"
 dane$buildingMaterial[is.na(dane$buildingMaterial)] <- "brick"
+dane$hasElevator[is.na(dane$hasElevator)] <- "yes"
 
 dane$type <- factor(dane$type)
 dane$buildingMaterial <- factor(dane$buildingMaterial)
+dane$hasElevator <- factor(dane$hasElevator)
 
-# buildingMaterial
 #dane$buildingMaterial<-imputate_na(dane, buildingMaterial, method = "mode") -----> wyskakuje błąd
-# type
-#dane$type <- imputate_na(dane, xvar = type, method = "mode")
 
-# Pozbycie się kolumny "condition", gdzie procent "NA" wynosi ok. 74%
+################################################################################
 dane$condition <- NA
 dane <- subset(dane, select = -condition)
-
+################################################################################
 ```
 
 
@@ -262,7 +250,7 @@ dane$buildingCategory <- cut(
 # Konwersja na character, dodanie "Nieokreślone", a następnie ponownie na factor
 dane$buildingCategory <- as.character(dane$buildingCategory)
 dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
-dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe", "Nieokreślone"))
+dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe"))
 
 #table(na.omit(dane$buildingCategory))
 #sprawdzić czy nieokreślone ma dalej sens po uzupełnieniu danych
