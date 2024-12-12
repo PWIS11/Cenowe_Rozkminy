@@ -145,8 +145,29 @@ ggplot(missing_summary, aes(x = reorder(variable, -pct_miss), y = pct_miss)) +
        x = "Kolumny",
        y = "Procent braków (%)") +
   theme_minimal()
+```
 
-vis_miss(dane)
+
+```{r obserwacje_brakujace_wykresy_2, echo=FALSE}
+vismiss <- vis_miss(dane) +
+  labs(
+    title = "Braki danych w zbiorze",
+    x = "Zmienne",
+    y = "Obserwacje"
+  ) +
+  theme_minimal(base_size = 10) + 
+  scale_fill_manual(values = c("lightyellow", "orchid3"),
+                    name = "Status danych",
+                    labels = c("Dane obecne", "Braki danych")) +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 0.2)
+  )
+print(vismiss)
+```
+
+
+```{r obserwacje_brakujace_wykresy, echo=FALSE}
 ```
 
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na kilka grup pod względem liczby braków:
