@@ -63,7 +63,7 @@ Celem naszego projektu jest analiza cen mieszkań w największych miastach Polsk
 
 -   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są najbardziej cenione?*
 
-### **Analizy w projekcie**
+## **Analizy w projekcie**
 
 Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
 
@@ -89,7 +89,7 @@ Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki wp
 
 5.  Czy wiek mieszkania ma taki sam wpływ na jego cenę w centrum jak na obrzeżach?
 
-# **Opis danych**
+## **Opis danych**
 
 Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa mieszkań.
 
@@ -113,18 +113,13 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
 
     -   Cena sprzedaży lub miesięczny czynsz.
 
-# **Dane dodatkowe**
+## **Dane dodatkowe**
 
-### **Znaczenie projektu**
+## **Znaczenie projektu**
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
 
-# **Data wrangling**
-
-### **Obserwacje brakujące**
-
-```{r wstepna_obrobka_danych}
-# Przygotowanie i wczytanie danych 
+```{r wstepna_obrobka_danych, echo=FALSE}
 dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
 
 # Zmiana id na liczby rosnące, zaczynające się od cyfry 1
@@ -134,19 +129,31 @@ dane$id <- 1:nrow(dane)
 dane[dane == ""] <- NA
 ```
 
+# **Data wrangling**
 
-```{r obserwacje_brakujace_wykresy, echo=FALSE}
+## **Obserwacje brakujące**
+
+Klasyfikacja braków danych w zbiorze:
+
+-   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich jak hasElevator i collegeDistance są losowe i wynikają z technicznych pominięć w zbieraniu danych.
+
+-   **MAR (Missing At Random)**: Braki w kolumnach condition, buildingMaterial, oraz floor wynikają z powiązań między zmiennymi, np. type i floorCount.
+
+-   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
+
+**Może opis jak zamierzamy je badać i dlaczego ? Typu - zdecydowaliśmy się wykonać wykres taki i taki aby zbadać coś tam**
+
+```{r obserwacje_brakujace_wykresy, echo=FALSE, comment=FALSE}
 missing_summary <- miss_var_summary(dane)
 
 ggplot(missing_summary, aes(x = reorder(variable, -pct_miss), y = pct_miss)) +
   geom_bar(stat = "identity", fill = "plum2") +
   coord_flip() +
   labs(title = "Procent brakujących wartości w kolumnach",
-       x = "Kolumny",
+       x = "Zmienne",
        y = "Procent braków (%)") +
   theme_minimal()
 ```
-
 
 ```{r obserwacje_brakujace_wykresy_2, echo=FALSE}
 vismiss <- vis_miss(dane) +
@@ -166,14 +173,13 @@ vismiss <- vis_miss(dane) +
 print(vismiss)
 ```
 
-
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na kilka grup pod względem liczby braków:
 
 -   **Bardzo duża liczba braków:** condition (74.0%) i buildingMaterial (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się usunąć kolumnę condition, a dla buildingMaterial zastosujemy imputację najczęstszą wartością.
 
 -   **Umiarkowana liczba braków:** type (20.5%), floor (16.6%), buildYear (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą najczęstszej wartości dla zmiennych kategorycznych (type) oraz medianą dla zmiennych liczbowych (floor, buildYear).
 
--   **Niewielka liczba braków:** Kolumny takie jak hasElevator (4.46%) czy collegeDistance (2.72%) zostaną uzupełnione odpowiednio modą i medianą. 
+-   **Niewielka liczba braków:** Kolumny takie jak hasElevator (4.46%) czy collegeDistance (2.72%) zostaną uzupełnione odpowiednio modą i medianą.
 
 -   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1% braków zostaną imputowane prostymi metodami (medianą lub najczęstszą wartością).
 
@@ -184,21 +190,21 @@ aggr(dane, col = c("lightyellow", "orchid3"), numbers = TRUE, sortVars = TRUE,
      labels = names(data), cex.axis = 0.7, gap = 3, ylab = c("Procent braków", "Wzorce braków"))
 ```
 
-# Zastąpenie danych NA; Imputacja medianą oraz najczęstszą wartością
+### Imputacja medianą oraz modą
 
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością}
 ################################################################################
-# floor
+
 dane$floor<-imputate_na(dane, floor, method = "median")
-#median(dane$floor)
-
-# buildYear
 dane$buildYear<-imputate_na(dane, buildYear, method = "median")
-#median(dane$buildYear)
-
-# collegeDistance 
 dane$collegeDistance<-imputate_na(dane, collegeDistance, method = "median")
-#median(dane$collegeDistance)
+dane$schoolDistance<-imputate_na(dane, schoolDistance, method = "median")
+dane$pharmacyDistance<-imputate_na(dane, pharmacyDistance, method = "median")
+dane$kindergartenDistance<-imputate_na(dane, kindergartenDistance, method = "median")
+dane$clinicDistance<-imputate_na(dane, clinicDistance, method = "median")
+dane$postOfficeDistance<-imputate_na(dane, postOfficeDistance, method = "median")
+dane$restaurantDistance<-imputate_na(dane, restaurantDistance, method = "median")
+
 ################################################################################
 
 #table(na.omit(dane$type)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
@@ -214,22 +220,11 @@ dane$buildingMaterial <- factor(dane$buildingMaterial)
 dane$hasElevator <- factor(dane$hasElevator)
 
 #dane$buildingMaterial<-imputate_na(dane, buildingMaterial, method = "mode") -----> wyskakuje błąd
-
 ################################################################################
 dane$condition <- NA
 dane <- subset(dane, select = -condition)
 ################################################################################
 ```
-
-
-Klasyfikacja braków danych w zbiorze:
-
--   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich jak hasElevator i collegeDistance są losowe i wynikają z technicznych pominięć w zbieraniu danych.
-
--   **MAR (Missing At Random)**: Braki w kolumnach condition, buildingMaterial, oraz floor wynikają z powiązań między zmiennymi, np. type i floorCount.
-
--   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
-
 
 ```{r dodatkowe_kolumny1}
 # Dodanie kolumny z ceną za metr kwadratowy
@@ -254,15 +249,43 @@ dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Śred
 
 #table(na.omit(dane$buildingCategory))
 #sprawdzić czy nieokreślone ma dalej sens po uzupełnieniu danych
-
 # Sprawdzenie wyników
 #table(dane$buildingCategory)
 ```
 
-### **Obserwacje odstające**
+## **Obserwacje odstające**
 
-```{r obs_odst_wizualizacja}
+Do analizy obserwacji odstających decydowaliśmy się użyć **wykresów pudełkowych**, ponieważ są one prostym i skutecznym narzędziem wizualizacyjnym, które pozwala szybko zidentyfikować wartości odstające. Dzięki nim poznamy wartości minimalne, maksymalne, mediane, kwartyle oraz ewentualne wartości wykraczające poza tzw. *wąsy*, czyli zakres między pierwszym a trzecim kwartylem powiększony. Każda z analizowanych zmiennych została przedstawiona na osobnym wykresie pudełkowym, co pozwala dokładnie przyjrzeć się rozkładowi poszczególnych cech, takich jak powierzchnia mieszkania, cena, cena za metr kwadratowy czy odległości od różnych punktów użyteczności publicznej. Dzięki temu można szybko zidentyfikować zmienne, które mogą zawierać nietypowe wartości i potencjalnie wpłynąć na dalsze analizy lub modelowanie danych.
 
+Dodatkowo, aby potwierdzić statystycznie obecność obserwacji odstających zastosowaliśmy metodę Z-score oraz zbadaliśmy czy rozkład danych jest zbliżony do rozkładu normalnego.
+
+-   Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
+         Z = \frac{x - \bar{x}}{\sigma}
+         $$ $x$: wartość obserwacji\
+    $\overline{x}$: średnia dla danej zmiennej\
+    $\sigma$: odchylenie standardowe.
+
+**Skośność** jest statystyką umożliwiającą porównanie rozkładu analizowanej zmiennej z hipotetycznym rozkładem normalnym. Wskazuje na rozbieżności pomiędzy wartością średnią, a centrum danego rozkładu. Wyraża się wzorem:
+
+$$\tilde{\mu}_3 = \frac{\sum_{i}^{N} (X_i - \bar{X})^3}{(N - 1) \cdot \sigma^3}$$
+
+-   $\tilde{\mu}_3$ = skośność
+-   $N$ = liczba zmiennych w rozkładzie
+-   $X_i$ = losowa zmienna
+-   $\bar{X}$ = średnia rozkładu
+-   $\sigma$ = odchylenie standardowe.
+
+Interpretacja jest następująca:
+
+-   Rozkład prawoskośny -- skośność jest dodatnia, prawe ramię rozkładu jest wydłużone, wyniki poniżej średniej są przeważające w badanej próbce.
+
+-   Rozkład symetryczny -- skośność wynosi 0, ogony rozkładu są identyczne w obu kierunkach. Jeśli znormalizowana kurtoza wynosi 0, rozkład jest zbliżony do rozkładu normalnego.
+
+-   Rozkład lewoskośny -- skośność jest ujemna, lewe ramię rozkładu jest wydłużone, większość obserwacji w próbie ma wartości powyżej średniej.
+
+### Wykresy pudełkowe
+
+```{r zamiana_na_numeryczne, echo=FALSE}
 dane$buildingAge <- as.numeric(dane$buildingAge)
 dane$latitude <- as.numeric(dane$latitude)
 dane$longitude <- as.numeric(dane$longitude)
@@ -275,97 +298,124 @@ dane$collegeDistance <- as.numeric(dane$collegeDistance)
 dane$restaurantDistance <- as.numeric(dane$restaurantDistance)
 dane$pharmacyDistance <- as.numeric(dane$pharmacyDistance)
 dane$floorCount <- as.numeric(dane$floorCount)
+```
 
-ploti1 <- boxplot(dane$squareMeters, main = "Outliers in Square Meters", col = "skyblue")
-ploti2 <- boxplot(dane$price, main = "Outliers in Price", col = "plum")
-ploti3 <- boxplot(dane$pricePerSquareMeter, main = "Outliers in pricePerSquareMeter", col = "peachpuff")
-ploti4 <- boxplot(dane$rooms, main = "Outliers in Rooms", col = "palegreen2")
-ploti5 <- boxplot(dane$floor, main = "Outliers in Floors", col = "powderblue")
-ploti6 <- boxplot(dane$floorCount, main = "Outliers in FloorCount", col = "thistle3")
-ploti7 <- boxplot(dane$buildingAge, main = "Outliers in BuildingAge", col = "salmon")
-ploti10 <- boxplot(dane$centreDistance, main = "Outliers in CentreDistance", col = "pink4")
-ploti11 <- boxplot(dane$schoolDistance, main = "Outliers in SchoolDistance", col = "pink")
-ploti12 <- boxplot(dane$clinicDistance, main = "Outliers in ClinicDistance", col = "orange")
-ploti13 <- boxplot(dane$postOfficeDistance, main = "Outliers in PostOfficeDistance", col = "coral")
-ploti14 <- boxplot(dane$kindergartenDistance, main = "Outliers in KindergardenDistance", col = "lavender")
-ploti15 <- boxplot(dane$restaurantDistance, main = "Outliers in RestaurantDistance", col = "khaki")
-ploti16 <- boxplot(dane$collegeDistance, main = "Outliers in CollegeDistance", col = "indianred")
-ploti17 <- boxplot(dane$pharmacyDistance, main = "Outliers in PharmacyDistance", col = "lavenderblush2")
+```{r boxplot_odst, fig.height=10,fig.width=10, echo=FALSE}
+par(mfrow = c(3, 3))  # 3 wiersze, 4 kolumny
+ploti1 <- boxplot(dane$squareMeters, main = "Square Meters", col = "skyblue")
+ploti2 <- boxplot(dane$price, main = "Price", col = "plum")
+ploti3 <- boxplot(dane$pricePerSquareMeter, main = "pricePerSquareMeter", col = "peachpuff")
+ploti4 <- boxplot(dane$rooms, main = "Rooms", col = "palegreen2")
+ploti5 <- boxplot(dane$floor, main = "Floors", col = "powderblue")
+ploti6 <- boxplot(dane$floorCount, main = "FloorCount", col = "thistle3")
+ploti7 <- boxplot(dane$buildingAge, main = "BuildingAge", col = "salmon")
+ploti10 <- boxplot(dane$centreDistance, main = "CentreDistance", col = "pink4")
+ploti11 <- boxplot(dane$schoolDistance, main = "SchoolDistance", col = "pink")
+ploti12 <- boxplot(dane$clinicDistance, main = "ClinicDistance", col = "orange")
+ploti13 <- boxplot(dane$postOfficeDistance, main = "PostOfficeDistance", col = "coral")
+ploti14 <- boxplot(dane$kindergartenDistance, main = "KindergardenDistance", col = "lavender")
+ploti15 <- boxplot(dane$restaurantDistance, main = "RestaurantDistance", col = "khaki")
+ploti16 <- boxplot(dane$collegeDistance, main = "CollegeDistance", col = "indianred")
+ploti17 <- boxplot(dane$pharmacyDistance, main = "PharmacyDistance", col = "lavenderblush2")
+par(mfrow = c(1, 1)) 
+```
 
-# Test Grubbsa dla każdej zmiennej
+Tu pojawi się opis :) **ZAPYTAC SIE CZEMU JAK GENERUJE SIE HTML ROBI SIE TAKA PRZERWA MIEDZY OPISEM A WYKRESAMI**
 
-library(outliers)
+### Z-score oraz skośność
 
-variables <- c("squareMeters", "price", "pricePerSquareMeter", "rooms", "floor", 
-               "floorCount", "buildingAge", "latitude", "longitude", "centreDistance", 
-               "schoolDistance", "clinicDistance", "postOfficeDistance", 
-               "kindergartenDistance", "restaurantDistance", "collegeDistance", 
-               "pharmacyDistance")
+```{r z-score, echo = FALSE}
+# length(which(abs(scale(dane$price)) > 3))
+# length(which(abs(scale(dane$squareMeters)) > 3))
+# length(which(abs(scale(dane$pricePerSquareMeter)) > 3))
+# length(which(abs(scale(dane$rooms)) > 3))
+# length(which(abs(scale(dane$floor)) > 3))
+# length(which(abs(scale(dane$floorCount)) > 3))
+# length(which(abs(scale(dane$buildingAge)) > 3))
+# length(which(abs(scale(dane$centreDistance)) > 3))
+# length(which(abs(scale(dane$schoolDistance)) > 3))
+# length(which(abs(scale(dane$clinicDistance)) > 3))
+# length(which(abs(scale(dane$postOfficeDistance)) > 3))
+# length(which(abs(scale(dane$kindergartenDistance)) > 3))
+# length(which(abs(scale(dane$restaurantDistance)) > 3))
+# length(which(abs(scale(dane$collegeDistance)) > 3))
+# length(which(abs(scale(dane$pharmacyDistance)) > 3))
+# length(which(abs(scale(dane$poiCount)) > 3))
+# length(which(abs(scale(dane$buildYear)) > 3))
+```
 
+```{r skosnosc, echo = FALSE, eval = TRUE}
+# hist(dane$squareMeters)
+# hist(dane$rooms)
+# hist(dane$floor)
+# hist(dane$floorCount)
+# hist(dane$buildYear)
+# hist(dane$centreDistance)
+# hist(dane$poiCount)
+# hist(dane$schoolDistance)
+# hist(dane$clinicDistance)
+# hist(dane$postOfficeDistance)
+# hist(dane$kindergartenDistance)
+# hist(dane$restaurantDistance)
+# hist(dane$collegeDistance)
+# hist(dane$pharmacyDistance)
+# hist(dane$buildingAge)
+```
 
-for (var in variables) {
+```{r tabela_wynikow, eval=TRUE, echo=FALSE, results='asis'}
+skewness_values <- c(find_skewness(dane, value=TRUE, thres=0.1))
+z_score_outliers <- c(
+  price = 478, squareMeters = 365, pricePerSquareMeter = 16, 
+  rooms = 141, floor = 371, floorCount = 388, buildingAge = 142, 
+  centreDistance = 115, schoolDistance = 410, clinicDistance = 450, 
+  postOfficeDistance = 401, kindergartenDistance = 409, 
+  restaurantDistance = 388, collegeDistance = 188, pharmacyDistance = 410, 
+  poiCount = 568, buildYear = 142
+)
 
-  test_result <- grubbs.test(dane[[var]])
-  print(test_result)
-}
+variable_names <- intersect(names(skewness_values), names(z_score_outliers))
 
+results_table <- data.frame(
+  Z_Score = z_score_outliers[variable_names],
+  Skewness = skewness_values[variable_names]
+)
 
-# Mediana i średnia dla price
-median_price <- median(dane$price)
-mean_price <- mean(dane$price)
+Interpretacje <- c(
+  squareMeters = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – zalecana transformacja logarytmiczna.",
+  rooms = "Stosunkowo niewiele wartości odstających i umiarkowana skośność – transformacja nie jest konieczna.",
+  price = "Wysoka liczba wartości odstających i umiarkowana skośność sugerują konieczność transformacji (np. logarytmowej).",
+  floor = "Duża liczba wartości odstających i wysoka skośność prawostronna – zalecana transformacja, np. logarytmiczna.",
+  floorCount = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – warto rozważyć transformację.",
+  buildYear = "Niewielka liczba wartości odstających, ale ujemna skośność – może wymagać analizy kontekstowej.",
+  centreDistance = "Umiarkowana liczba wartości odstających, niewielka skośność – transformacja opcjonalna.",
+  schoolDistance = "Wysoka liczba wartości odstających i bardzo silna skośność prawostronna – konieczna transformacja.",
+  poiCount = "Duża liczba wartości odstających i silna skośność prawostronna – transformacja logarytmiczna.",
+  clinicDistance = "	Duża liczba wartości odstających i umiarkowana skośność prawostronna – warto zastosować transformację.",
+  postOfficeDistance = "Duża liczba wartości odstających i wysoka skośność – transformacja zalecana.",
+  kindergartenDistance = "Bardzo silna skośność i duża liczba wartości odstających – konieczna transformacja.",
+  restaurantDistance = "Wysoka liczba wartości odstających i mocna skośność prawostronna – transformacja logarytmiczna.",
+  collegeDistance = "Umiarkowana liczba wartości odstających, niewielka skośność – opcjonalna transformacja.",
+  pharmacyDistance = "Silna skośność prawostronna i liczne wartości odstające – transformacja logarytmiczna.",
+  pricePerSquareMeter = "Brak potrzeby transformacji ze względu na małą liczbę odstających i niewielką skośność.",
+  buildingAge = "Umiarkowana liczba wartości odstających, stosunkowo niewielka skośność – opcjonalna transformacja."
+)
 
-# Mediana i średnia dla SquareMeters
-median_squareMeters <- median(dane$squareMeters)
-mean_squareMeters <- mean(dane$squareMeters)
+results_table$Interpretacja <- Interpretacje[variable_names]
 
-# Mediana i średnia dla pricePerSquareMeter
-median_pricePerSquareMeter <- median(dane$pricePerSquareMeter)
-mean_pricePerSquareMeter <- mean(dane$pricePerSquareMeter)
-
-# Mediana i średnia dla BuildingAge
-median_buildingAge <- median(dane$buildingAge)
-mean_buildingAge <- mean(dane$buildingAge)
-
-# Mediana i średnia dla Latitude
-median_latitude <- median(dane$latitude)
-mean_latitude <- mean(dane$latitude)
-
-# Mediana i średnia dla Longitude
-median_longitude <- median(dane$longitude)
-mean_longitude <- mean(dane$longitude)
+knitr::kable(results_table, caption = "Wyniki Z-Score oraz skośności")
 
 ```
 
-Do analizy obserwacji odstających posłużono się testem Grubbsa. W teście stwierdzono, że:
+### **Podsumowanie**:
 
-1)  ***dla squareMaters wartość 150 jest potencjalnie odstającym wynikiem. Jednakże z p-value wynoszącym 0.06864, co jest większe niż 0.05, uznano, że nie ma wystarczających dowodów, aby tę hipotezę odrzucić. Mediana dla squareMeters wynosi 52.81, a średnia 56.97. Obie te wartości są bliskie sobie, co wskazuje, że dane są rozłożone stosunkowo równomiernie, a różnice między nimi nie są duże. To sugeruje, że wartość 150 nie jest skrajnie różna od pozostałych danych. Wartość ta, choć wyraźnie wyższa, mieści się w szerszym kontekście rozkładu, gdyż mediana i średnia wskazują na brak silnych odchyleń w danych.***
+-   **Transformacje logarytmiczne:** dla zmiennych o dużej liczbie wartości odstających i wysokiej skośności prawostronnej (poiCount, schoolDistance, clinicDistance, postOfficeDistance).
+-   **Transformacje pierwiastkowe:** dla zmiennych z umiarkowaną asymetrią, ale dużą liczbą wartości odstających (squareMeters, floorCount).
+-   **Transformacje opcjonalne:** dla zmiennych o umiarkowanej liczbie wartości odstających i niewielkiej skośności (collegeDistance, buildingAge).
+-   **Brak transformacji:** dla zmiennych o minimalnej liczbie wartości odstających i małej skośności (pricePerSquareMeter, rooms).
 
-2)  **dla price wartość 3 000 000 jest wartością odstającą. Zgodnie z wynikiem testu Grubbsa, statystyka G wynosi 5.04755, p-value (0.004775) jest poniżej progu 0.05, co oznacza, że wynik jest statystycznie istotny. Należy ją traktować jako rzadki, ale możliwy przypadek bardzo drogiej nieruchomości. Boxplot pokazuje, że ta wartość nie jest błędem, lecz wynikiem specyficznej sytuacji na rynku.**
-
-3)  **dla pricePerSquareMeter Test Grubbsa dał wyniki, że najwyższa wartość 30 702.75 jest potencjalną wartością odstającą. Wynik p-value = (1) sugeruje, że nie powinniśmy odrzucać hipotezy zerowej, przez co nie uznano tej wartości za wartość odstającą i mieści się ona w ogólnym rozkładzie.**
-
-    **#Sprawdzić p=1 (rzadko spotykane)**
-
-    **#mamy wartosci odstajace/review/change**
-
-4)  dla rooms Test Grubbsa **wykazał**, że wartość 6 jest wartością odstającą (p-value = 1). Choć wartość ta jest najwyższa w zbiorze, brak dowodów na jej odstępstwo od reszty danych oznacza, że mieści się w ogólnym rozkładzie. Jednostka mieszkalna posiadająca 6 pomieszczeń zdarza się w rzeczywistości i nie jest błędem, a rzadkim i możliwym przypadkiem, który mieści się w ogólnym rozkładzie.
-
-5)  dla floor odstająca obserwacja wynosi 29. Wynik p-value mniejszy niż 2.2e-16 sugeruje, że ta wartość jest statystycznie istotnie różna od reszty danych, co wskazuje, że jest to wyjątkowy przypadek. Mimo to, nie może zostać pominięta w badaniach zbioru, gdyż nie wynika z błędu, a z rzadkiej sytuacji, gdy nieruchomość znajduje się w wieżowcu na 29 pietrze. Dla floorCount zastosowano podobną zasadę.
-
-6)  dla buildingAge obserwacja odstająca wynosi 174. Nie jest to wynikiem błędu; w danych sprzedaży znalazły się również nieruchomości zabytkowe, mające ponad 50 lat. Mimo tego, że wartość ta jest znacząco wyższa od mediany i średniej, powinna zostać w badanym zbiorze. Tak znaczące ekstremum może wskazywać na wyjątkową pod względem wieku nieruchomość, np. dworek, zamek, kamienicę.
-
-7)  dla Latitude obserwacją odstającą jest 54.58287; jednakże nie odbiega istotnie od przeciętnych wartości w zbiorze.
-
-8)  dla Longitude obserwacja odstająca jest 14.4471272; nie odbiega jednak ona znacząco od średniej i mediany w tym zbiorze.
-
-9)  w CentreDistance, SchoolDistance, ClinicDistance, PostOfficeDistance, KindergardenDsitance, RestaurantDistance, CollegeDistance oraz PharamcyDistance zaobserwowane odstające co prawda są oddalone od reszty danych, jednak ich odległość nie jest wystarczająco duża, by znacząco wpłynęły na ogólną charakterystykę danych zbiorów. Z tego względu zostały one uwzględnione w dalszej analizie, ponieważ mogą reprezentować istotne, choć rzadkie przypadki w danych.
-
-Pomimo zauważenia kilku obserwacji odstających w naszym zbiorze danych, żadna z nich nie została wykluczona z dalszej analizy. Żadna z obserwacji nie odbiega znacząco od średnich w danych rozkładach i mieszczą się w ich schemacie.
-
-W kontekście rynku nieruchomości takie wartości mogą być naturalne, choć rzadkie, i stanowić istotną część analizowanych danych. Nie są one błędami pomiarów, a wzięte pod uwagę znacznie uatrakcyjnią i oddadzą rzeczywisty obraz naszych badań.
-
-```{r dodanie_nowych_danych}
+```{r dodanie_nowych_danych, eval=TRUE, echo=FALSE}
 # Wczytanie granic admistracyjnych województw
+gml_file <- "ms_A01_Granice_wojewodztw.gml"
 
 # Wczytanie danych przestrzennych
 wojewodztwa <- st_read(gml_file)
