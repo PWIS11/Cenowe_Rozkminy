@@ -133,7 +133,10 @@ dane[dane == ""] <- NA
 
 ## **Obserwacje brakujące**
 
-Klasyfikacja braków danych w zbiorze:
+Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny braków w zbiorze danych. 
+Wizualizacje, takie jak **wykresy słupkowe** prezentujące procent brakujących wartości w poszczególnych zmiennych oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe zależności w danych.
+
+Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej zrozumieć przyczyny ich występowania.
 
 -   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich jak hasElevator i collegeDistance są losowe i wynikają z technicznych pominięć w zbieraniu danych.
 
@@ -141,7 +144,8 @@ Klasyfikacja braków danych w zbiorze:
 
 -   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
 
-**Może opis jak zamierzamy je badać i dlaczego ? Typu - zdecydowaliśmy się wykonać wykres taki i taki aby zbadać coś tam**
+
+Dzięki tym wstępnym analizom możliwe jest odpowiednie dobranie metod imputacji (np. medianą, modą lub bardziej zaawansowanymi metodami), a także ewentualne usunięcie zmiennych, w których braki są zbyt liczne i niemożliwe do uzupełnienia bez znaczącej utraty jakości danych.
 
 ```{r obserwacje_brakujace_wykresy, echo=FALSE, comment=FALSE}
 missing_summary <- miss_var_summary(dane)
@@ -346,7 +350,7 @@ Tu pojawi się opis :) **ZAPYTAC SIE CZEMU JAK GENERUJE SIE HTML ROBI SIE TAKA P
 
 ```{r skosnosc, echo = FALSE, eval = TRUE}
 # hist(dane$squareMeters)
-# hist(dane$rooms)
+# hist(dane$price)
 # hist(dane$floor)
 # hist(dane$floorCount)
 # hist(dane$buildYear)
@@ -363,7 +367,7 @@ Tu pojawi się opis :) **ZAPYTAC SIE CZEMU JAK GENERUJE SIE HTML ROBI SIE TAKA P
 ```
 
 ```{r tabela_wynikow, eval=TRUE, echo=FALSE, results='asis'}
-skewness_values <- c(find_skewness(dane, value=TRUE, thres=0.1))
+skewness_values <- c(find_skewness(dane, value=TRUE, thres=0.1), price = "-")
 z_score_outliers <- c(
   price = 478, squareMeters = 365, pricePerSquareMeter = 16, 
   rooms = 141, floor = 371, floorCount = 388, buildingAge = 142, 
@@ -383,7 +387,7 @@ results_table <- data.frame(
 Interpretacje <- c(
   squareMeters = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – zalecana transformacja logarytmiczna.",
   rooms = "Stosunkowo niewiele wartości odstających i umiarkowana skośność – transformacja nie jest konieczna.",
-  price = "Wysoka liczba wartości odstających i umiarkowana skośność sugerują konieczność transformacji (np. logarytmowej).",
+  price = "Wysoka liczba wartości odstających sugeruje konieczność transformacji (np. logarytmowej), jednak nie otrzymaliśmy wyniku skośności",
   floor = "Duża liczba wartości odstających i wysoka skośność prawostronna – zalecana transformacja, np. logarytmiczna.",
   floorCount = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – warto rozważyć transformację.",
   buildYear = "Niewielka liczba wartości odstających, ale ujemna skośność – może wymagać analizy kontekstowej.",
