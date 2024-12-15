@@ -87,8 +87,6 @@ Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby lepiej zr
 
 Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki wpływające na ceny mieszkań oraz umożliwią stworzenie użytecznych modeli predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
 
-5.  Czy wiek mieszkania ma taki sam wpływ na jego cenę w centrum jak na obrzeżach?
-
 ## **Opis danych**
 
 Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa mieszkań.
@@ -115,6 +113,15 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
 
 ## **Dane dodatkowe**
 
+W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się wzbogacić nasz zbiór o **granice administracyjne województw**. Dane te zostały pobrane z pliku **`ms_A01_Granice_wojewodztw`** i umożliwiły przypisanie każdego miasta do odpowiedniego województwa.
+
+### **Cel dodania danych:**
+
+-   **Przypisanie lokalizacji mieszkań do województw**,\
+-   **Przeprowadzenie analiz regionalnych**, aby lepiej zrozumieć różnice w cenach i cechach mieszkań w różnych częściach Polski.
+
+Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku nieruchomości na poziomie miast, ale także **porównanie wyników w kontekście regionalnym**.
+
 ## **Znaczenie projektu**
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
@@ -129,12 +136,13 @@ dane$id <- 1:nrow(dane)
 dane[dane == ""] <- NA
 ```
 
+ #**Data validation**
+
 # **Data wrangling**
 
 ## **Obserwacje brakujące**
 
-Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny braków w zbiorze danych. 
-Wizualizacje, takie jak **wykresy słupkowe** prezentujące procent brakujących wartości w poszczególnych zmiennych oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe zależności w danych.
+Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny braków w zbiorze danych. Wizualizacje, takie jak **wykresy słupkowe** prezentujące procent brakujących wartości w poszczególnych zmiennych oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe zależności w danych.
 
 Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej zrozumieć przyczyny ich występowania.
 
@@ -143,7 +151,6 @@ Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej zrozum
 -   **MAR (Missing At Random)**: Braki w kolumnach condition, buildingMaterial, oraz floor wynikają z powiązań między zmiennymi, np. type i floorCount.
 
 -   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
-
 
 Dzięki tym wstępnym analizom możliwe jest odpowiednie dobranie metod imputacji (np. medianą, modą lub bardziej zaawansowanymi metodami), a także ewentualne usunięcie zmiennych, w których braki są zbyt liczne i niemożliwe do uzupełnienia bez znaczącej utraty jakości danych.
 
@@ -230,31 +237,13 @@ dane <- subset(dane, select = -condition)
 ################################################################################
 ```
 
-```{r dodatkowe_kolumny1}
+```{r Dodanie_dodatkowych_kolumn_cena_za_metr_wiek_mieszkania}
 # Dodanie kolumny z ceną za metr kwadratowy
 dane$pricePerSquareMeter <- dane$price / dane$squareMeters
 
 # Dodanie kolumny z wiekiem mieszkania
 currentYear <- format(Sys.Date(), "%Y")
 dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
-
-# Tworzenie kategorii wieku mieszkań
-dane$buildingCategory <- cut(
-  dane$buildingAge,
-  breaks = c(-Inf, 5, 20, 50, Inf),
-  labels = c("Nowe", "Średnie", "Stare", "Zabytkowe"),
-  right = FALSE
-)
-
-# Konwersja na character, dodanie "Nieokreślone", a następnie ponownie na factor
-dane$buildingCategory <- as.character(dane$buildingCategory)
-dane$buildingCategory[is.na(dane$buildingAge)] <- "Nieokreślone"
-dane$buildingCategory <- factor(dane$buildingCategory, levels = c("Nowe", "Średnie", "Stare", "Zabytkowe"))
-
-#table(na.omit(dane$buildingCategory))
-#sprawdzić czy nieokreślone ma dalej sens po uzupełnieniu danych
-# Sprawdzenie wyników
-#table(dane$buildingCategory)
 ```
 
 ## **Obserwacje odstające**
@@ -304,27 +293,115 @@ dane$pharmacyDistance <- as.numeric(dane$pharmacyDistance)
 dane$floorCount <- as.numeric(dane$floorCount)
 ```
 
-```{r boxplot_odst, fig.height=10,fig.width=10, echo=FALSE}
-par(mfrow = c(3, 3))  # 3 wiersze, 4 kolumny
-ploti1 <- boxplot(dane$squareMeters, main = "Square Meters", col = "skyblue")
-ploti2 <- boxplot(dane$price, main = "Price", col = "plum")
-ploti3 <- boxplot(dane$pricePerSquareMeter, main = "pricePerSquareMeter", col = "peachpuff")
-ploti4 <- boxplot(dane$rooms, main = "Rooms", col = "palegreen2")
-ploti5 <- boxplot(dane$floor, main = "Floors", col = "powderblue")
-ploti6 <- boxplot(dane$floorCount, main = "FloorCount", col = "thistle3")
-ploti7 <- boxplot(dane$buildingAge, main = "BuildingAge", col = "salmon")
-ploti10 <- boxplot(dane$centreDistance, main = "CentreDistance", col = "pink4")
-ploti11 <- boxplot(dane$schoolDistance, main = "SchoolDistance", col = "pink")
-ploti12 <- boxplot(dane$clinicDistance, main = "ClinicDistance", col = "orange")
-ploti13 <- boxplot(dane$postOfficeDistance, main = "PostOfficeDistance", col = "coral")
-ploti14 <- boxplot(dane$kindergartenDistance, main = "KindergardenDistance", col = "lavender")
-ploti15 <- boxplot(dane$restaurantDistance, main = "RestaurantDistance", col = "khaki")
-ploti16 <- boxplot(dane$collegeDistance, main = "CollegeDistance", col = "indianred")
-ploti17 <- boxplot(dane$pharmacyDistance, main = "PharmacyDistance", col = "lavenderblush2")
-par(mfrow = c(1, 1)) 
+```{r boxplot_odst, fig.height=10, fig.width=10, echo=FALSE, fig.show='hold'}
+# Renderowanie pierwszej strony (9 wykresów)
+par(mfrow = c(3, 3))  # Układ 3x3
+boxplot(dane$squareMeters, main = "Square Meters", col = "skyblue")
+boxplot(dane$price, main = "Price", col = "plum")
+boxplot(dane$pricePerSquareMeter, main = "PricePerSquareMeter", col = "peachpuff")
+boxplot(dane$rooms, main = "Rooms", col = "palegreen2")
+boxplot(dane$floor, main = "Floors", col = "powderblue")
+boxplot(dane$floorCount, main = "FloorCount", col = "thistle3")
+boxplot(dane$buildingAge, main = "BuildingAge", col = "salmon")
+boxplot(dane$centreDistance, main = "CentreDistance", col = "pink4")
+boxplot(dane$schoolDistance, main = "SchoolDistance", col = "pink")
+
+# Resetowanie układu
+par(mfrow = c(2, 3))  # Układ 2x3 dla 6 miejsc
+
+# Renderowanie drugiej strony (5 wykresów + puste miejsce)
+boxplot(dane$clinicDistance, main = "ClinicDistance", col = "orange")
+boxplot(dane$postOfficeDistance, main = "PostOfficeDistance", col = "coral")
+boxplot(dane$kindergartenDistance, main = "KindergardenDistance", col = "lavender")
+boxplot(dane$restaurantDistance, main = "RestaurantDistance", col = "khaki")
+boxplot(dane$collegeDistance, main = "CollegeDistance", col = "indianred")
+boxplot(dane$pharmacyDistance, main = "PharmacyDistance", col = "lavenderblush2")
+
 ```
 
-Tu pojawi się opis :) **ZAPYTAC SIE CZEMU JAK GENERUJE SIE HTML ROBI SIE TAKA PRZERWA MIEDZY OPISEM A WYKRESAMI**
+## **Interpretacja wyników wykresów pudełkowych**
+
+Przeprowadzona analiza wykresów pudełkowych pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pokoi oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (mediana, kwartyle) oraz **wartości odstających**, które wykraczają poza zakres wyznaczony przez *wąsy*.\
+Wartości odstające są szczególnie istotne, ponieważ mogą wskazywać na specyficzne obserwacje, takie jak:
+
+-   **Nieruchomości luksusowe** lub o nietypowej wielkości i cenie,\
+-   **Mieszkania położone w trudno dostępnych lokalizacjach**,\
+-   **Nieruchomości w starszych budynkach** lub obszarach o słabo rozwiniętej infrastrukturze.
+
+Poniżej przedstawiono szczegółową interpretację wyników dla każdej z analizowanych zmiennych.
+
+------------------------------------------------------------------------
+
+**Square Meters (Powierzchnia mieszkań):**\
+- Mediana powierzchni wynosi około **50-60 m²**.\
+- Większość mieszkań mieści się w zakresie **40-80 m²**.\
+- **Wartości odstające** powyżej **100 m²** wskazują na większe apartamenty lub luksusowe nieruchomości.
+
+**Price (Cena mieszkań):**\
+- Mediana ceny mieszkań wynosi około **750 tys. zł**.\
+- Typowe wartości mieszczą się w przedziale **500 tys. – 1 mln zł**.\
+- Liczne **wartości odstające** powyżej **2,5 mln zł** sugerują obecność luksusowych nieruchomości w analizowanym zbiorze.
+
+**PricePerSquareMeter (Cena za m²):**\
+- Mediana wynosi około **15 000 zł/m²**, a większość wartości mieści się w zakresie **10 000 – 20 000 zł/m²**.\
+- **Wartości odstające** przekraczające **30 000 zł/m²** mogą wynikać z mieszkań położonych w bardzo prestiżowych lokalizacjach.
+
+**Rooms (Liczba pokoi):**\
+- Typowe mieszkania mają **2-3 pokoje**, co potwierdza mediana.\
+- **Wartości odstające** (4-6 pokoi) mogą wskazywać na większe mieszkania lub apartamenty rodzinne.
+
+**Floors (Piętro):**\
+- Mediana piętra to około **2**.\
+- Większość mieszkań znajduje się na **1-5 piętrze**.\
+- **Wartości odstające** powyżej **15 piętra** sugerują obecność mieszkań w wieżowcach.
+
+**FloorCount (Liczba pięter w budynku):**\
+- Typowe budynki mają **4-6 pięter**.\
+- **Wartości odstające** powyżej **15 pięter** wskazują na obecność wysokich budynków mieszkalnych.
+
+**BuildingAge (Wiek budynku):**\
+- Mediana wieku budynków wynosi około **50 lat**.\
+- Budynki mające więcej niż **100 lat** to **wartości odstające**, co sugeruje obecność starszych, często zabytkowych nieruchomości.
+
+**CentreDistance (Odległość od centrum):**\
+- Typowa odległość to **2-8 km**.\
+- **Wartości odstające** powyżej **15 km** wskazują na nieruchomości położone na przedmieściach lub w odległych lokalizacjach.
+
+**SchoolDistance (Odległość od szkoły):**\
+- Większość szkół znajduje się w odległości **do 1 km**.\
+- **Wartości odstające** powyżej **4 km** mogą świadczyć o gorszej dostępności edukacji w analizowanych lokalizacjach.
+
+**ClinicDistance (Odległość od kliniki):**\
+- Kliniki są najczęściej położone **do 1 km** od mieszkań.\
+- **Wartości odstające** powyżej **3 km** wskazują na obszary o niższym dostępie do opieki zdrowotnej.
+
+**PostOfficeDistance (Odległość od poczty):**\
+- Typowa odległość wynosi **0-1 km**.\
+- **Wartości odstające** powyżej **4 km** mogą wynikać z mniej zurbanizowanych obszarów.
+
+**KindergardenDistance (Odległość od przedszkola):**\
+- Przedszkola znajdują się głównie **do 1 km** od mieszkań.\
+- **Wartości odstające** powyżej **3 km** sugerują problemy z dostępem do usług dla rodzin z dziećmi.
+
+**RestaurantDistance (Odległość od restauracji):**\
+- Restauracje znajdują się typowo **do 1 km** od mieszkań.\
+- **Wartości odstające** powyżej **5 km** wskazują na peryferyjne lokalizacje z ograniczoną ofertą gastronomiczną.
+
+**CollegeDistance (Odległość od uczelni):**\
+- Typowa odległość wynosi **1-2 km**.\
+- **Wartości odstające** do **5 km** sugerują lokalizacje mniej centralne pod względem infrastruktury edukacyjnej.
+
+**PharmacyDistance (Odległość od apteki):**\
+- Apteki znajdują się zazwyczaj **do 1 km** od mieszkań.\
+- **Wartości odstające** powyżej **4 km** wskazują na obszary o ograniczonym dostępie do usług farmaceutycznych.
+
+------------------------------------------------------------------------
+
+## **Podsumowanie**
+
+Analiza wykresów pudełkowych potwierdziła występowanie wartości odstających w każdej z badanych zmiennych. Są one szczególnie istotne, ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości – luksusowe mieszkania, nieruchomości historyczne lub obszary z ograniczoną infrastrukturą.
+
+Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych krokach rozważyć, czy te obserwacje powinny zostać zachowane jako istotne dla analizy, czy też przekształcone lub usunięte w zależności od kontekstu biznesowego i analitycznego.
 
 ### Z-score oraz skośność
 
