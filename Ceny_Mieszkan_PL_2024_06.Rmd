@@ -167,21 +167,24 @@ ggplot(missing_summary, aes(x = reorder(variable, -pct_miss), y = pct_miss)) +
 ```
 
 ```{r obserwacje_brakujace_wykresy_2, echo=FALSE}
-vismiss <- vis_miss(dane) +
-  labs(
-    title = "Braki danych w zbiorze",
-    x = "Zmienne",
-    y = "Obserwacje"
-  ) +
-  theme_minimal(base_size = 10) + 
-  scale_fill_manual(values = c("lightyellow", "orchid3"),
-                    name = "Status danych",
-                    labels = c("Dane obecne", "Braki danych")) +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(angle = 45, hjust = 0.2)
-  )
-print(vismiss)
+suppressMessages({
+  vismiss <- vis_miss(dane) +
+    scale_fill_manual(values = c("lightyellow", "orchid3"),
+                      name = "Status danych",
+                      labels = c("Dane obecne", "Braki danych")) +
+    labs(
+      title = "Braki danych w zbiorze",
+      x = "Zmienne",
+      y = "Obserwacje"
+    ) +
+    theme_minimal(base_size = 10) + 
+    theme(
+      plot.title = element_text(hjust = 0.5),
+      axis.text.x = element_text(angle = 45, hjust = 0.2)
+    )
+  
+  print(vismiss)
+})
 ```
 
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na kilka grup pod względem liczby braków:
@@ -196,9 +199,19 @@ Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na
 
 -   **Kolumny bez braków:** Pozostałe zmienne, takie jak price, squareMeters czy rooms, są kompletne i nie wymagają dodatkowych działań.
 
-```{r wzorce_brakow}
-aggr(dane, col = c("lightyellow", "orchid3"), numbers = TRUE, sortVars = TRUE,
-     labels = names(data), cex.axis = 0.7, gap = 3, ylab = c("Procent braków", "Wzorce braków"))
+```{r wzorce_brakow, echo=FALSE, warning=FALSE, message=FALSE}
+# Zwiększenie rozmiaru wykresu
+options(repr.plot.width = 14, repr.plot.height = 10)
+
+# Tworzenie wykresu z jeszcze mniejszymi czcionkami
+aggr(dane, 
+     col = c("lightyellow", "orchid3"), 
+     numbers = TRUE, 
+     sortVars = TRUE,
+     labels = names(dane), 
+     cex.axis = 0.4, # Zmniejszenie czcionki osi
+     gap = 1.5,      # Zmniejszenie odstępów między elementami
+     ylab = c("Procent braków", "Wzorce braków"))
 ```
 
 ### Imputacja medianą oraz modą
@@ -423,6 +436,18 @@ Poniżej przedstawiono szczegółową interpretację wyników dla każdej z anal
 # length(which(abs(scale(dane$buildYear)) > 3))
 ```
 
+<a id="centreDistancePlot"></a>
+<a id="poiCountPlot"></a>
+<a id="schoolDistancePlot"></a>
+<a id="clinicDistancePlot"></a>
+<a id="postOfficeDistancePlot"></a>
+<a id="kindergartenDistancePlot"></a>
+<a id="restaurantDistancePlot"></a>
+<a id="collegeDistancePlot"></a>
+<a id="pharmacyDistancePlot"></a>
+
+
+
 ```{r skosnosc, echo = FALSE, eval = TRUE, fig.height=6, fig.width=8}
 par(mfrow = c(3, 3))  # Układ 3x3
 hist(na.omit(dane$centreDistance), 
@@ -529,7 +554,12 @@ curve(dnorm(x, mean = mean(na.omit(dane$pharmacyDistance)),
       lwd = 2, 
       add = TRUE)
 ```
-
+<a id="buildingAgePlot"></a>
+<a id="squareMetersPlot"></a>
+<a id="pricePlot"></a>
+<a id="floorPlot"></a>
+<a id="floorCountPlot"></a>
+<a id="buildYearPlot"></a>
 
 ```{r skosnosc_hist2, echo = FALSE, eval = TRUE, fig.height=4, fig.width=8}
 par(mfrow = c(2, 3))  # Układ 3x3
@@ -606,6 +636,89 @@ curve(dnorm(x, mean = mean(na.omit(dane$buildYear)),
       add = TRUE)
 ```
 
+
+#### **Interpretacja wyników histogramów**
+
+Przeprowadzona analiza histogramów pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pięter oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (dominanty, gęstość wartości) oraz **wartości odstających**, które znajdują się na krańcach rozkładów.  
+Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy punkt odniesienia do oceny kształtu rozkładów. Pozwalają one zidentyfikować:  
+
+- **Odstępstwa od normalności**, takie jak skośność czy wielomodalność,  
+- **Stopień zgodności rozkładów empirycznych z teoretycznym rozkładem normalnym**,  
+- **Przesunięcia względem środka rozkładu** sugerujące koncentrację danych.  
+
+---
+
+**[centreDistance](#centreDistancePlot):**
+- Rozkład jest **prawoskośny** z koncentracją wartości w zakresie **2-8 km**.  
+- Linia rozkładu normalnego pokazuje, że rozkład empiryczny jest odchylony w prawo.  
+- Wartości powyżej **10 km** stanowią odstępstwa, które wskazują na nieruchomości w peryferyjnych lokalizacjach, co jest nietypowe dla większości analizowanych danych.
+
+**[poiCount](#poiCountPlot)** 
+- Histogram pokazuje **wysoce prawoskośny** rozkład, gdzie większość obserwacji znajduje się poniżej **50**.  
+- Linia rozkładu normalnego podkreśla duże odchylenie od symetrii, co sugeruje, że większość lokalizacji ma ograniczoną liczbę punktów użyteczności publicznej, natomiast pojedyncze przypadki z bardzo dużymi wartościami (powyżej **100**) są wyjątkami.
+
+**[schoolDistance](#schoolDistancePlot)**  
+- Rozkład odległości jest **prawoskośny**, z dominacją wartości **0-1 km**.  
+- Linia normalna nie pasuje do rozkładu, co wskazuje na silną koncentrację danych blisko **0 km**.  
+- Wartości odstające powyżej **3 km** sugerują lokalizacje z ograniczonym dostępem do szkół.
+
+**[clinicDistance](#clinicDistancePlot)**  
+- Histogram pokazuje **prawoskośny rozkład**, z większością wartości w przedziale **do 1 km**.  
+- Linia rozkładu normalnego wyraźnie nie oddaje koncentracji danych w niższych wartościach.  
+- Wartości powyżej **3 km** sugerują trudniejszy dostęp do opieki zdrowotnej w mniej zurbanizowanych obszarach.
+
+**[postOfficeDistance](#postOfficeDistancePlot)**  
+- Rozkład jest **prawoskośny**, z typowymi wartościami **0,5–1 km**.  
+- Linia rozkładu normalnego wskazuje na istotne odchylenie od normalności, co podkreśla silne skupienie danych w niższych przedziałach.
+
+**[restaurantDistance](#restaurantDistancePlot)**  
+- Histogram ujawnia koncentrację wartości w zakresie **do 1 km** z pojedynczymi przypadkami powyżej **3 km**.  
+- Przesunięcie względem linii normalnej podkreśla ograniczoną liczbę nieruchomości o znacznej odległości od restauracji.
+
+**[collegeDistance](#collegeDistancePlot)**  
+- Wartości typowe mieszczą się w przedziale **1–2 km**, natomiast histogram jest **lekko prawoskośny**.  
+- Linia rozkładu normalnego dobrze przybliża dane w środkowej części, jednak widać odchylenia w wyższych wartościach (powyżej **4 km**).
+
+**[pharmacyDistance](#pharmacyDistancePlot)** 
+- Histogram jest **silnie prawoskośny**, z wartościami typowymi **do 1 km**.  
+- Linia normalna nie jest dopasowana, co sugeruje, że rozkład empiryczny jest skupiony na jednym krańcu.
+
+---
+
+**[squareMeters](#squareMetersPlot)** 
+- Rozkład powierzchni mieszkań jest **prawoskośny**, z wartościami dominującymi w przedziale **40–80 m²**.  
+- Linia rozkładu normalnego sugeruje większą symetrię niż istnieje w danych.  
+- **Wartości odstające** powyżej **100 m²** wskazują na duże apartamenty, które są nietypowe.
+
+**[price](#pricePlot)**
+- Histogram jest **wysoce prawoskośny**, z typowymi cenami **500 tys. – 1 mln zł**.  
+- Rozkład empiryczny jest znacznie przesunięty względem linii normalnej, co podkreśla nierównomierną strukturę cen na rynku.
+
+**[floor](#floorPlot)** 
+- Większość mieszkań znajduje się na **1-5 piętrze**.  
+- Linia rozkładu normalnego odbiega od rzeczywistego kształtu, który jest **skośny**, z kilkoma wartościami odstającymi powyżej **15 piętra**.
+
+**[floorCount](#floorCountPlot)** 
+- Rozkład pokazuje, że typowe budynki mają **4-6 pięter**.  
+- Linia normalna nie oddaje koncentracji w niskich wartościach oraz odstępstw w wysokich budynkach.
+
+**[buildingAge](#buildingAgePlot)** 
+- Histogram wskazuje, że większość budynków ma mniej niż **50 lat**.  
+- Rozkład jest prawoskośny, a linia normalna sugeruje większą symetrię niż rzeczywiście istnieje.
+
+**[buildYear](#buildYearPlot)** 
+- Rozkład pokazuje koncentrację budynków wybudowanych po **1950 roku**.  
+- Linia normalna dobrze dopasowuje się do danych, jednak rozkład jest lekko przesunięty ku nowszym budynkom.
+
+---
+
+## **Podsumowanie**  
+Analiza histogramów, w połączeniu z linią rozkładu normalnego, dostarczyła następujących wniosków:  
+- **Większość rozkładów jest prawoskośna**, co sugeruje koncentrację wartości w niższych przedziałach oraz obecność kilku wartości odstających.  
+- Linie normalne pozwoliły zidentyfikować rozbieżności między rozkładami empirycznymi a teoretycznym rozkładem normalnym.  
+- **Wartości odstające** są widoczne w wielu zmiennych, zwłaszcza w powierzchni mieszkań, cenach oraz odległościach do punktów użyteczności publicznej.  
+
+Wyniki te potwierdzają specyfikę rynku nieruchomości, gdzie typowe wartości są skoncentrowane w określonych zakresach, a odstępstwa wskazują na szczególne przypadki, które mogą być analizowane osobno.
 
 
 ```{r tabela_wynikow, eval=TRUE, echo=FALSE, results='asis'}
