@@ -305,7 +305,10 @@ boxplot(dane$floorCount, main = "FloorCount", col = "thistle3")
 boxplot(dane$buildingAge, main = "BuildingAge", col = "salmon")
 boxplot(dane$centreDistance, main = "CentreDistance", col = "pink4")
 boxplot(dane$schoolDistance, main = "SchoolDistance", col = "pink")
+```
 
+
+```{r boxplot_odst2, fig.height=7, fig.width=10, echo=FALSE, fig.show='hold'}
 # Resetowanie układu
 par(mfrow = c(2, 3))  # Układ 2x3 dla 6 miejsc
 
@@ -316,10 +319,11 @@ boxplot(dane$kindergartenDistance, main = "KindergardenDistance", col = "lavende
 boxplot(dane$restaurantDistance, main = "RestaurantDistance", col = "khaki")
 boxplot(dane$collegeDistance, main = "CollegeDistance", col = "indianred")
 boxplot(dane$pharmacyDistance, main = "PharmacyDistance", col = "lavenderblush2")
-
 ```
 
-## **Interpretacja wyników wykresów pudełkowych**
+
+
+#### **Interpretacja wyników wykresów pudełkowych**
 
 Przeprowadzona analiza wykresów pudełkowych pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pokoi oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (mediana, kwartyle) oraz **wartości odstających**, które wykraczają poza zakres wyznaczony przez *wąsy*.\
 Wartości odstające są szczególnie istotne, ponieważ mogą wskazywać na specyficzne obserwacje, takie jak:
@@ -397,12 +401,6 @@ Poniżej przedstawiono szczegółową interpretację wyników dla każdej z anal
 
 ------------------------------------------------------------------------
 
-## **Podsumowanie**
-
-Analiza wykresów pudełkowych potwierdziła występowanie wartości odstających w każdej z badanych zmiennych. Są one szczególnie istotne, ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości – luksusowe mieszkania, nieruchomości historyczne lub obszary z ograniczoną infrastrukturą.
-
-Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych krokach rozważyć, czy te obserwacje powinny zostać zachowane jako istotne dla analizy, czy też przekształcone lub usunięte w zależności od kontekstu biznesowego i analitycznego.
-
 ### Z-score oraz skośność
 
 ```{r z-score, echo = FALSE}
@@ -425,23 +423,190 @@ Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym m
 # length(which(abs(scale(dane$buildYear)) > 3))
 ```
 
-```{r skosnosc, echo = FALSE, eval = TRUE}
-# hist(dane$squareMeters)
-# hist(dane$price)
-# hist(dane$floor)
-# hist(dane$floorCount)
-# hist(dane$buildYear)
-# hist(dane$centreDistance)
-# hist(dane$poiCount)
-# hist(dane$schoolDistance)
-# hist(dane$clinicDistance)
-# hist(dane$postOfficeDistance)
-# hist(dane$kindergartenDistance)
-# hist(dane$restaurantDistance)
-# hist(dane$collegeDistance)
-# hist(dane$pharmacyDistance)
-# hist(dane$buildingAge)
+```{r skosnosc, echo = FALSE, eval = TRUE, fig.height=6, fig.width=8}
+par(mfrow = c(3, 3))  # Układ 3x3
+hist(na.omit(dane$centreDistance), 
+     probability = TRUE, 
+     col = "plum1", 
+     main = "Histogram - centreDistance", 
+     xlab = "centreDistance")
+curve(dnorm(x, mean = mean(na.omit(dane$centreDistance)), 
+            sd = sd(na.omit(dane$centreDistance))), 
+      col = "plum4", 
+      lwd = 2, 
+      add = TRUE)
+
+# poiCount
+hist(na.omit(dane$poiCount), 
+     probability = TRUE, 
+     col = "lightblue", 
+     main = "Histogram - poiCount", 
+     xlab = "poiCount")
+curve(dnorm(x, mean = mean(na.omit(dane$poiCount)), 
+            sd = sd(na.omit(dane$poiCount))), 
+      col = "darkblue", 
+      lwd = 2, 
+      add = TRUE)
+
+# schoolDistance
+hist(na.omit(dane$schoolDistance), 
+     probability = TRUE, 
+     col = "lightgreen", 
+     main = "Histogram - schoolDistance", 
+     xlab = "schoolDistance")
+curve(dnorm(x, mean = mean(na.omit(dane$schoolDistance)), 
+            sd = sd(na.omit(dane$schoolDistance))), 
+      col = "green4", 
+      lwd = 2, 
+      add = TRUE)
+
+# clinicDistance
+hist(na.omit(dane$clinicDistance), 
+     probability = TRUE, 
+     col = "lightpink", 
+     main = "Histogram - clinicDistance", 
+     xlab = "floorCount")
+curve(dnorm(x, mean = mean(na.omit(dane$clinicDistance)), 
+            sd = sd(na.omit(dane$clinicDistance))), 
+      col = "violet", 
+      lwd = 2, 
+      add = TRUE)
+
+# postOfficeDistance
+hist(na.omit(dane$postOfficeDistance), 
+     probability = TRUE, 
+     col = "peachpuff", 
+     main = "Histogram - postOfficeDistance", 
+     xlab = "postOfficeDistance")
+curve(dnorm(x, mean = mean(na.omit(dane$postOfficeDistance)), 
+            sd = sd(na.omit(dane$postOfficeDistance))), 
+      col = "orange1", 
+      lwd = 2, 
+      add = TRUE)
+
+# kindergartenDistance
+hist(na.omit(dane$kindergartenDistance), 
+     probability = TRUE, 
+     col = "lightyellow", 
+     main = "Histogram - kindergartenDistance", 
+     xlab = "kindergartenDistance")
+curve(dnorm(x, mean = mean(na.omit(dane$kindergartenDistance)), 
+            sd = sd(na.omit(dane$kindergartenDistance))), 
+      col = "yellow2", 
+      lwd = 2, 
+      add = TRUE)
+# restaurantDistance
+hist(na.omit(dane$restaurantDistance), 
+     probability = TRUE, 
+     col = "grey", 
+     main = "Histogram - restaurantDistance", 
+     xlab = "restaurantDistance")
+curve(dnorm(x, mean = mean(na.omit(dane$restaurantDistance)), 
+            sd = sd(na.omit(dane$restaurantDistance))), 
+      col = "grey1", 
+      lwd = 2, 
+      add = TRUE)
+# collegeDistance
+hist(na.omit(dane$collegeDistance), 
+     probability = TRUE, 
+     col = "red4", 
+     main = "Histogram - collegeDistance", 
+     xlab = "collegeDistance")
+curve(dnorm(x, mean = mean(na.omit(dane$collegeDistance)), 
+            sd = sd(na.omit(dane$collegeDistance))), 
+      col = "tomato1", 
+      lwd = 2, 
+      add = TRUE)
+# pharmacyDistance
+hist(na.omit(dane$pharmacyDistance), 
+     probability = TRUE, 
+     col = "skyblue1", 
+     main = "Histogram - pharmacyDistance", 
+     xlab = "pharmacyDistance")
+curve(dnorm(x, mean = mean(na.omit(dane$pharmacyDistance)), 
+            sd = sd(na.omit(dane$pharmacyDistance))), 
+      col = "dodgerblue3", 
+      lwd = 2, 
+      add = TRUE)
 ```
+
+
+```{r skosnosc_hist2, echo = FALSE, eval = TRUE, fig.height=4, fig.width=8}
+par(mfrow = c(2, 3))  # Układ 3x3
+# postOfficeDistance
+hist(na.omit(dane$buildingAge), 
+     probability = TRUE, 
+     col = "palegoldenrod", 
+     main = "Histogram - buildingAge", 
+     xlab = "buildingAge")
+curve(dnorm(x, mean = mean(na.omit(dane$buildingAge)), 
+            sd = sd(na.omit(dane$buildingAge))), 
+      col = "palegreen3", 
+      lwd = 2, 
+      add = TRUE)
+
+# squareMeters
+hist(na.omit(dane$squareMeters), 
+     probability = TRUE, 
+     col = "deeppink", 
+     main = "Histogram - squareMeters", 
+     xlab = "squareMeters")
+curve(dnorm(x, mean = mean(na.omit(dane$squareMeters)), 
+            sd = sd(na.omit(dane$squareMeters))), 
+      col = "deeppink4", 
+      lwd = 2, 
+      add = TRUE)
+
+# price
+hist(na.omit(dane$price), 
+     probability = TRUE, 
+     col = "antiquewhite", 
+     main = "Histogram - price", 
+     xlab = "price")
+curve(dnorm(x, mean = mean(na.omit(dane$price)), 
+            sd = sd(na.omit(dane$price))), 
+      col = "indianred2", 
+      lwd = 2, 
+      add = TRUE)
+
+# floor
+hist(na.omit(dane$floor), 
+     probability = TRUE, 
+     col = "slategray2", 
+     main = "Histogram - floor", 
+     xlab = "floor")
+curve(dnorm(x, mean = mean(na.omit(dane$floor)), 
+            sd = sd(na.omit(dane$floor))), 
+      col = "orchid", 
+      lwd = 2, 
+      add = TRUE)
+
+# floorCount
+hist(na.omit(dane$floorCount), 
+     probability = TRUE, 
+     col = "burlywood", 
+     main = "Histogram - floorCount", 
+     xlab = "floorCount")
+curve(dnorm(x, mean = mean(na.omit(dane$floorCount)), 
+            sd = sd(na.omit(dane$floorCount))), 
+      col = "burlywood4", 
+      lwd = 2, 
+      add = TRUE)
+
+# buildYear
+hist(na.omit(dane$buildYear), 
+     probability = TRUE, 
+     col = "lightblue", 
+     main = "Histogram - buildYear", 
+     xlab = "buildYear")
+curve(dnorm(x, mean = mean(na.omit(dane$buildYear)), 
+            sd = sd(na.omit(dane$buildYear))), 
+      col = "darkblue", 
+      lwd = 2, 
+      add = TRUE)
+```
+
+
 
 ```{r tabela_wynikow, eval=TRUE, echo=FALSE, results='asis'}
 skewness_values <- c(find_skewness(dane, value=TRUE, thres=0.1), price = "-")
@@ -462,10 +627,10 @@ results_table <- data.frame(
 )
 
 Interpretacje <- c(
-  squareMeters = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – zalecana transformacja logarytmiczna.",
-  rooms = "Stosunkowo niewiele wartości odstających i umiarkowana skośność – transformacja nie jest konieczna.",
-  price = "Wysoka liczba wartości odstających sugeruje konieczność transformacji (np. logarytmowej), jednak nie otrzymaliśmy wyniku skośności",
-  floor = "Duża liczba wartości odstających i wysoka skośność prawostronna – zalecana transformacja, np. logarytmiczna.",
+  squareMeters = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – zalecana transformacja logarytmiczna. KONTEKST ?",
+  rooms = "Stosunkowo niewiele wartości odstających i umiarkowana skośność – transformacja nie jest konieczna.KONTEKST ?",
+  price = "Wysoka liczba wartości odstających sugeruje konieczność transformacji (np. logarytmowej), jednak nie otrzymaliśmy wyniku skośności. KONTEKST ?",
+  floor = "Duża liczba wartości odstających i wysoka skośność prawostronna – zalecana transformacja, np. logarytmiczna.KONTEKST ?",
   floorCount = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – warto rozważyć transformację.",
   buildYear = "Niewielka liczba wartości odstających, ale ujemna skośność – może wymagać analizy kontekstowej.",
   centreDistance = "Umiarkowana liczba wartości odstających, niewielka skośność – transformacja opcjonalna.",
@@ -487,12 +652,19 @@ knitr::kable(results_table, caption = "Wyniki Z-Score oraz skośności")
 
 ```
 
-### **Podsumowanie**:
+#### **Tranfsormacje**
 
 -   **Transformacje logarytmiczne:** dla zmiennych o dużej liczbie wartości odstających i wysokiej skośności prawostronnej (poiCount, schoolDistance, clinicDistance, postOfficeDistance).
 -   **Transformacje pierwiastkowe:** dla zmiennych z umiarkowaną asymetrią, ale dużą liczbą wartości odstających (squareMeters, floorCount).
 -   **Transformacje opcjonalne:** dla zmiennych o umiarkowanej liczbie wartości odstających i niewielkiej skośności (collegeDistance, buildingAge).
 -   **Brak transformacji:** dla zmiennych o minimalnej liczbie wartości odstających i małej skośności (pricePerSquareMeter, rooms).
+CHOCIAZ JAK MYSLE TO WSZYSTKO MOZNA PODCIAGNĄĆ POD KONTEKST dodatkowo rozklad normalny wyglada git na histogramach :)
+
+### **Podsumowanie**
+
+Analiza wykresów pudełkowych potwierdziła występowanie wartości odstających w każdej z badanych zmiennych. Są one szczególnie istotne, ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości – luksusowe mieszkania, nieruchomości historyczne lub obszary z ograniczoną infrastrukturą.
+
+Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych krokach rozważyć, czy te obserwacje powinny zostać zachowane jako istotne dla analizy, czy też przekształcone lub usunięte w zależności od kontekstu biznesowego i analitycznego.
 
 ```{r dodanie_nowych_danych, eval=TRUE, echo=FALSE}
 # Wczytanie granic admistracyjnych województw
