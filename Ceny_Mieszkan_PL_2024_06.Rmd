@@ -228,6 +228,7 @@ dane$kindergartenDistance<-imputate_na(dane, kindergartenDistance, method = "med
 dane$clinicDistance<-imputate_na(dane, clinicDistance, method = "median")
 dane$postOfficeDistance<-imputate_na(dane, postOfficeDistance, method = "median")
 dane$restaurantDistance<-imputate_na(dane, restaurantDistance, method = "median")
+dane$floorCount<-imputate_na(dane, floorCount, method = "median")
 
 ################################################################################
 
@@ -414,27 +415,12 @@ Poniżej przedstawiono szczegółową interpretację wyników dla każdej z anal
 
 ------------------------------------------------------------------------
 
-### Z-score oraz skośność
+Analiza wykresów pudełkowych potwierdziła występowanie wartości odstających w każdej z badanych zmiennych. Są one szczególnie istotne, ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości – luksusowe mieszkania, nieruchomości historyczne lub obszary z ograniczoną infrastrukturą.
 
-```{r z-score, echo = FALSE}
-# length(which(abs(scale(dane$price)) > 3))
-# length(which(abs(scale(dane$squareMeters)) > 3))
-# length(which(abs(scale(dane$pricePerSquareMeter)) > 3))
-# length(which(abs(scale(dane$rooms)) > 3))
-# length(which(abs(scale(dane$floor)) > 3))
-# length(which(abs(scale(dane$floorCount)) > 3))
-# length(which(abs(scale(dane$buildingAge)) > 3))
-# length(which(abs(scale(dane$centreDistance)) > 3))
-# length(which(abs(scale(dane$schoolDistance)) > 3))
-# length(which(abs(scale(dane$clinicDistance)) > 3))
-# length(which(abs(scale(dane$postOfficeDistance)) > 3))
-# length(which(abs(scale(dane$kindergartenDistance)) > 3))
-# length(which(abs(scale(dane$restaurantDistance)) > 3))
-# length(which(abs(scale(dane$collegeDistance)) > 3))
-# length(which(abs(scale(dane$pharmacyDistance)) > 3))
-# length(which(abs(scale(dane$poiCount)) > 3))
-# length(which(abs(scale(dane$buildYear)) > 3))
-```
+Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych krokach rozważyć, czy te obserwacje powinny zostać zachowane jako istotne dla analizy, czy też przekształcone lub usunięte w zależności od kontekstu biznesowego i analitycznego.
+
+
+### Skośność
 
 <a id="centreDistancePlot"></a>
 <a id="poiCountPlot"></a>
@@ -711,8 +697,7 @@ Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy punkt 
 - Linia normalna dobrze dopasowuje się do danych, jednak rozkład jest lekko przesunięty ku nowszym budynkom.
 
 ---
-
-## **Podsumowanie**  
+ 
 Analiza histogramów, w połączeniu z linią rozkładu normalnego, dostarczyła następujących wniosków:  
 - **Większość rozkładów jest prawoskośna**, co sugeruje koncentrację wartości w niższych przedziałach oraz obecność kilku wartości odstających.  
 - Linie normalne pozwoliły zidentyfikować rozbieżności między rozkładami empirycznymi a teoretycznym rozkładem normalnym.  
@@ -720,64 +705,49 @@ Analiza histogramów, w połączeniu z linią rozkładu normalnego, dostarczyła
 
 Wyniki te potwierdzają specyfikę rynku nieruchomości, gdzie typowe wartości są skoncentrowane w określonych zakresach, a odstępstwa wskazują na szczególne przypadki, które mogą być analizowane osobno.
 
+### Z-score
 
-```{r tabela_wynikow, eval=TRUE, echo=FALSE, results='asis'}
-skewness_values <- c(find_skewness(dane, value=TRUE, thres=0.1), price = "-")
-z_score_outliers <- c(
-  price = 478, squareMeters = 365, pricePerSquareMeter = 16, 
-  rooms = 141, floor = 371, floorCount = 388, buildingAge = 142, 
-  centreDistance = 115, schoolDistance = 410, clinicDistance = 450, 
-  postOfficeDistance = 401, kindergartenDistance = 409, 
-  restaurantDistance = 388, collegeDistance = 188, pharmacyDistance = 410, 
-  poiCount = 568, buildYear = 142
-)
-
-variable_names <- intersect(names(skewness_values), names(z_score_outliers))
-
-results_table <- data.frame(
-  Z_Score = z_score_outliers[variable_names],
-  Skewness = skewness_values[variable_names]
-)
-
-Interpretacje <- c(
-  squareMeters = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – zalecana transformacja logarytmiczna. KONTEKST ?",
-  rooms = "Stosunkowo niewiele wartości odstających i umiarkowana skośność – transformacja nie jest konieczna.KONTEKST ?",
-  price = "Wysoka liczba wartości odstających sugeruje konieczność transformacji (np. logarytmowej), jednak nie otrzymaliśmy wyniku skośności. KONTEKST ?",
-  floor = "Duża liczba wartości odstających i wysoka skośność prawostronna – zalecana transformacja, np. logarytmiczna.KONTEKST ?",
-  floorCount = "Duża liczba wartości odstających i umiarkowana skośność prawostronna – warto rozważyć transformację.",
-  buildYear = "Niewielka liczba wartości odstających, ale ujemna skośność – może wymagać analizy kontekstowej.",
-  centreDistance = "Umiarkowana liczba wartości odstających, niewielka skośność – transformacja opcjonalna.",
-  schoolDistance = "Wysoka liczba wartości odstających i bardzo silna skośność prawostronna – konieczna transformacja.",
-  poiCount = "Duża liczba wartości odstających i silna skośność prawostronna – transformacja logarytmiczna.",
-  clinicDistance = "	Duża liczba wartości odstających i umiarkowana skośność prawostronna – warto zastosować transformację.",
-  postOfficeDistance = "Duża liczba wartości odstających i wysoka skośność – transformacja zalecana.",
-  kindergartenDistance = "Bardzo silna skośność i duża liczba wartości odstających – konieczna transformacja.",
-  restaurantDistance = "Wysoka liczba wartości odstających i mocna skośność prawostronna – transformacja logarytmiczna.",
-  collegeDistance = "Umiarkowana liczba wartości odstających, niewielka skośność – opcjonalna transformacja.",
-  pharmacyDistance = "Silna skośność prawostronna i liczne wartości odstające – transformacja logarytmiczna.",
-  pricePerSquareMeter = "Brak potrzeby transformacji ze względu na małą liczbę odstających i niewielką skośność.",
-  buildingAge = "Umiarkowana liczba wartości odstających, stosunkowo niewielka skośność – opcjonalna transformacja."
-)
-
-results_table$Interpretacja <- Interpretacje[variable_names]
-
-knitr::kable(results_table, caption = "Wyniki Z-Score oraz skośności")
-
+```{r z-score, echo = FALSE}
+# mean((dane$buildYear-mean(dane$buildYear))/sd(dane$buildYear))
+# mean((dane$price-mean(dane$price))/sd(dane$price))
+# mean((dane$squareMeters-mean(dane$squareMeters))/sd(dane$squareMeters))
+# mean((dane$pricePerSquareMeter-mean(dane$pricePerSquareMeter))/sd(dane$pricePerSquareMeter))
+# mean((dane$rooms-mean(dane$rooms))/sd(dane$rooms))
+# mean((dane$floor-mean(dane$floor))/sd(dane$floor))
+# mean((dane$floorCount-mean(dane$floorCount))/sd(dane$floorCount))
+# mean((dane$centreDistance-mean(dane$centreDistance))/sd(dane$centreDistance))
+# mean((dane$buildingAge-mean(dane$buildingAge))/sd(dane$buildingAge))
+# mean((dane$schoolDistance-mean(dane$schoolDistance))/sd(dane$schoolDistance))
+# mean((dane$clinicDistance-mean(dane$clinicDistance))/sd(dane$clinicDistance))
+# mean((dane$postOfficeDistance-mean(dane$postOfficeDistance))/sd(dane$postOfficeDistance))
+# mean((dane$kindergartenDistance-mean(dane$kindergartenDistance))/sd(dane$kindergartenDistance))
+# mean((dane$restaurantDistance-mean(dane$restaurantDistance))/sd(dane$restaurantDistance))
+# mean((dane$collegeDistance-mean(dane$collegeDistance))/sd(dane$collegeDistance))
+# mean((dane$pharmacyDistance-mean(dane$pharmacyDistance))/sd(dane$pharmacyDistance))
+# mean((dane$poiCount-mean(dane$poiCount))/sd(dane$poiCount))
 ```
 
-#### **Tranfsormacje**
 
--   **Transformacje logarytmiczne:** dla zmiennych o dużej liczbie wartości odstających i wysokiej skośności prawostronnej (poiCount, schoolDistance, clinicDistance, postOfficeDistance).
--   **Transformacje pierwiastkowe:** dla zmiennych z umiarkowaną asymetrią, ale dużą liczbą wartości odstających (squareMeters, floorCount).
--   **Transformacje opcjonalne:** dla zmiennych o umiarkowanej liczbie wartości odstających i niewielkiej skośności (collegeDistance, buildingAge).
--   **Brak transformacji:** dla zmiennych o minimalnej liczbie wartości odstających i małej skośności (pricePerSquareMeter, rooms).
-CHOCIAZ JAK MYSLE TO WSZYSTKO MOZNA PODCIAGNĄĆ POD KONTEKST dodatkowo rozklad normalny wyglada git na histogramach :)
+```{r tab_zscore, results='asis', eval=TRUE, echo=FALSE}
 
-### **Podsumowanie**
+wyniki <- data.frame(
+  Zmienna = c("buildYear", "price", "squareMeters", "pricePerSquareMeter", "rooms",
+              "floor", "floorCount", "centreDistance", "buildingAge", "schoolDistance",
+              "clinicDistance", "postOfficeDistance", "kindergartenDistance", 
+              "restaurantDistance", "collegeDistance", "pharmacyDistance", "poiCount"),
+  Wartosc = c("1.321569e-15", "9.155718e-17", "3.0552e-17", "-5.888089e-17", "-1.961117e-16",
+              "-3.274304e-17", "-9.234339e-17", "-1.348539e-16", "8.221441e-17", "1.247826e-17",
+             " 2.77439e-17", "9.446714e-17", "-4.220434e-17", "5.62074e-17", "-2.656712e-17",
+              "-1.519166e-17", "-2.97876e-17")
+)
+knitr::kable(wyniki, caption = "Wyniki Z-Score")
+```
 
-Analiza wykresów pudełkowych potwierdziła występowanie wartości odstających w każdej z badanych zmiennych. Są one szczególnie istotne, ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości – luksusowe mieszkania, nieruchomości historyczne lub obszary z ograniczoną infrastrukturą.
 
-Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych krokach rozważyć, czy te obserwacje powinny zostać zachowane jako istotne dla analizy, czy też przekształcone lub usunięte w zależności od kontekstu biznesowego i analitycznego.
+Standaryzacja przy użyciu z-score umożliwia identyfikację wartości odstających. Wartości, które są znacznie większe lub mniejsze niż 3 odchylenia standardowe, mogą być traktowane jako odstające. Zastosowanie z-score zapewniło, że wszystkie analizowane zmienne są zbalansowane wokół średniej, co stanowi podstawę do dalszych, bardziej szczegółowych analiz. Większość wartości w danych jest symetrycznie rozłożona wokół średniej i nie dominuje żaden zbiór ekstremalnych wartości.
+
+
+
 
 ```{r dodanie_nowych_danych, eval=TRUE, echo=FALSE}
 # Wczytanie granic admistracyjnych województw
