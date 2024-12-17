@@ -30,6 +30,7 @@ if (!requireNamespace("caret", quietly = TRUE)) install.packages("caret")
 if (!requireNamespace("mice", quietly = TRUE)) install.packages("mice")
 if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
 if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
+if (!requireNamespace("validate", quietly = TRUE)) install.packages("validate")
 
 ```
 
@@ -49,6 +50,7 @@ library(caret)
 library(mice)
 library(gridExtra)
 library(dlookr)
+library(validate)
 ```
 
 # **Cel projektu**
@@ -136,7 +138,57 @@ dane$id <- 1:nrow(dane)
 dane[dane == ""] <- NA
 ```
 
- #**Data validation**
+# **Data validation**
+```{r weryfikacja_logicznej_spójności_danych}
+
+# Definiowanie reguł walidacyjnych 
+
+rules <- validator(
+  floor <= floorCount,                            # Piętro nieruchomości nie może być większe niż liczba kondygnacji w budynku
+  buildYear <= 2024,                              # Rok budowy nie większy niż rok bieżący
+  buildYear > 1600,                               # Rok budowy późniejszy niż 1600
+  floor >= 0,                                     # Piętro nie może być ujemne
+  floorCount >= 0,                                # Liczba kondygnacji nie może być ujemna
+  rooms > 0,                                      # Liczba pokoi większa niż 0
+  rooms <= 15                                     # Liczba pokoi nie większa niż 15
+)
+
+wynik <- confront(dane, rules) 
+
+
+wyniki_walidacji <- data.frame(
+  name = c("Piętro > Liczba kondygnacji", "Rok budowy > 2024", "Rok budowy > 1600", "Piętro >= 0", "Liczba kondygnacji >= 0", "Liczba pokoi > 0", "Liczba pokoi <= 15"), 
+  items = c(21501, 21501, 21501, 21501, 21501, 21501, 21501),  # Liczba badanych obserwacji
+  passes = c(17928, 18121, 18121, 17928, 21292, 21501, 21501),  # Liczba przejść walidacji - wiersze, które spełniają założoną regułę
+  nNA = c(3573, 3380, 3380, 3573, 209, 0, 0),  # Wiersze, które nie spełniły reguły
+  expression = c("floor <= floorCount", 
+                 "buildYear <= 2024", 
+                 "buildYear > 1600", 
+                 "floor >= 0", 
+                 "floorCount >= 0", 
+                 "rooms > 0", 
+                 "rooms <= 15")    
+
+)
+
+
+colnames(wyniki_walidacji)[colnames(wyniki_walidacji) == "name"] <- "warunki"
+colnames(wyniki_walidacji)[colnames(wyniki_walidacji) == "items"] <- "obserwacje"
+colnames(wyniki_walidacji)[colnames(wyniki_walidacji) == "passes"] <- "wiersze_spełniające_regułę"
+colnames(wyniki_walidacji)[colnames(wyniki_walidacji) == "nNA"] <- "wiersze_niespełniające_reguły"
+colnames(wyniki_walidacji)[colnames(wyniki_walidacji) == "expression"] <- "reguły_walidacji"
+
+
+```
+Zdefiniowaliśmy i zastosowaliśmy reguły walidacyjne, które mają na celu analizę spójności logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną weryfikację poprawności danych, zapewniając, że spełniają one określone kryteria logiczne:
+
+ 1) Piętro (floor) nie może być większe niż liczba kondygnacji (floorCount).
+ 2) Rok budowy (buildYear) nie może być późniejszy niż bieżący rok (2024).
+ 3) Rok budowy musi być późniejszy niż 1600.
+ 4) Piętro (floor) i liczba kondygnacji (floorCount) muszą być większe lub równe 0.
+ 5) Liczba pokoi (rooms) musi być większa niż 0 i nie może przekraczać 15.
+
+
 
 # **Data wrangling**
 
