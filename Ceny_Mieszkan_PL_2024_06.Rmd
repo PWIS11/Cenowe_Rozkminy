@@ -222,33 +222,60 @@ ggplot(data, aes(x = "", y = count, fill = category)) +
 W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych. Błędy w danych "floor" i "floorCount" mogą być spowodowane błędnie uzupełnionymi wartościami lub niektualnymi danymi (budynki mogły zmienić liczbę kondygnacji po modernizacji). 
 
 
-```{r walidacja_i_korekta_wartości;floor_floorCount}
+```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów}
 
+# Błędne obserwacje - filtracja 
+bledne_obserwacje <- dane %>% filter(floor > floorCount)
 
-cor(dane$floorCount, dane$floor)  # Korelacja między floorCount a floor
+# Korekta błędnych wartości
+dane <- dane %>% mutate(floorCount = ifelse(floorCount < floor, floor, floorCount))
 
-dane$floorCount <- ifelse(dane$floor > dane$floorCount, dane$floor, dane$floorCount)
-
-library(ggplot2)
-ggplot(dane, aes(x = floorCount, y = floor)) +
-  geom_point(color = "blue", alpha = 0.5) +
-  labs(title = "Związek między liczbą kondygnacji a piętrem",
-       x = "Liczba kondygnacji (floorCount)",
-       y = "Piętro (floor)") +
-  theme_minimal()
-ggplot(dane, aes(x = floorCount, y = floor)) +
-  geom_point(color = "blue") +
-  geom_smooth(method = "lm", col = "red") +
-  ggtitle("Regresja między liczba kondygnacji a piętrem")
-
-
-
+# Sprawdzanie duplikatów
+zduplikowane_wiersze <- dane[duplicated(dane), ]
 ```
+
+W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floorCount, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floorCount) zostanie ustawiona na wartość piętra (floor).
+
+Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
+
 
 # **Data wrangling**
-```{r}
+```{r weryfikacja_typów_danych}
+
+# Sprawdzenie struktury danych i sptawdzenie pierwszych kilku wierszy danych
+str(dane)
+head(dane)
+
+# Sprawdzenie i weryfikacja typów danych i liczby unikalnych wartości w każdej kolumnie
+typy_danych <- sapply(dane, class) 
+unikalne_wartosci <- sapply(dane, function(x) length(unique(x)))
+
+tabela_typów_danych <- data.frame(
+  Kolumna = names(dane),           
+  Typ = typy_danych,              
+  Liczba_unikalnych = unikalne_wartosci 
+)
+
+# Podsumowanie ile kolumn jest każdego typu
+liczba_numeric <- sum(typy_danych == "numeric")
+liczba_character <- sum(typy_danych == "character")
+liczba_factor <- sum(typy_danych == "factor")
+liczba_integer <- sum(typy_danych == "integer")
+liczba_logical <- sum(typy_danych == "logical")
+
+rodzaje_danych <- data.frame(
+  Typ = c("Numeric", "Character", "Factor", "Integer", "Logical"),
+  Liczba_kolumn = c(liczba_numeric, liczba_character, liczba_factor, liczba_integer, liczba_logical)
+)
+
 
 ```
+Zbiór danych składa się z 28 kolumn, które charakteryzują się następującymi typami: 18 zmiennych numerycznych (typ numeric), 6 zmiennych tekstowych (typ character), 3 zmiennymi kategorycznymi (typ factor), 2 zmiennymi całkowitymi (typ integer) oraz brakiem zmiennych logicznych. 
+
+Zmienne numeryczne, takie jak squareMeters, price czy centreDistance, mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne, takie jak type, ownership czy buildingMaterial, mogą być traktowane jako zmienne typu factor i wykorzystane w analizach klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price, również mogą być używane w analizach numerycznych.
+
+Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej analizy i modelowania. Zmienne numeryczne będą wykorzystywane w analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a zmienne character mogą wymagać kodowania na typ factor, aby mogły być wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w zależności od typu danych i celu analizy.
+
 
 
 ## **Obserwacje brakujące**
