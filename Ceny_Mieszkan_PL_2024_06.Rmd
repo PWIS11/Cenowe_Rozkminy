@@ -139,7 +139,7 @@ dane[dane == ""] <- NA
 ```
 
 # **Data validation**
-```{r weryfikacja_logicznej_spójności_danych}
+```{r weryfikacja_logicznej_spójności_danych, echo=FALSE}
 
 # Definiowanie reguł walidacyjnych 
 
@@ -211,7 +211,9 @@ ggplot(data, aes(x = "", y = count, fill = category)) +
 
 
 ```
- Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają określone kryteria, zapewniając ich poprawność, spójność oraz integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną weryfikację poprawności danych, zapewniając ich zgodność z określonymi kryteriami logicznymi.
+
+Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają określone kryteria, zapewniając ich poprawność, spójność oraz integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną weryfikację poprawności danych, zapewniając ich zgodność z określonymi kryteriami logicznymi.
+
  1) Piętro (floor) nie może być większe niż liczba kondygnacji (floorCount).
  2) Rok budowy (buildYear) nie może być późniejszy niż bieżący rok (2024).
  3) Rok budowy musi być późniejszy niż 1600.
@@ -222,7 +224,7 @@ ggplot(data, aes(x = "", y = count, fill = category)) +
 W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych. Błędy w danych "floor" i "floorCount" mogą być spowodowane błędnie uzupełnionymi wartościami lub niektualnymi danymi (budynki mogły zmienić liczbę kondygnacji po modernizacji). 
 
 
-```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów}
+```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów, echo=FALSE}
 
 # Błędne obserwacje - filtracja 
 bledne_obserwacje <- dane %>% filter(floor > floorCount)
@@ -240,7 +242,7 @@ Jeśli wartość liczby kondygnacji była równa lub większa od wartości pięt
 
 
 # **Data wrangling**
-```{r weryfikacja_typów_danych}
+```{r weryfikacja_typów_danych, echo=FALSE}
 
 # Sprawdzenie struktury danych i sptawdzenie pierwszych kilku wierszy danych
 str(dane)
