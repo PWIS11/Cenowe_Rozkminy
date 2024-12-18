@@ -139,6 +139,49 @@ dane[dane == ""] <- NA
 ```
 
 # **Data validation**
+
+
+```{r weryfikacja_typów_danych, echo=FALSE, results='asis', eval=TRUE}
+# Sprawdzenie struktury danych i sptawdzenie pierwszych kilku wierszy danych
+# str(dane)
+# head(dane)
+
+# Sprawdzenie i weryfikacja typów danych i liczby unikalnych wartości w każdej kolumnie
+typy_danych <- sapply(dane, class) 
+unikalne_wartosci <- sapply(dane, function(x) length(unique(x)))
+
+tabela_typów_danych <- data.frame(
+  Typ = typy_danych,              
+  Liczba_unikalnych = unikalne_wartosci 
+)
+
+knitr::kable(tabela_typów_danych, caption = "Typy Danych oraz ich ilość")
+```
+
+
+```{r weryfikacja_typów_danych2, echo=FALSE, results='asis', eval=TRUE}
+# Podsumowanie ile kolumn jest każdego typu
+liczba_numeric <- sum(typy_danych == "numeric")
+liczba_character <- sum(typy_danych == "character")
+liczba_factor <- sum(typy_danych == "factor")
+liczba_integer <- sum(typy_danych == "integer")
+liczba_logical <- sum(typy_danych == "logical")
+
+rodzaje_danych <- data.frame(
+  Typ = c("Numeric", "Character", "Factor", "Integer", "Logical"),
+  Liczba_kolumn = c(liczba_numeric, liczba_character, liczba_factor, liczba_integer, liczba_logical)
+)
+
+knitr::kable(rodzaje_danych, caption = "Typy Danych")
+
+```
+
+Zbiór danych składa się z 28 kolumn, które charakteryzują się następującymi typami: 18 zmiennych numerycznych (typ numeric), 6 zmiennych tekstowych (typ character), 3 zmiennymi kategorycznymi (typ factor), 2 zmiennymi całkowitymi (typ integer) oraz brakiem zmiennych logicznych. 
+
+Zmienne numeryczne, takie jak squareMeters, price czy centreDistance, mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne, takie jak type, ownership czy buildingMaterial, mogą być traktowane jako zmienne typu factor i wykorzystane w analizach klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price, również mogą być używane w analizach numerycznych.
+
+Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej analizy i modelowania. Zmienne numeryczne będą wykorzystywane w analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a zmienne character mogą wymagać kodowania na typ factor, aby mogły być wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w zależności od typu danych i celu analizy.
+
 ```{r weryfikacja_logicznej_spójności_danych, echo=FALSE}
 
 # Definiowanie reguł walidacyjnych 
@@ -242,42 +285,17 @@ Jeśli wartość liczby kondygnacji była równa lub większa od wartości pięt
 
 
 # **Data wrangling**
-```{r weryfikacja_typów_danych, echo=FALSE}
 
-# Sprawdzenie struktury danych i sptawdzenie pierwszych kilku wierszy danych
-str(dane)
-head(dane)
+Proces **data wrangling** umożliwia przekształcenie surowego zbioru danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach: analizie wartości brakujących oraz obserwacji odstających.  
 
-# Sprawdzenie i weryfikacja typów danych i liczby unikalnych wartości w każdej kolumnie
-typy_danych <- sapply(dane, class) 
-unikalne_wartosci <- sapply(dane, function(x) length(unique(x)))
+W tej części projektu podjęliśmy działania mające na celu:
+- zrozumienie i klasyfikację braków danych (MCAR, MAR, MNAR), 
+- wybór odpowiednich strategii imputacji brakujących wartości,
+- wykrycie i obsługę obserwacji odstających, które mogą zaburzać statystyczne wnioski.
 
-tabela_typów_danych <- data.frame(
-  Kolumna = names(dane),           
-  Typ = typy_danych,              
-  Liczba_unikalnych = unikalne_wartosci 
-)
+Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score) możliwe było zarówno dokładne zrozumienie problemów związanych z danymi, jak i zaplanowanie działań naprawczych (???? nie wiem czy brzmi to "naprawczych" dobrze). Tak przygotowany zbiór danych stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.  
 
-# Podsumowanie ile kolumn jest każdego typu
-liczba_numeric <- sum(typy_danych == "numeric")
-liczba_character <- sum(typy_danych == "character")
-liczba_factor <- sum(typy_danych == "factor")
-liczba_integer <- sum(typy_danych == "integer")
-liczba_logical <- sum(typy_danych == "logical")
-
-rodzaje_danych <- data.frame(
-  Typ = c("Numeric", "Character", "Factor", "Integer", "Logical"),
-  Liczba_kolumn = c(liczba_numeric, liczba_character, liczba_factor, liczba_integer, liczba_logical)
-)
-
-
-```
-Zbiór danych składa się z 28 kolumn, które charakteryzują się następującymi typami: 18 zmiennych numerycznych (typ numeric), 6 zmiennych tekstowych (typ character), 3 zmiennymi kategorycznymi (typ factor), 2 zmiennymi całkowitymi (typ integer) oraz brakiem zmiennych logicznych. 
-
-Zmienne numeryczne, takie jak squareMeters, price czy centreDistance, mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne, takie jak type, ownership czy buildingMaterial, mogą być traktowane jako zmienne typu factor i wykorzystane w analizach klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price, również mogą być używane w analizach numerycznych.
-
-Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej analizy i modelowania. Zmienne numeryczne będą wykorzystywane w analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a zmienne character mogą wymagać kodowania na typ factor, aby mogły być wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w zależności od typu danych i celu analizy.
-
+W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji wartości odstających, a także opis zastosowanych metod ich obsługi.
 
 
 ## **Obserwacje brakujące**
@@ -369,6 +387,7 @@ dane$clinicDistance<-imputate_na(dane, clinicDistance, method = "median")
 dane$postOfficeDistance<-imputate_na(dane, postOfficeDistance, method = "median")
 dane$restaurantDistance<-imputate_na(dane, restaurantDistance, method = "median")
 dane$floorCount<-imputate_na(dane, floorCount, method = "median")
+dane$poiCount<-imputate_na(dane, poiCount, method = "median")
 
 ################################################################################
 
@@ -406,7 +425,7 @@ Do analizy obserwacji odstających decydowaliśmy się użyć **wykresów pudeł
 
 Dodatkowo, aby potwierdzić statystycznie obecność obserwacji odstających zastosowaliśmy metodę Z-score oraz zbadaliśmy czy rozkład danych jest zbliżony do rozkładu normalnego.
 
--   Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
+Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
          Z = \frac{x - \bar{x}}{\sigma}
          $$ $x$: wartość obserwacji\
     $\overline{x}$: średnia dla danej zmiennej\
@@ -887,6 +906,129 @@ knitr::kable(wyniki, caption = "Wyniki Z-Score")
 Standaryzacja przy użyciu z-score umożliwia identyfikację wartości odstających. Wartości, które są znacznie większe lub mniejsze niż 3 odchylenia standardowe, mogą być traktowane jako odstające. Zastosowanie z-score zapewniło, że wszystkie analizowane zmienne są zbalansowane wokół średniej, co stanowi podstawę do dalszych, bardziej szczegółowych analiz. Większość wartości w danych jest symetrycznie rozłożona wokół średniej i nie dominuje żaden zbiór ekstremalnych wartości.
 
 
+### Transformacje
+
+
+
+```{r transformacja_price, echo = FALSE, fig.height=4, fig.width=8}
+par(mfrow = c(1,2))
+# price
+# wykres przed transformacją
+hist(na.omit(dane$price), 
+     probability = TRUE, 
+     col = "antiquewhite", 
+     main = "Histogram - price", 
+     xlab = "price")
+curve(dnorm(x, mean = mean(na.omit(dane$price)), 
+            sd = sd(na.omit(dane$price))), 
+      col = "indianred2", 
+      lwd = 2, 
+      add = TRUE)
+
+# po transformacji
+dane$price <- log(dane$price)
+hist(na.omit(dane$price), 
+     probability = TRUE, 
+     col = "antiquewhite", 
+     main = "Histogram - price", 
+     xlab = "price")
+curve(dnorm(x, mean = mean(na.omit(dane$price)), 
+            sd = sd(na.omit(dane$price))), 
+      col = "indianred2", 
+      lwd = 2, 
+      add = TRUE)
+
+```
+
+
+
+
+
+```{r transformacja_PricePerSquareMeter, echo = FALSE, fig.height=4, fig.width=8}
+par(mfrow = c(1,2))
+# poiCount
+# wykres przed transformacją
+hist(na.omit(dane$poiCount), 
+     probability = TRUE, 
+     col = "goldenrod1", 
+     main = "Histogram - poiCount", 
+     xlab = "poiCount")
+curve(dnorm(x, mean = mean(na.omit(dane$poiCount)), 
+            sd = sd(na.omit(dane$poiCount))), 
+      col = "darkblue", 
+      lwd = 2, 
+      add = TRUE)
+
+# po transformacji
+dane$poiCount <- sqrt(dane$poiCount)
+hist(na.omit(dane$poiCount), 
+     probability = TRUE, 
+     col = "goldenrod1", 
+     main = "Histogram - poiCount", 
+     xlab = "poiCount")
+curve(dnorm(x, mean = mean(dane$poiCount), 
+            sd = sd(na.omit(dane$poiCount))), 
+      col = "darkblue", 
+      lwd = 2, 
+      add = TRUE)
+
+```
+
+
+
+#### Uzasadnienie braku transformacji dla poszczególnych kolumn
+
+1. **squareMeters**  
+   - **Uzasadnienie**: Duże wartości tej zmiennej (np. powyżej 200 m²) mogą odnosić się do apartamentów luksusowych lub przestronnych domów, co jest zrozumiałe w kontekście rynku nieruchomości. Asymetria rozkładu wynika z faktu, że małe mieszkania są bardziej powszechne, ale większe jednostki wciąż mają naturalne uzasadnienie.  
+
+2. **rooms**  
+   - **Uzasadnienie**: Liczba pokoi w mieszkaniach czy domach jest zwykle niewielka i wynika z ich przeznaczenia. Duże liczby (np. 7–10 pokoi) mogą odnosić się do dużych domów jednorodzinnych lub luksusowych apartamentów. Każda wartość zmiennej ma swoje logiczne wyjaśnienie.  
+
+3. **floor oraz floorCount**  
+   - **Uzasadnienie**: Wysokie wartości (np. powyżej 10. piętra) zazwyczaj odnoszą się do mieszkań w wieżowcach, co jest typowe w dużych miastach. Rozkład zmiennej jest zgodny z różnorodnością rynku.  
+
+5. **buildYear**  
+   - **Uzasadnienie**: Starsze budynki (np. przedwojenne) mają swoje unikalne cechy (np. kamienice), a nowe budynki charakteryzują nowoczesne technologie i standardy. Każda wartość zmiennej niesie ze sobą istotny kontekst historyczny i architektoniczny.  
+
+6. **centreDistance**  
+   - **Uzasadnienie**: Duże odległości (np. >20 km) zwykle oznaczają mieszkania na przedmieściach lub w miejscowościach satelickich, co jest naturalne w kontekście urbanistycznym. Mniejsze wartości wskazują na nieruchomości w centrum miasta, co również ma sens.  
+
+8. **schoolDistance**  
+   - **Uzasadnienie**: Krótsze odległości są typowe dla osiedli mieszkaniowych, gdzie szkoły są blisko mieszkańców. Większe odległości mogą dotyczyć obszarów wiejskich lub mniej zurbanizowanych.  
+
+9. **clinicDistance**  
+   - **Uzasadnienie**: Podobnie jak w przypadku szkół, krótsze odległości charakteryzują gęsto zabudowane obszary, a większe – mniej rozwinięte okolice. Rozkład zmiennej jest zgodny z rzeczywistością.  
+
+10. **postOfficeDistance**  
+    - **Uzasadnienie**: Odległości te odzwierciedlają rzeczywisty dostęp do infrastruktury. Krótsze odległości oznaczają bardziej zurbanizowane tereny, a dłuższe – obszary mniej zaludnione.  
+
+11. **kindergartenDistance**  
+    - **Uzasadnienie**: Podobnie jak w przypadku szkół, odległości mają naturalne wyjaśnienie w charakterystyce lokalizacji.  
+
+12. **restaurantDistance**  
+    - **Uzasadnienie**: Krótsze odległości są typowe dla centrów miast, a większe – dla terenów podmiejskich i wiejskich. Zmienna w swojej formie jest wystarczająco zrozumiała.  
+
+13. **collegeDistance**  
+    - **Uzasadnienie**: Podobnie jak inne odległości, wartości tej zmiennej mają naturalne uzasadnienie w zależności od lokalizacji nieruchomości względem centrów edukacyjnych.  
+
+14. **pharmacyDistance**  
+    - **Uzasadnienie**: Odległości te są intuicyjne i w pełni odpowiadają rzeczywistości. Apteki są zlokalizowane bliżej mieszkańców w gęsto zaludnionych obszarach, co tłumaczy krótsze wartości.  
+
+15. **buildingAge**  
+    - **Uzasadnienie**: Starsze budynki (np. >50 lat) są często kamienicami lub historycznymi budynkami, a nowe (np. <10 lat) to inwestycje deweloperskie. Wiek budynku jest intuicyjny i łatwy do zrozumienia bez transformacji.  
+
+
+**Podsumowanie**: Brak transformacji dla większości zmiennych wynika z ich naturalnego znaczenia w kontekście rynku nieruchomości. Transformacje stosujemy wyłącznie w sytuacjach, gdy poprawiają one analizę, bez utraty interpretowalności. W przypadku tych zmiennych, zachowanie ich w pierwotnej formie pozwala na lepsze oddanie rzeczywistości i kontekstu analizy.
+
+druga werjsa, którą wolimy ?
+
+Zmienna **powierzchnia mieszkania w metrach kwadratowych** może wykazywać duże wartości w przypadku apartamentów luksusowych lub domów jednorodzinnych. Rozkład tej zmiennej naturalnie odzwierciedla różnorodność nieruchomości na rynku – od małych kawalerek po przestronne rezydencje. Podobnie, liczba pokoi może wahać się od jednego do kilkunastu w zależności od typu nieruchomości, co w pełni odpowiada rzeczywistości.
+
+Kiedy analizowaliśmy dane o **piętrze mieszkania** i **liczbie pięter w budynku**, od razu dostrzegliśmy, że wyższe wartości (np. 10–30 pięter) są typowe dla wieżowców w dużych miastach. Transformacja tych zmiennych jest zatem zbędna. Podobnie w przypadku zmiennej opisującej **rok budowy**, każda wartość niesie istotne znaczenie – od historycznych kamienic, po nowoczesne apartamentowce – co czyni tę zmienną zrozumiałą w swojej pierwotnej formie. Zmienna opisująca **wiek budynku** naturalnie odzwierciedla różnice pomiędzy budynkami historycznymi a nowymi inwestycjami. Asymetria w rozkładzie tej zmiennej jest w pełni zrozumiała i nie wymaga dodatkowych przekształceń.
+
+Z kolei zmienne odległościowe, takie jak **odległość od centrum miasta**, **szkoły**, czy **klinik**, również mają logiczne wytłumaczenie w zależności od lokalizacji nieruchomości. Mniejsze wartości oznaczają bardziej zurbanizowane tereny, podczas gdy większe odległości wskazują na przedmieścia.
+
+Podsumowując, zrezygnowaliśmy z transformacji tych zmiennych, ponieważ ich obecny kształt pozwala na pełne zachowanie kontekstu analizy. Każda z nich odzwierciedla rzeczywistość rynku nieruchomości i umożliwia intuicyjne wnioski bez potrzeby dodatkowego przekształcania. Dzięki temu analiza wyników pozostaje przejrzysta, a dane zachowują swoją interpretowalność.
 
 
 ```{r dodanie_nowych_danych, eval=TRUE, echo=FALSE}
@@ -925,6 +1067,10 @@ wojewodztwa_centroidy <- wojewodztwa %>%
   st_centroid() %>%
   mutate(label = JPT_NAZWA_)
 ```
+
+
+
+
 
 ```{r wykres_choropleth}
 # Tworzenie mapy choropleth
