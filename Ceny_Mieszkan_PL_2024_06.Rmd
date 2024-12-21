@@ -55,8 +55,9 @@ library(plotly)
 ```
 
 # **Cel projektu**
-
+<p style="text-align: justify;">
 Celem naszego projektu jest analiza cen mieszkań w największych miastach Polski, uwzględniając różnorodne czynniki, które mogą wpływać na wartość nieruchomości. Wykorzystamy metody analizy danych, aby odpowiedzieć na kluczowe pytania, takie jak:
+</p>
 
 -   *Od czego zależy cena mieszkań?*
 
@@ -91,8 +92,9 @@ Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby lepiej zr
 Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki wpływające na ceny mieszkań oraz umożliwią stworzenie użytecznych modeli predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
 
 ## **Opis danych**
-
+<p style="text-align: justify;">
 Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa mieszkań.
+</p>
 
 **Miasta w zbiorze danych:** Warszawa, Łódź, Kraków, Wrocław, Poznań, Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
 
@@ -115,9 +117,9 @@ Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych
     -   Cena sprzedaży lub miesięczny czynsz.
 
 ## **Dane dodatkowe**
-
+<p style="text-align: justify;">
 W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się wzbogacić nasz zbiór o **granice administracyjne województw**. Dane te zostały pobrane z pliku **`ms_A01_Granice_wojewodztw`** i umożliwiły przypisanie każdego miasta do odpowiedniego województwa.
-
+</p>
 ### **Cel dodania danych:**
 
 -   **Przypisanie lokalizacji mieszkań do województw**,\
@@ -126,9 +128,9 @@ W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się wzbogacić
 Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku nieruchomości na poziomie miast, ale także **porównanie wyników w kontekście regionalnym**.
 
 ## **Znaczenie projektu**
-
+<p style="text-align: justify;">
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
-
+</p>
 ```{r wstepna_obrobka_danych, echo=FALSE}
 dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
 
@@ -176,14 +178,21 @@ data_types <- data.frame(
 knitr::kable(data_types, caption = "Typy Danych")
 
 ```
-
+<p style="text-align: justify;">
 Zbiór danych składa się z 28 kolumn, które charakteryzują się następującymi typami: 18 zmiennych numerycznych (typ numeric), 6 zmiennych tekstowych (typ character), 3 zmiennymi kategorycznymi (typ factor), 2 zmiennymi całkowitymi (typ integer) oraz brakiem zmiennych logicznych. 
+</p>
 
+<p style="text-align: justify;">
 Zmienne numeryczne, takie jak squareMeters, price czy centreDistance, mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne, takie jak type, ownership czy buildingMaterial, mogą być traktowane jako zmienne typu factor i wykorzystane w analizach klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price, również mogą być używane w analizach numerycznych.
+</p>
 
+<p style="text-align: justify;">
 Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej analizy i modelowania. Zmienne numeryczne będą wykorzystywane w analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a zmienne character mogą wymagać kodowania na typ factor, aby mogły być wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w zależności od typu danych i celu analizy.
+</p>
 
+<p style="text-align: justify;">
 Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają określone kryteria, zapewniając ich poprawność, spójność oraz integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną weryfikację poprawności danych, zapewniając ich zgodność z określonymi kryteriami logicznymi.
+</p>
 
  1) Piętro (Floor) nie może być większe niż liczba kondygnacji (Floor Count).
  2) Rok budowy (Build Year) nie może być późniejszy niż bieżący rok (2024).
@@ -245,21 +254,28 @@ W wyniku przeprowadzonej walidacji w zbiorze danych zauważono znaczną obecnoś
 
 # **Data wrangling**
 
+<p style="text-align: justify;">
 Proces **data wrangling** umożliwia przekształcenie surowego zbioru danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach: analizie wartości brakujących oraz obserwacji odstających.  
+</p>
 
 W tej części projektu podjęliśmy działania mające na celu:
 - zrozumienie i klasyfikację braków danych (MCAR, MAR, MNAR), 
 - wybór odpowiednich strategii imputacji brakujących wartości,
 - wykrycie i obsługę obserwacji odstających, które mogą zaburzać statystyczne wnioski.
 
-Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score) możliwe było zarówno dokładne zrozumienie problemów związanych z danymi, jak i zaplanowanie działań naprawczych (???? nie wiem czy brzmi to "naprawczych" dobrze). Tak przygotowany zbiór danych stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.  
+<p style="text-align: justify;">
+Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score) możliwe było zarówno dokładne zrozumienie problemów związanych z danymi, jak i zaplanowanie działań korygujących. Tak przygotowany zbiór danych stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.
+</p>
 
+<p style="text-align: justify;">
 W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji wartości odstających, a także opis zastosowanych metod ich obsługi.
-
+</p>
 
 ## **Obserwacje brakujące**
 
+<p style="text-align: justify;">
 Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny braków w zbiorze danych. Wizualizacje, takie jak **wykresy słupkowe** prezentujące procent brakujących wartości w poszczególnych zmiennych oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe zależności w danych.
+</p>
 
 Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej zrozumieć przyczyny ich występowania.
 
@@ -331,9 +347,15 @@ aggr(dane,
      ylab = c("Procent braków", "Wzorce braków"))
 ```
 
+#### usunałbym w tym miejscu ten message który generuje R w postaci tabeli. wykres wzorca braków umieściłbym zaraz pod vismiss, a pod nimi dał ten opis o analizie
+
 ### Imputacja medianą oraz modą
 
+
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością, echo = FALSE}
+
+#### Iza - czy tutaj chcemy dać jakieś podsumowanie, ilu zmian dokonano per kolumna?
+
 ################################################################################
 
 dane$floor<-imputate_na(dane, floor, method = "median")
@@ -360,14 +382,15 @@ dane$type <- factor(dane$type)
 dane$buildingMaterial <- factor(dane$buildingMaterial)
 dane$hasElevator <- factor(dane$hasElevator)
 
-#dane$buildingMaterial<-imputate_na(dane, buildingMaterial, method = "mode") -----> wyskakuje błąd
 ################################################################################
 dane$condition <- NA
 dane <- subset(dane, select = -condition)
 ################################################################################
 ```
 
+
 ```{r Dodanie_dodatkowych_kolumn_cena_za_metr_wiek_mieszkania,echo = FALSE}
+
 # Dodanie kolumny z ceną za metr kwadratowy
 dane$pricePerSquareMeter <- dane$price / dane$squareMeters
 
@@ -422,11 +445,17 @@ plot(out)
 
 ```
 
+<p style="text-align: justify;">
 W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności zmiennych floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych.
+</p>
 
+<p style="text-align: justify;">
 Przed rozpoczęciem walidacji brakujące wartości (NA) zostały uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z regułami. Imputacja brakujących danych była kluczowym krokiem, umożliwiającym dalsze etapy weryfikacji danych.
+</p>
 
+<p style="text-align: justify;">
 Błędy w danych floor i floorCount mogą wynikać z błędnie uzupełnionych wartości lub nieaktualnych danych (budynki mogły zmienić liczbę kondygnacji po modernizacji).
+</p>
 
 ```{r weryfikacja_cz.2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
 
@@ -473,17 +502,19 @@ duplicates <- dane[duplicated(dane), ]
 
 ```
 
+<p style="text-align: justify;">
 W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floorCount, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floorCount) zostanie ustawiona na wartość piętra (floor).
 
 Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
-
+</p>
 
 ## **Obserwacje odstające**
-
+<p style="text-align: justify;">
 Do analizy obserwacji odstających decydowaliśmy się użyć **wykresów pudełkowych**, ponieważ są one prostym i skutecznym narzędziem wizualizacyjnym, które pozwala szybko zidentyfikować wartości odstające. Dzięki nim poznamy wartości minimalne, maksymalne, mediane, kwartyle oraz ewentualne wartości wykraczające poza tzw. *wąsy*, czyli zakres między pierwszym a trzecim kwartylem powiększony. Każda z analizowanych zmiennych została przedstawiona na osobnym wykresie pudełkowym, co pozwala dokładnie przyjrzeć się rozkładowi poszczególnych cech, takich jak powierzchnia mieszkania, cena, cena za metr kwadratowy czy odległości od różnych punktów użyteczności publicznej. Dzięki temu można szybko zidentyfikować zmienne, które mogą zawierać nietypowe wartości i potencjalnie wpłynąć na dalsze analizy lub modelowanie danych.
-
+</p>
+<p style="text-align: justify;">
 Dodatkowo, aby potwierdzić statystycznie obecność obserwacji odstających zastosowaliśmy metodę Z-score oraz zbadaliśmy czy rozkład danych jest zbliżony do rozkładu normalnego.
-
+</p>
 Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
          Z = \frac{x - \bar{x}}{\sigma}
          $$ $x$: wartość obserwacji\
@@ -558,6 +589,7 @@ boxplot(dane$pharmacyDistance, main = "PharmacyDistance", col = "lavenderblush2"
 #### **Interpretacja wyników wykresów pudełkowych**
 
 Przeprowadzona analiza wykresów pudełkowych pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pokoi oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (mediana, kwartyle) oraz **wartości odstających**, które wykraczają poza zakres wyznaczony przez *wąsy*.\
+
 Wartości odstające są szczególnie istotne, ponieważ mogą wskazywać na specyficzne obserwacje, takie jak:
 
 -   **Nieruchomości luksusowe** lub o nietypowej wielkości i cenie,\
@@ -566,7 +598,7 @@ Wartości odstające są szczególnie istotne, ponieważ mogą wskazywać na spe
 
 Poniżej przedstawiono szczegółową interpretację wyników dla każdej z analizowanych zmiennych.
 
-------------------------------------------------------------------------
+
 
 **Square Meters (Powierzchnia mieszkań):**\
 - Mediana powierzchni wynosi około **50-60 m²**.\
@@ -631,11 +663,11 @@ Poniżej przedstawiono szczegółową interpretację wyników dla każdej z anal
 - Apteki znajdują się zazwyczaj **do 1 km** od mieszkań.\
 - **Wartości odstające** powyżej **4 km** wskazują na obszary o ograniczonym dostępie do usług farmaceutycznych.
 
-------------------------------------------------------------------------
 
 Analiza wykresów pudełkowych potwierdziła występowanie wartości odstających w każdej z badanych zmiennych. Są one szczególnie istotne, ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości – luksusowe mieszkania, nieruchomości historyczne lub obszary z ograniczoną infrastrukturą.
 
 Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych krokach rozważyć, czy te obserwacje powinny zostać zachowane jako istotne dla analizy, czy też przekształcone lub usunięte w zależności od kontekstu biznesowego i analitycznego.
+
 
 
 ### Skośność
@@ -842,8 +874,10 @@ curve(dnorm(x, mean = mean(na.omit(dane$buildYear)),
 
 
 #### **Interpretacja wyników histogramów**
+<p style="text-align: justify;">
+Przeprowadzona analiza histogramów pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pięter oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (dominanty, gęstość wartości) oraz **wartości odstających**, które znajdują się na krańcach rozkładów.
+</p>
 
-Przeprowadzona analiza histogramów pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pięter oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (dominanty, gęstość wartości) oraz **wartości odstających**, które znajdują się na krańcach rozkładów.  
 Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy punkt odniesienia do oceny kształtu rozkładów. Pozwalają one zidentyfikować:  
 
 - **Odstępstwa od normalności**, takie jak skośność czy wielomodalność,  
@@ -916,7 +950,8 @@ Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy punkt 
 
 ---
  
-Analiza histogramów, w połączeniu z linią rozkładu normalnego, dostarczyła następujących wniosków:  
+Analiza histogramów, w połączeniu z linią rozkładu normalnego, dostarczyła następujących wniosków:
+
 - **Większość rozkładów jest prawoskośna**, co sugeruje koncentrację wartości w niższych przedziałach oraz obecność kilku wartości odstających.  
 - Linie normalne pozwoliły zidentyfikować rozbieżności między rozkładami empirycznymi a teoretycznym rozkładem normalnym.  
 - **Wartości odstające** są widoczne w wielu zmiennych, zwłaszcza w powierzchni mieszkań, cenach oraz odległościach do punktów użyteczności publicznej.  
@@ -961,9 +996,9 @@ wyniki <- data.frame(
 knitr::kable(wyniki, caption = "Wyniki Z-Score")
 ```
 
-
+<p style="text-align: justify;">
 Standaryzacja przy użyciu z-score umożliwia identyfikację wartości odstających. Wartości, które są znacznie większe lub mniejsze niż 3 odchylenia standardowe, mogą być traktowane jako odstające. Zastosowanie z-score zapewniło, że wszystkie analizowane zmienne są zbalansowane wokół średniej, co stanowi podstawę do dalszych, bardziej szczegółowych analiz. Większość wartości w danych jest symetrycznie rozłożona wokół średniej i nie dominuje żaden zbiór ekstremalnych wartości.
-
+</p>
 
 ### Transformacje
 
@@ -976,7 +1011,7 @@ par(mfrow = c(1,2))
 hist(na.omit(dane$price), 
      probability = TRUE, 
      col = "antiquewhite", 
-     main = "Histogram - price", 
+     main = "Original: Histogram - price", 
      xlab = "price")
 curve(dnorm(x, mean = mean(na.omit(dane$price)), 
             sd = sd(na.omit(dane$price))), 
@@ -1010,7 +1045,7 @@ par(mfrow = c(1,2))
 hist(na.omit(dane$poiCount), 
      probability = TRUE, 
      col = "goldenrod1", 
-     main = "Histogram - poiCount", 
+     main = "Original: Histogram - poiCount", 
      xlab = "poiCount")
 curve(dnorm(x, mean = mean(na.omit(dane$poiCount)), 
             sd = sd(na.omit(dane$poiCount))), 
@@ -1095,12 +1130,14 @@ Po transformacji:
 
 
 
-```{r dodanie_nowych_danych, eval=TRUE, echo=FALSE}
-# Wczytanie granic admistracyjnych województw
+```{r dodanie_nowych_danych, echo=FALSE, message=FALSE, warning=FALSE}
+# Wczytanie granic administracyjnych województw
 gml_file <- "ms_A01_Granice_wojewodztw.gml"
 
-# Wczytanie danych przestrzennych
-wojewodztwa <- st_read(gml_file)
+# Ukrycie komunikatów st_read
+invisible(capture.output({
+  wojewodztwa <- st_read(gml_file)
+}))
 
 # Tworzenie punktów z danych (longitude i latitude)
 punkty <- st_as_sf(dane, coords = c("longitude", "latitude"), crs = 4326)
@@ -1114,9 +1151,6 @@ dane_with_region <- st_join(punkty, wojewodztwa)
 # Dodanie kolumny 'wojewodztwo' na podstawie JPT_NAZWA_
 dane$wojewodztwo <- dane_with_region$JPT_NAZWA_
 
-# Sprawdzenie wyników
-#head(dane$wojewodztwo)
-
 # Obliczenie średniej ceny za metr kwadratowy na województwo
 srednie_ceny_m2 <- dane %>%
   group_by(wojewodztwo) %>%
@@ -1127,15 +1161,21 @@ wojewodztwa <- wojewodztwa %>%
   left_join(srednie_ceny_m2, by = c("JPT_NAZWA_" = "wojewodztwo"))
 
 # Obliczenie centroidów województw dla etykiet
-wojewodztwa_centroidy <- wojewodztwa %>%
-  st_centroid() %>%
-  mutate(label = JPT_NAZWA_)
+wojewodztwa_centroidy <- suppressWarnings({
+  wojewodztwa %>%
+    st_centroid() %>%
+    mutate(label = JPT_NAZWA_)
+})
 ```
 
+## Analiza średnich cen mieszkań według województw
+
+<p style="text-align: justify;"> Celem analizy regionalnej cen mieszkań jest zrozumienie zróżnicowania poziomu cen nieruchomości w Polsce. Wykorzystanie mapy województw pozwala zobrazować różnice w średnich cenach za metr kwadratowy w poszczególnych regionach kraju. Tego rodzaju wizualizacja umożliwia identyfikację obszarów o najwyższych oraz najniższych cenach, co może stanowić punkt wyjścia do dalszej analizy rynku nieruchomości, uwzględniającej czynniki wpływające na cenę, takie jak urbanizacja, poziom dochodów czy lokalna infrastruktura. </p>
 
 
 
-```{r wykres_choropleth, echo = FALSE}
+
+```{r wykres_choropleth, echo=FALSE, message=FALSE, warning=FALSE}
 # Tworzenie mapy choropleth
 ggplot(data = wojewodztwa) +
   geom_sf(aes(fill = srednia_cena_m2), color = "black", size = 0.2) +
@@ -1149,6 +1189,20 @@ ggplot(data = wojewodztwa) +
   theme(legend.position = "right")
 ```
 
+
+#### **Interpretacja wyników**
+
+##### **Województwo mazowieckie jako lider cenowy**
+<p style="text-align: justify;">Z wykresu wynika, że województwo mazowieckie, w szczególności Warszawa, dominuje pod względem średnich cen za metr kwadratowy, osiągając wartości powyżej **18 000 PLN/m²**. Jest to odzwierciedleniem centralnej roli stolicy w gospodarce, jej rozwiniętego rynku pracy oraz wysokiego popytu na mieszkania.</p>
+##### **Regiony o najniższych cenach**
+<p style="text-align: justify;">Województwa takie jak podkarpackie, lubelskie i podlaskie charakteryzują się znacznie niższymi cenami, oscylującymi wokół **10 000 PLN/m²**. Są to regiony o mniejszym stopniu urbanizacji oraz niższym popycie na nieruchomości w porównaniu do dużych miast.</p>
+##### **Regiony o średnich cenach**
+<p style="text-align: justify;">Województwa dolnośląskie, pomorskie i wielkopolskie znajdują się w średnim przedziale cenowym, wynoszącym od **12 000 PLN/m² do 16 000 PLN/m²**. Obejmują one dynamicznie rozwijające się miasta, takie jak Wrocław, Gdańsk czy Poznań, które są istotnymi ośrodkami akademickimi i biznesowymi.</p>
+##### **Różnice między regionami**
+<p style="text-align: justify;">Mapa podkreśla wyraźne różnice w rozwoju regionalnym. Województwa takie jak opolskie czy świętokrzyskie należą do najtańszych, co może być związane z niższym stopniem urbanizacji, mniejszym popytem oraz ograniczoną dostępnością pracy w tych regionach.</p>
+
+#### **Wnioski**
+<p style="text-align: justify;"> Wykres średnich cen mieszkań za metr kwadratowy w podziale na województwa jasno pokazuje istotne różnice regionalne. Najwyższe ceny dominują w centralnej i północno-zachodniej części Polski, szczególnie w miastach takich jak Warszawa, Wrocław, Gdańsk i Kraków. Natomiast regiony wschodnie oraz mniej zurbanizowane województwa charakteryzują się niższymi cenami, co wskazuje na ich mniejszy potencjał rynkowy. Wyniki te sugerują, że dalsze badania powinny uwzględnić czynniki demograficzne, ekonomiczne i infrastrukturalne, które kształtują rynek nieruchomości w Polsce. </p>
 
 
 
@@ -1238,6 +1292,7 @@ barplot_city <- plot_ly(
 barplot_city
 
 ```
+
 
 
 
