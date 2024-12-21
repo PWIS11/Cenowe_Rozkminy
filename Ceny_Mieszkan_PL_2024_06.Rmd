@@ -147,32 +147,32 @@ dane[dane == ""] <- NA
 # head(dane)
 
 # Sprawdzenie i weryfikacja typów danych i liczby unikalnych wartości w każdej kolumnie
-typy_danych <- sapply(dane, class) 
-unikalne_wartosci <- sapply(dane, function(x) length(unique(x)))
+data_types <- sapply(dane, class) 
+unique_values <- sapply(dane, function(x) length(unique(x)))
 
-tabela_typów_danych <- data.frame(
-  Typ = typy_danych,              
-  Liczba_unikalnych = unikalne_wartosci 
+data_types <- data.frame(
+  Typ = data_types,              
+  Liczba_unikalnych = unique_values
 )
 
-knitr::kable(tabela_typów_danych, caption = "Typy Danych oraz ich ilość")
+knitr::kable(data_types, caption = "Typy Danych oraz ich ilość")
 ```
 
 
 ```{r weryfikacja_typów_danych2, echo=FALSE, results='asis', eval=TRUE}
 # Podsumowanie ile kolumn jest każdego typu
-liczba_numeric <- sum(typy_danych == "numeric")
-liczba_character <- sum(typy_danych == "character")
-liczba_factor <- sum(typy_danych == "factor")
-liczba_integer <- sum(typy_danych == "integer")
-liczba_logical <- sum(typy_danych == "logical")
+liczba_numeric <- sum(data_types == "numeric")
+liczba_character <- sum(data_types == "character")
+liczba_factor <- sum(data_types == "factor")
+liczba_integer <- sum(data_types == "integer")
+liczba_logical <- sum(data_types == "logical")
 
-rodzaje_danych <- data.frame(
+data_types <- data.frame(
   Typ = c("Numeric", "Character", "Factor", "Integer", "Logical"),
   Liczba_kolumn = c(liczba_numeric, liczba_character, liczba_factor, liczba_integer, liczba_logical)
 )
 
-knitr::kable(rodzaje_danych, caption = "Typy Danych")
+knitr::kable(data_types, caption = "Typy Danych")
 
 ```
 
@@ -182,106 +182,64 @@ Zmienne numeryczne, takie jak squareMeters, price czy centreDistance, mają duż
 
 Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej analizy i modelowania. Zmienne numeryczne będą wykorzystywane w analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a zmienne character mogą wymagać kodowania na typ factor, aby mogły być wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w zależności od typu danych i celu analizy.
 
-```{r weryfikacja_logicznej_spójności_danych, echo=FALSE}
+Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają określone kryteria, zapewniając ich poprawność, spójność oraz integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną weryfikację poprawności danych, zapewniając ich zgodność z określonymi kryteriami logicznymi.
 
-# Definiowanie reguł walidacyjnych 
+ 1) Piętro (Floor) nie może być większe niż liczba kondygnacji (Floor Count).
+ 2) Rok budowy (Build Year) nie może być późniejszy niż bieżący rok (2024).
+ 3) Rok budowy musi być późniejszy niż 1600.
+ 4) Piętro (Floor) i liczba kondygnacji (Floor Count) muszą być większe lub równe 0.
+ 5) Liczba pokoi (Rooms) musi być większa niż 0 i nie może przekraczać 15.
+ 6) Jeżeli liczba kondygnacji (Floor Count) wynosi 0, to nie powinno być w takim budynku windy (Has Elevator).
+ 
+```{r walidacja_wstępna_danych, echo=FALSE,out.width="83%", fig.width=14, fig.height=9}
+
+# Definiowanie reguł walidacyjnych
 
 rules <- validator(
-  "Piętro > Liczba kondygnacji" = floor <= floorCount,                                    # Piętro nie większe niż liczba kondygnacji
-  "Rok budowy <= 2024" = buildYear <= 2024,                                               # Rok budowy nie większy niż rok bieżący
-  "Rok budowy > 1600" = buildYear > 1600,                                                 # Rok budowy późniejszy niż 1600
-  "Piętro >= 0" = floor >= 0,                                                             # Piętro nie może być ujemne
-  "Liczba kondygnacji >= 0" = floorCount >= 0,                                            # Liczba kondygnacji nie może być ujemna
-  "Liczba pokoi > 0" = rooms > 0,                                                         # Liczba pokoi większa niż 0
-  "Liczba pokoi <= 15" = rooms <= 15,                                                     # Liczba pokoi nie większa niż 15
-"Obecność windy w budynku z 0 kondygnacjami" = !(floorCount == 0 & hasElevator == "yes")  # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+  "Floor>Floor Count" = floor <= floorCount,                                            # Piętro nie większe niż liczba kondygnacji
+  "BuildYear<= 2024" = buildYear <= 2024,                                               # Rok budowy nie większy niż rok bieżący
+  "BuildYear > 1600" = buildYear > 1600,                                                 # Rok budowy późniejszy niż 1600
+  "Floor>= 0" = floor >= 0,                                                              # Piętro nie może być ujemne
+  "FloorCount >= 0" = floorCount >= 0,                                                   # Liczba kondygnacji nie może być ujemna
+  "Rooms> 0" = rooms > 0,                                                                # Liczba pokoi większa niż 0
+  "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
+  "Elevator in a building with 0 floors" = !(floorCount == 0 & hasElevator == "yes")      # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 
 )
 
+
 out <- confront(dane, rules)
 
-rules_names <- c("Piętro > Liczba kondygnacji", "Rok budowy <= 2024", "Rok budowy > 1600", 
-                 "Piętro >= 0", "Liczba kondygnacji >= 0", "Liczba pokoi > 0", "Liczba pokoi <= 15","Obecność windy w budynku z 0 kondygnacjami")
-expressions <- c("floor <= floorCount", "buildYear <= 2024", "buildYear > 1600", 
-                 "floor >= 0", "floorCount >= 0", "rooms > 0", "rooms <= 15", "!(floorCount == 0 & hasElevator == 'yes')")
+rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
 
-# Pobieranie wyników walidacji i obliczanie liczby spełnionych i niespełnionych reguł walidacyjnych
+expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floorCount == 0 & hasElevator == 'yes')")
 
-results <- lapply(c("Piętro...Liczba.kondygnacji", "Rok.budowy....2024", "Rok.budowy...1600", 
-                    "Piętro....0", "Liczba.kondygnacji....0", "Liczba.pokoi...0", "Liczba.pokoi....15","Obecność.windy.w.budynku.z.0.kondygnacjami"), 
+results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                    "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
                   function(x) out$`._value`[[x]])
 
-passes <- sapply(results, sum)
-nNA <- sapply(results, function(x) sum(!x))
 
-# Wyniki walidacji
-wyniki_walidacji <- data.frame(
-  reguła = rules_names,
-  badane_obserwacje = rep(21501, 8),
-  obserwacje_spełniające_regułę = passes,
-  obserwacje_niespełniające_reguły = nNA,
-  wyrażenie_reguły = expressions
+results_logical <- lapply(results, function(x) x == 1)
+passes <- sapply(results_logical, sum)
+nNA <- sapply(results_logical, function(x) sum(!x))  
+
+# Przygotowanie wyników walidacji
+validation_results <- data.frame(
+  rule = rules_names,
+  examined_observations = rep(21501, 8),
+  observations_passing_rule = passes,
+  observations_failing_rule = nNA,
+  rule_expression = expressions
 )
 
 # Wykres wyników walidacji z podziałem na reguły
 plot(out)
 
-# Wykres kołowy dla obserwacji "Piętro > liczba kondygnacji"
-data <- data.frame(
-  category = c("Spełniające regułę", "Niespełniające reguły"),
-  count = c(20956, 545)
-)
-
-ggplot(data, aes(x = "", y = count, fill = category)) +
-  geom_bar(stat = "identity", width = 1) +
-  coord_polar(theta = "y") +
-  labs(title = "Podział obserwacji dla reguły: Piętro > Liczba kondygnacji") +
-  theme_minimal() +
-  theme(
-    axis.text = element_blank(), 
-    axis.ticks = element_blank(), 
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
-    legend.title = element_blank(),
-    plot.margin = margin(20, 20, 20, 20),
-    panel.grid = element_blank(),
-    panel.border = element_blank()
-  ) +
-  geom_text(aes(label = paste0(count, " (", round(count / sum(count) * 100, 1), "%)")),
-            color = "white", size = 6, fontface = "bold", 
-            position = position_stack(vjust = 0.5)) +
-  scale_fill_manual(values = c("mediumpurple", "aquamarine3"))
-
-
-
 ```
 
-Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają określone kryteria, zapewniając ich poprawność, spójność oraz integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną weryfikację poprawności danych, zapewniając ich zgodność z określonymi kryteriami logicznymi.
-
- 1) Piętro (floor) nie może być większe niż liczba kondygnacji (floorCount).
- 2) Rok budowy (buildYear) nie może być późniejszy niż bieżący rok (2024).
- 3) Rok budowy musi być późniejszy niż 1600.
- 4) Piętro (floor) i liczba kondygnacji (floorCount) muszą być większe lub równe 0.
- 5) Liczba pokoi (rooms) musi być większa niż 0 i nie może przekraczać 15.
- 6) Jeżeli liczba kondygnacji (floorCount) wynosi 0, to nie powinno być w takim budynku windy (hasElevator).
-
-W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych. Błędy w danych "floor" i "floorCount" mogą być spowodowane błędnie uzupełnionymi wartościami lub niektualnymi danymi (budynki mogły zmienić liczbę kondygnacji po modernizacji). 
-
-
-```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów, echo=FALSE}
-
-# Błędne obserwacje - filtracja 
-bledne_obserwacje <- dane %>% filter(floor > floorCount)
-
-# Korekta błędnych wartości
-dane <- dane %>% mutate(floorCount = ifelse(floorCount < floor, floor, floorCount))
-
-# Sprawdzanie duplikatów
-zduplikowane_wiersze <- dane[duplicated(dane), ]
-```
-
-W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floorCount, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floorCount) zostanie ustawiona na wartość piętra (floor).
-
-Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
+W wyniku przeprowadzonej walidacji w zbiorze danych zauważono znaczną obecność wartości NA (brakujących danych), które pojawiły się kolumnach. W dalszej części analizy planuje się ich imputację, przy czym wartości te zostaną zastąpione: medianą dla zmiennych o charakterze numerycznym, a modą dla zmiennych kategorycznych. 
 
 
 # **Data wrangling**
@@ -418,6 +376,108 @@ dane$pricePerSquareMeter <- dane$price / dane$squareMeters
 currentYear <- format(Sys.Date(), "%Y")
 dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
 ```
+
+
+```{r walidacja_i_weryfikacja_logicznej_spójności_danych, echo=FALSE, out.width="83%", fig.width=14, fig.height=9}
+
+# Walidacja wcześniej zdefiniowanych reguł 
+
+rules <- validator(
+  "Floor>FloorCount" = floor <= floorCount,                                              # Piętro nie większe niż liczba kondygnacji
+  "BuildYear<=2024" = buildYear <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
+  "BuildYear>1600" = buildYear > 1600,                                                   # Rok budowy późniejszy niż 1600
+  "Floor>=0" = floor >= 0,                                                               # Piętro nie może być ujemne
+  "FloorCount>= 0" = floorCount >= 0,                                                    # Liczba kondygnacji nie może być ujemna
+  "Rooms>0" = rooms > 0,                                                                 # Liczba pokoi większa niż 0
+  "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
+  "Elevator in a building with 0 floors" = !(floorCount == 0 & hasElevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+)
+
+out <- confront(dane, rules)
+
+rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
+
+expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floorCount == 0 & hasElevator == 'yes')")
+
+results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                    "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
+                  function(x) out$`._value`[[x]])
+
+
+passes <- sapply(results_logical, sum)
+nNA <- sapply(results_logical, function(x) sum(!x))  
+
+# Przygotowanie wyników walidacji
+validation_results <- data.frame(
+  rule = rules_names,
+  examined_observations = rep(21501, 8),
+  observations_passing_rule = passes,
+  observations_failing_rule = nNA,
+  rule_expression = expressions
+)
+
+# Wykres wyników walidacji z podziałem na reguły
+plot(out)
+
+```
+
+W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności zmiennych floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych.
+
+Przed rozpoczęciem walidacji brakujące wartości (NA) zostały uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z regułami. Imputacja brakujących danych była kluczowym krokiem, umożliwiającym dalsze etapy weryfikacji danych.
+
+Błędy w danych floor i floorCount mogą wynikać z błędnie uzupełnionych wartości lub nieaktualnych danych (budynki mogły zmienić liczbę kondygnacji po modernizacji).
+
+```{r weryfikacja_cz.2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
+
+# Wykres kołowy dla obserwacji "Piętro > liczba kondygnacji"
+data <- data.frame(
+  category = c("Spełniające regułę", "Niespełniające reguły"),
+  count = c(20956, 545)
+)
+
+ggplot(data, aes(x = " ", y = count, fill = category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  labs(title = "Floor > Floor Count") +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(), 
+    axis.ticks = element_blank(), 
+    plot.title = element_text(hjust = 0.5, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 19),
+    plot.margin = margin(30, 30, 30, 30),
+    panel.grid = element_blank(),
+    panel.border = element_blank()
+  ) +
+  geom_text(aes(label = paste0(count, " (", round(count / sum(count) * 100, 1), "%)")),
+            color = "black", size = 8, fontface = "bold", 
+            position = position_stack(vjust = 0.7)) +
+  scale_fill_manual(values = c("darkseagreen", "powderblue"))
+
+```
+
+```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów, echo=FALSE}
+
+# Błędne obserwacje - filtracja 
+invalid_observations <- dane %>% filter(floor > floorCount)
+
+# Korekta błędnych wartości
+dane <- dane %>% mutate(floorCount = ifelse(floorCount < floor, floor, floorCount))
+
+# Sprawdzanie duplikatów
+duplicates <- dane[duplicated(dane), ]
+
+```
+
+W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floorCount, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floorCount) zostanie ustawiona na wartość piętra (floor).
+
+Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
+
 
 ## **Obserwacje odstające**
 
