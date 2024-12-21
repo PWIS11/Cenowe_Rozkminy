@@ -51,6 +51,7 @@ library(mice)
 library(gridExtra)
 library(dlookr)
 library(validate)
+library(plotly)
 ```
 
 # **Cel projektu**
@@ -332,7 +333,7 @@ aggr(dane,
 
 ### Imputacja medianą oraz modą
 
-```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością}
+```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością, echo = FALSE}
 ################################################################################
 
 dane$floor<-imputate_na(dane, floor, method = "median")
@@ -345,8 +346,6 @@ dane$clinicDistance<-imputate_na(dane, clinicDistance, method = "median")
 dane$postOfficeDistance<-imputate_na(dane, postOfficeDistance, method = "median")
 dane$restaurantDistance<-imputate_na(dane, restaurantDistance, method = "median")
 dane$floorCount<-imputate_na(dane, floorCount, method = "median")
-dane$poiCount<-imputate_na(dane, poiCount, method = "median")
-
 ################################################################################
 
 #table(na.omit(dane$type)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
@@ -368,7 +367,7 @@ dane <- subset(dane, select = -condition)
 ################################################################################
 ```
 
-```{r Dodanie_dodatkowych_kolumn_cena_za_metr_wiek_mieszkania}
+```{r Dodanie_dodatkowych_kolumn_cena_za_metr_wiek_mieszkania,echo = FALSE}
 # Dodanie kolumny z ceną za metr kwadratowy
 dane$pricePerSquareMeter <- dane$price / dane$squareMeters
 
@@ -990,7 +989,7 @@ dane$price <- log(dane$price)
 hist(na.omit(dane$price), 
      probability = TRUE, 
      col = "antiquewhite", 
-     main = "Histogram - price", 
+     main = "Histogram - log(price)", 
      xlab = "price")
 curve(dnorm(x, mean = mean(na.omit(dane$price)), 
             sd = sd(na.omit(dane$price))), 
@@ -1020,11 +1019,11 @@ curve(dnorm(x, mean = mean(na.omit(dane$poiCount)),
       add = TRUE)
 
 # po transformacji
-dane$poiCount <- sqrt(dane$poiCount)
+dane$poiCount <- log(dane$poiCount + 1)
 hist(na.omit(dane$poiCount), 
      probability = TRUE, 
      col = "goldenrod1", 
-     main = "Histogram - poiCount", 
+     main = "Histogram - log(poiCount+1)", 
      xlab = "poiCount")
 curve(dnorm(x, mean = mean(dane$poiCount), 
             sd = sd(na.omit(dane$poiCount))), 
@@ -1033,6 +1032,20 @@ curve(dnorm(x, mean = mean(dane$poiCount),
       add = TRUE)
 
 ```
+
+#### Transformacja zmiennej price oraz poiCount
+
+##### Powody przeprowadzenia transformacji logarytmicznej:
+1. **Zmniejszenie wpływu wartości odstających**: 
+   - W zmiennych takich jak **price** i **poiCount** występują duże wartości odstające. Dla ceny może to być kilka luksusowych apartamentów o bardzo wysokiej cenie, a dla liczby punktów zainteresowania miejsca z wyjątkowo dużą liczbą udogodnień w okolicy. Transformacja logarytmiczna zmniejsza wpływ tych skrajnych wartości na analizy.
+   
+2. **Poprawa rozkładu zmiennych**: 
+   - Cena mieszkań oraz liczba punktów zainteresowania często mają rozkład prawoskośny, co oznacza, że większość wartości jest skupiona przy niższych wartościach, ale pojawiają się też wyższe, rzadkie wartości. Logarytm zmniejsza tę asymetrię, zbliżając dane do rozkładu normalnego, co ułatwia interpretację i modelowanie statystyczne.
+
+##### Interpretacja:
+Po transformacji:
+- **Rozkład zmiennej price** jest bardziej symetryczny, co ułatwi modelowanie zależności między ceną a innymi zmiennymi.
+- **Rozkład zmiennej poiCount** jest  mniej skośny, co pozwoli lepiej zrozumieć wpływ liczby punktów zainteresowania na analizowane wyniki.
 
 
 
@@ -1080,15 +1093,6 @@ curve(dnorm(x, mean = mean(dane$poiCount),
 
 **Podsumowanie**: Brak transformacji dla większości zmiennych wynika z ich naturalnego znaczenia w kontekście rynku nieruchomości. Transformacje stosujemy wyłącznie w sytuacjach, gdy poprawiają one analizę, bez utraty interpretowalności. W przypadku tych zmiennych, zachowanie ich w pierwotnej formie pozwala na lepsze oddanie rzeczywistości i kontekstu analizy.
 
-druga werjsa, którą wolimy ?
-
-Zmienna **powierzchnia mieszkania w metrach kwadratowych** może wykazywać duże wartości w przypadku apartamentów luksusowych lub domów jednorodzinnych. Rozkład tej zmiennej naturalnie odzwierciedla różnorodność nieruchomości na rynku – od małych kawalerek po przestronne rezydencje. Podobnie, liczba pokoi może wahać się od jednego do kilkunastu w zależności od typu nieruchomości, co w pełni odpowiada rzeczywistości.
-
-Kiedy analizowaliśmy dane o **piętrze mieszkania** i **liczbie pięter w budynku**, od razu dostrzegliśmy, że wyższe wartości (np. 10–30 pięter) są typowe dla wieżowców w dużych miastach. Transformacja tych zmiennych jest zatem zbędna. Podobnie w przypadku zmiennej opisującej **rok budowy**, każda wartość niesie istotne znaczenie – od historycznych kamienic, po nowoczesne apartamentowce – co czyni tę zmienną zrozumiałą w swojej pierwotnej formie. Zmienna opisująca **wiek budynku** naturalnie odzwierciedla różnice pomiędzy budynkami historycznymi a nowymi inwestycjami. Asymetria w rozkładzie tej zmiennej jest w pełni zrozumiała i nie wymaga dodatkowych przekształceń.
-
-Z kolei zmienne odległościowe, takie jak **odległość od centrum miasta**, **szkoły**, czy **klinik**, również mają logiczne wytłumaczenie w zależności od lokalizacji nieruchomości. Mniejsze wartości oznaczają bardziej zurbanizowane tereny, podczas gdy większe odległości wskazują na przedmieścia.
-
-Podsumowując, zrezygnowaliśmy z transformacji tych zmiennych, ponieważ ich obecny kształt pozwala na pełne zachowanie kontekstu analizy. Każda z nich odzwierciedla rzeczywistość rynku nieruchomości i umożliwia intuicyjne wnioski bez potrzeby dodatkowego przekształcania. Dzięki temu analiza wyników pozostaje przejrzysta, a dane zachowują swoją interpretowalność.
 
 
 ```{r dodanie_nowych_danych, eval=TRUE, echo=FALSE}
@@ -1131,8 +1135,7 @@ wojewodztwa_centroidy <- wojewodztwa %>%
 
 
 
-
-```{r wykres_choropleth}
+```{r wykres_choropleth, echo = FALSE}
 # Tworzenie mapy choropleth
 ggplot(data = wojewodztwa) +
   geom_sf(aes(fill = srednia_cena_m2), color = "black", size = 0.2) +
@@ -1145,3 +1148,98 @@ ggplot(data = wojewodztwa) +
        caption = "Źródło: https://www.geoportal.gov.pl/") +
   theme(legend.position = "right")
 ```
+
+
+
+
+
+```{r, results='asis', eval=TRUE, echo=FALSE, comment=FALSE, warning=FALSE}
+
+get_mode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+statystyki <- dane %>%
+  group_by(city) %>%
+  summarise(
+    "Średnia powierzchnia" = mean(squareMeters, na.rm = TRUE),
+    "Średnia cena za $m^2$" = mean(pricePerSquareMeter, na.rm = TRUE),
+    "Najczęstsza liczba pokoi" = get_mode(rooms)
+  )
+
+knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
+```
+
+
+
+# **Analiza udogodnień w nieruchomościach**
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE}
+
+ggplot(dane, aes(x = hasBalcony, y = price)) +
+  geom_boxplot(fill = c("lightblue", "lightgreen")) +
+  labs(title = "Wpływ obecności balkonu na cenę mieszkania",
+       x = "Czy mieszkanie ma balkon?",
+       y = "Cena (PLN)") +
+  theme_minimal()
+
+```
+
+
+#### Interpretacja wyników analizy wpływu obecności balkonu na cenę mieszkań:
+
+W analizie porównaliśmy ceny mieszkań w dwóch grupach: z balkonem oraz bez balkonu. Obserwacje z wykresów pudełkowych wskazują, że poziomy mediany w obu grupach są podobne, co sugeruje, że obecność balkonu nie ma znaczącego wpływu na centralną tendencję ceny mieszkań.
+
+Jednakże mediana w grupie mieszkań z balkonem jest nieco wyższa niż w grupie bez balkonu, co może wskazywać na minimalną przewagę cenową mieszkań wyposażonych w to udogodnienie. Dodatkowo pudełko w tej grupie (symbolizujące zakres między dolnym a górnym kwartylem) jest węższe, co oznacza mniejsze zróżnicowanie cen wśród mieszkań z balkonem.
+
+Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z różnorodności innych czynników wpływających na cenę, które w tej grupie mają większe znaczenie.
+
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE}
+pokoejecenam2 <- dane %>%
+  group_by(city, rooms) %>%
+  summarise(
+    mean_price_per_m2 = mean(pricePerSquareMeter, na.rm = TRUE)
+  )
+
+podsumowanie_m2dlamiast <- dane %>%
+  group_by(city) %>%
+  summarise(
+    mean_price_per_m2 = mean(pricePerSquareMeter, na.rm = TRUE)
+  )
+top5 <- podsumowanie_m2dlamiast %>%
+  arrange(desc(mean_price_per_m2)) %>%
+  slice_head(n = 5)
+
+top5pokojecenamiasta <- pokoejecenam2 %>% filter(city %in% top5$city)
+
+```
+
+
+
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE}
+barplot_city <- plot_ly(
+  data = top5pokojecenamiasta,
+  x = ~rooms,
+  y = ~mean_price_per_m2,
+  color = ~city, 
+  type = "bar"
+) %>%
+  layout(
+    title = "Średnia cena za m^2 w zależności od liczby pokoi i miasta",
+    xaxis = list(title = "Liczba pokoi"),
+    yaxis = list(title = "Średnia cena za $m^2$ [PLN]"),
+    barmode = "group",
+    legend = list(title = list(text = "Miasto"))
+  )
+
+barplot_city
+
+```
+
+
+
+
+
