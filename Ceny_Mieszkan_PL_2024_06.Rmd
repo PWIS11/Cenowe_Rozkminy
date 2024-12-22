@@ -31,7 +31,7 @@ if (!requireNamespace("mice", quietly = TRUE)) install.packages("mice")
 if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
 if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
 if (!requireNamespace("validate", quietly = TRUE)) install.packages("validate")
-
+if (!requireNamespace("plotly", quietly = TRUE)) install.packages("plotly")
 ```
 
 ```{r libraries, include=FALSE}
@@ -398,115 +398,6 @@ dane$pricePerSquareMeter <- dane$price / dane$squareMeters
 currentYear <- format(Sys.Date(), "%Y")
 dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
 ```
-
-
-```{r walidacja_i_weryfikacja_logicznej_spójności_danych, echo=FALSE, out.width="83%", fig.width=14, fig.height=9}
-
-# Walidacja wcześniej zdefiniowanych reguł 
-
-rules <- validator(
-  "Floor>FloorCount" = floor <= floorCount,                                              # Piętro nie większe niż liczba kondygnacji
-  "BuildYear<=2024" = buildYear <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
-  "BuildYear>1600" = buildYear > 1600,                                                   # Rok budowy późniejszy niż 1600
-  "Floor>=0" = floor >= 0,                                                               # Piętro nie może być ujemne
-  "FloorCount>= 0" = floorCount >= 0,                                                    # Liczba kondygnacji nie może być ujemna
-  "Rooms>0" = rooms > 0,                                                                 # Liczba pokoi większa niż 0
-  "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
-  "Elevator in a building with 0 floors" = !(floorCount == 0 & hasElevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
-)
-
-out <- confront(dane, rules)
-
-rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
-
-expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floorCount == 0 & hasElevator == 'yes')")
-
-results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                    "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
-                  function(x) out$`._value`[[x]])
-
-
-passes <- sapply(results_logical, sum)
-nNA <- sapply(results_logical, function(x) sum(!x))  
-
-# Przygotowanie wyników walidacji
-validation_results <- data.frame(
-  rule = rules_names,
-  examined_observations = rep(21501, 8),
-  observations_passing_rule = passes,
-  observations_failing_rule = nNA,
-  rule_expression = expressions
-)
-
-# Wykres wyników walidacji z podziałem na reguły
-plot(out)
-
-```
-
-<p style="text-align: justify;">
-W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności zmiennych floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych.
-</p>
-
-<p style="text-align: justify;">
-Przed rozpoczęciem walidacji brakujące wartości (NA) zostały uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z regułami. Imputacja brakujących danych była kluczowym krokiem, umożliwiającym dalsze etapy weryfikacji danych.
-</p>
-
-<p style="text-align: justify;">
-Błędy w danych floor i floorCount mogą wynikać z błędnie uzupełnionych wartości lub nieaktualnych danych (budynki mogły zmienić liczbę kondygnacji po modernizacji).
-</p>
-
-```{r weryfikacja_cz.2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
-
-# Wykres kołowy dla obserwacji "Piętro > liczba kondygnacji"
-data <- data.frame(
-  category = c("Spełniające regułę", "Niespełniające reguły"),
-  count = c(20956, 545)
-)
-
-ggplot(data, aes(x = " ", y = count, fill = category)) +
-  geom_bar(stat = "identity", width = 1) +
-  coord_polar(theta = "y") +
-  labs(title = "Floor > Floor Count") +
-  theme_minimal() +
-  theme(
-    axis.text = element_blank(), 
-    axis.ticks = element_blank(), 
-    plot.title = element_text(hjust = 0.5, size = 30, face = "bold"),
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    legend.title = element_blank(),
-    legend.text = element_text(size = 19),
-    plot.margin = margin(30, 30, 30, 30),
-    panel.grid = element_blank(),
-    panel.border = element_blank()
-  ) +
-  geom_text(aes(label = paste0(count, " (", round(count / sum(count) * 100, 1), "%)")),
-            color = "black", size = 8, fontface = "bold", 
-            position = position_stack(vjust = 0.7)) +
-  scale_fill_manual(values = c("darkseagreen", "powderblue"))
-
-```
-
-```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów, echo=FALSE}
-
-# Błędne obserwacje - filtracja 
-invalid_observations <- dane %>% filter(floor > floorCount)
-
-# Korekta błędnych wartości
-dane <- dane %>% mutate(floorCount = ifelse(floorCount < floor, floor, floorCount))
-
-# Sprawdzanie duplikatów
-duplicates <- dane[duplicated(dane), ]
-
-```
-
-<p style="text-align: justify;">
-W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floorCount, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floorCount) zostanie ustawiona na wartość piętra (floor).
-
-Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
-</p>
 
 ## **Obserwacje odstające**
 <p style="text-align: justify;">
@@ -1129,6 +1020,113 @@ Po transformacji:
 **Podsumowanie**: Brak transformacji dla większości zmiennych wynika z ich naturalnego znaczenia w kontekście rynku nieruchomości. Transformacje stosujemy wyłącznie w sytuacjach, gdy poprawiają one analizę, bez utraty interpretowalności. W przypadku tych zmiennych, zachowanie ich w pierwotnej formie pozwala na lepsze oddanie rzeczywistości i kontekstu analizy.
 
 
+```{r walidacja_i_weryfikacja_logicznej_spójności_danych, echo=FALSE, out.width="83%", fig.width=14, fig.height=9}
+
+# Walidacja wcześniej zdefiniowanych reguł 
+
+rules <- validator(
+  "Floor>FloorCount" = floor <= floorCount,                                              # Piętro nie większe niż liczba kondygnacji
+  "BuildYear<=2024" = buildYear <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
+  "BuildYear>1600" = buildYear > 1600,                                                   # Rok budowy późniejszy niż 1600
+  "Floor>=0" = floor >= 0,                                                               # Piętro nie może być ujemne
+  "FloorCount>= 0" = floorCount >= 0,                                                    # Liczba kondygnacji nie może być ujemna
+  "Rooms>0" = rooms > 0,                                                                 # Liczba pokoi większa niż 0
+  "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
+  "Elevator in a building with 0 floors" = !(floorCount == 0 & hasElevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+)
+
+out <- confront(dane, rules)
+
+rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
+
+expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floorCount == 0 & hasElevator == 'yes')")
+
+results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
+                    "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
+                  function(x) out$`._value`[[x]])
+
+
+passes <- sapply(results_logical, sum)
+nNA <- sapply(results_logical, function(x) sum(!x))  
+
+# Przygotowanie wyników walidacji
+validation_results <- data.frame(
+  rule = rules_names,
+  examined_observations = rep(21501, 8),
+  observations_passing_rule = passes,
+  observations_failing_rule = nNA,
+  rule_expression = expressions
+)
+
+# Wykres wyników walidacji z podziałem na reguły
+plot(out)
+
+```
+
+<p style="text-align: justify;">
+W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności zmiennych floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych.
+</p>
+
+<p style="text-align: justify;">
+Przed rozpoczęciem walidacji brakujące wartości (NA) zostały uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z regułami. Imputacja brakujących danych była kluczowym krokiem, umożliwiającym dalsze etapy weryfikacji danych.
+</p>
+
+<p style="text-align: justify;">
+Błędy w danych floor i floorCount mogą wynikać z błędnie uzupełnionych wartości lub nieaktualnych danych (budynki mogły zmienić liczbę kondygnacji po modernizacji).
+</p>
+
+```{r weryfikacja_cz.2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
+
+# Wykres kołowy dla obserwacji "Piętro > liczba kondygnacji"
+data <- data.frame(
+  category = c("Spełniające regułę", "Niespełniające reguły"),
+  count = c(20956, 545)
+)
+
+ggplot(data, aes(x = " ", y = count, fill = category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  labs(title = "Floor > Floor Count") +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(), 
+    axis.ticks = element_blank(), 
+    plot.title = element_text(hjust = 0.5, size = 30, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 19),
+    plot.margin = margin(30, 30, 30, 30),
+    panel.grid = element_blank(),
+    panel.border = element_blank()
+  ) +
+  geom_text(aes(label = paste0(count, " (", round(count / sum(count) * 100, 1), "%)")),
+            color = "black", size = 8, fontface = "bold", 
+            position = position_stack(vjust = 0.7)) +
+  scale_fill_manual(values = c("darkseagreen", "powderblue"))
+
+```
+
+```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów, echo=FALSE}
+
+# Błędne obserwacje - filtracja 
+invalid_observations <- dane %>% filter(floor > floorCount)
+
+# Korekta błędnych wartości
+dane <- dane %>% mutate(floorCount = ifelse(floorCount < floor, floor, floorCount))
+
+# Sprawdzanie duplikatów
+duplicates <- dane[duplicated(dane), ]
+
+```
+
+<p style="text-align: justify;">
+W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floorCount, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floorCount) zostanie ustawiona na wartość piętra (floor).
+
+Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
+</p>
 
 ```{r dodanie_nowych_danych, echo=FALSE, message=FALSE, warning=FALSE}
 # Wczytanie granic administracyjnych województw
