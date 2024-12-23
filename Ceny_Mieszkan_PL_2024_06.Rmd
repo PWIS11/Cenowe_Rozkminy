@@ -1166,7 +1166,7 @@ wojewodztwa_centroidy <- suppressWarnings({
 })
 ```
 
-## Analiza średnich cen mieszkań według województw
+# Analiza średnich cen mieszkań według województw
 
 <p style="text-align: justify;"> Celem analizy regionalnej cen mieszkań jest zrozumienie zróżnicowania poziomu cen nieruchomości w Polsce. Wykorzystanie mapy województw pozwala zobrazować różnice w średnich cenach za metr kwadratowy w poszczególnych regionach kraju. Tego rodzaju wizualizacja umożliwia identyfikację obszarów o najwyższych oraz najniższych cenach, co może stanowić punkt wyjścia do dalszej analizy rynku nieruchomości, uwzględniającej czynniki wpływające na cenę, takie jak urbanizacja, poziom dochodów czy lokalna infrastruktura. </p>
 
@@ -1227,14 +1227,43 @@ knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
 
 # **Analiza udogodnień w nieruchomościach**
 
-```{r, echo=FALSE, comment=FALSE, warning=FALSE}
-
-ggplot(dane, aes(x = hasBalcony, y = price)) +
+```{r, echo=FALSE, fig.height=10,fig.width=10}
+p1 <- ggplot(dane, aes(x = hasBalcony, y = price)) +
   geom_boxplot(fill = c("lightblue", "lightgreen")) +
   labs(title = "Wpływ obecności balkonu na cenę mieszkania",
        x = "Czy mieszkanie ma balkon?",
        y = "Cena (PLN)") +
   theme_minimal()
+
+p2 <- ggplot(dane, aes(x = hasElevator, y = price)) +
+  geom_boxplot(fill = c("plum", "peachpuff")) +
+  labs(title = "Wpływ obecności windy na cenę mieszkania",
+       x = "Czy mieszkanie ma windę?",
+       y = "Cena (PLN)") +
+  theme_minimal()
+
+p3 <- ggplot(dane, aes(x = hasParkingSpace, y = price)) +
+  geom_boxplot(fill = c("lightyellow", "tomato2")) +
+  labs(title = "Wpływ obecności parkingu na cenę mieszkania",
+       x = "Czy mieszkanie ma parking?",
+       y = "Cena (PLN)") +
+  theme_minimal()
+
+p4 <- ggplot(dane, aes(x = hasSecurity, y = price)) +
+  geom_boxplot(fill = c("thistle", "darkslateblue")) +
+  labs(title = "Wpływ obecności ochrony na cenę mieszkania",
+       x = "Czy mieszkanie ma ochronę?",
+       y = "Cena (PLN)") +
+  theme_minimal()
+
+p5 <- ggplot(dane, aes(x = hasStorageRoom, y = price)) +
+  geom_boxplot(fill = c("lightsalmon1", "darkseagreen3")) +
+  labs(title = "Wpływ obecności komórki lokatorskiej na cenę mieszkania",
+       x = "Czy mieszkanie ma komórke lokatorską?",
+       y = "Cena (PLN)") +
+  theme_minimal()
+
+grid.arrange(p1, p2, p3, p4, p5, nrow =3)
 
 ```
 
