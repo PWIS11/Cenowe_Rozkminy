@@ -32,6 +32,7 @@ if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra"
 if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
 if (!requireNamespace("validate", quietly = TRUE)) install.packages("validate")
 if (!requireNamespace("plotly", quietly = TRUE)) install.packages("plotly")
+if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")
 ```
 
 ```{r libraries, include=FALSE}
@@ -52,6 +53,7 @@ library(gridExtra)
 library(dlookr)
 library(validate)
 library(plotly)
+library(knitr)
 ```
 
 # **Cel projektu**
@@ -131,15 +133,218 @@ Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku nieruchomości 
 <p style="text-align: justify;">
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
 </p>
+
+
+## **Brudne dane i ich znaczenie w analizie**
+
+### **Czym są brudne dane?**
+<p style="text-align: justify;">
+Brudne dane to dane, które są niekompletne, nieprawidłowe, niespójne lub w inny sposób niezgodne z wymaganiami jakościowymi potrzebnymi do ich analizy. Przykłady brudnych danych obejmują:
+</p>
+
+- **Braki danych (NA):** Puste komórki w zestawie danych, które mogą być spowodowane błędami w zbieraniu danych lub brakiem odpowiednich informacji.
+- **Niepoprawne wartości:** Dane, które są logicznie sprzeczne, np. liczba pięter większa niż całkowita liczba kondygnacji.
+- **Niespójne formaty:** Dane zapisane w różnych formatach, np. różne sposoby zapisu nazw miast.
+- **Duplikaty:** Powtarzające się rekordy w zbiorze danych.
+
+### **Dlaczego należy walczyć z brudnymi danymi?**
+<p style="text-align: justify;">
+Analiza danych oparta na brudnych danych prowadzi do błędnych wniosków i modeli. Wysoka jakość danych jest kluczowa, ponieważ:
+</p>
+
+1. **Zapewnia wiarygodność wyników:** Poprawne dane umożliwiają uzyskanie rzetelnych wniosków.
+2. **Ułatwia analizę:** Dane uporządkowane i spójne są łatwiejsze do przetwarzania i modelowania.
+3. **Ogranicza błędy w analizach:** Niespójności w danych mogą prowadzić do błędnych wyników statystycznych.
+
+### **Działania naprawcze dla brudnych danych**
+<p style="text-align: justify;">
+W naszym projekcie podjęliśmy działania w celu naprawy brudnych danych, obejmujące:
+</p>
+
+1. **Ujednolicenie nazw miast:** Naprawimy niezgodności w zapisie nazw, aby zapewnić spójność.
+2. **Poprawa nazw kolumn:** Nazwy kolumn zostaną zmienione na bardziej opisowe, co ułatwi zrozumienie danych. Planowane zmiany to np.:
+   - `squareMeters` → `square_meters`
+   - `floorCount` → `total_floors`
+   - `clinic_distance` → `distance_to_clinic`
+3. **Uzupełnienie brakujących danych:**
+   - **Metodami statystycznymi:** Użyjemy mediany dla wartości liczbowych oraz najczęściej występujących wartości dla zmiennych kategorycznych.
+   - **Regułami logicznymi:** Uzupełnimy dane na podstawie zależności między zmiennymi.
+4. **Eliminacja błędów logicznych:** Skorygujemy przypadki, gdzie np. piętro jest większe niż liczba kondygnacji.
+
+### **Planowane działania techniczne**
+<p style="text-align: justify;">
+Przegląd kolumn w poszukiwaniu braków, niezgodności oraz błędów logicznych. Transformacja danych, aby były zgodne z wymaganiami do analizy i modelowania. Sprawdzenie zgodności z przyjętymi regułami walidacyjnymi oraz weryfikacja efektów imputacji i transformacji danych.
+</p>
+
+**Zmiana nazw kolumn**
+Poniżej znajduje się tabela z przekształconymi nazwami kolumn:
+
 ```{r wstepna_obrobka_danych, echo=FALSE}
 dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
+
+# Przygotowanie tabeli do raportu
+column_changes <- data.frame(
+  Original_Name = c("id", "city", "type", "squareMeters", "rooms", "floor", 
+                    "floorCount", "buildYear", "latitude", "longitude", 
+                    "centreDistance", "poiCount", "schoolDistance", 
+                    "clinicDistance", "postOfficeDistance", "kindergartenDistance", 
+                    "restaurantDistance", "collegeDistance", "pharmacyDistance", 
+                    "ownership", "buildingMaterial", "condition", "hasParkingSpace", 
+                    "hasBalcony", "hasElevator", "hasSecurity", "hasStorageRoom", "price"),
+  New_Name = c("id", "city", "building_type", "square_meters", "rooms", "floor", 
+               "floor_count", "build_year", "latitude", "longitude", 
+               "centre_distance", "poi_count", "school_distance", 
+               "clinic_distance", "post_office_distance", "kindergarten_distance", 
+               "restaurant_distance", "college_distance", "pharmacy_distance", 
+               "ownership", "building_material", "condition", "has_parking", 
+               "has_balcony", "has_elevator", "has_security", "has_storage_room", "price")
+)
+
+# Wyświetlenie tabeli w raporcie
+knitr::kable(column_changes, 
+             caption = "Zmiana nazw kolumn: Oryginalne i nowe nazwy", 
+             align = "c")
+
+# Zmiana nazw kolumn w zbiorze danych
+colnames(dane) <- c("id", "city", "building_type", "square_meters", "rooms", "floor", 
+                    "floor_count", "build_year", "latitude", "longitude", 
+                    "centre_distance", "poi_count", "school_distance", 
+                    "clinic_distance", "post_office_distance", "kindergarten_distance", 
+                    "restaurant_distance", "college_distance", "pharmacy_distance", 
+                    "ownership", "building_material", "condition", "has_parking", 
+                    "has_balcony", "has_elevator", "has_security", "has_storage_room", "price")
 
 # Zmiana id na liczby rosnące, zaczynające się od cyfry 1
 dane$id <- 1:nrow(dane)
 
 # Zamiana pustych ciągów na NA
 dane[dane == ""] <- NA
+
 ```
+
+## Standaryzacja danych
+
+W celu ujednolicenia danych i zapewnienia ich spójności, dokonano następujących zmian:
+
+### **Zmiany nazw miast**
+
+Standaryzacja nazw miast w kolumnie `city` polegała na poprawie pisowni, m.in. zamianie nazw pisanych małymi literami na wersje z wielką literą oraz wprowadzeniu poprawnych form polskich nazw. Dzięki temu dane są bardziej czytelne i gotowe do dalszych analiz.
+
+| Poprzednia nazwa | Nowa nazwa |
+|-------------------|------------|
+| szczecin          | Szczecin   |
+| gdynia            | Gdynia     |
+| krakow            | Kraków     |
+| poznan            | Poznań     |
+| bialystok         | Białystok  |
+| gdansk            | Gdańsk     |
+| wroclaw           | Wrocław    |
+| radom             | Radom      |
+| rzeszow           | Rzeszów    |
+| lodz              | Łódź       |
+| katowice          | Katowice   |
+| lublin            | Lublin     |
+| czestochowa       | Częstochowa|
+| warszawa          | Warszawa   |
+| bydgoszcz         | Bydgoszcz  |
+
+---
+
+### **Zmiany nazw w kolumnie `building_type`**
+
+Ujednolicono nazewnictwo typów budynków. Różne nazwy odnoszące się do tego samego typu budynku zostały sprowadzone do jednej wartości, co upraszcza interpretację i analizę.
+
+| Poprzednia nazwa       | Nowa nazwa      |
+|-------------------------|-----------------|
+| blockOfFlats           | block_of_flats  |
+| apartmentBuilding       | block_of_flats  |
+| tenement               | tenement        |
+
+---
+
+### **Zmiany nazw w kolumnie `ownership`**
+
+Poprawiono i ujednolicono nazwy dotyczące formy własności nieruchomości. Różne terminy określające tę samą formę własności zostały scalone.
+
+| Poprzednia nazwa  | Nowa nazwa   |
+|-------------------|--------------|
+| condominium       | condominium  |
+| udział            | condominium  |
+| cooperative       | cooperative  |
+
+---
+
+### **Zmiany nazw w kolumnie `building_material`**
+
+Dostosowano nazewnictwo materiałów budowlanych, ujednolicając zapis oraz wprowadzając format z podkreśleniami (`snake_case`).
+
+| Poprzednia nazwa  | Nowa nazwa     |
+|-------------------|----------------|
+| concreteSlab      | concrete_slab  |
+| brick             | brick          |
+
+---
+
+### **Cel zmian**
+1. **Poprawa jakości danych:** Eliminacja niespójności w nazewnictwie.
+2. **Ułatwienie analizy:** Ujednolicone dane umożliwiają prostsze grupowanie i wyciąganie wniosków.
+3. **Czytelność i przejrzystość:** Dzięki standaryzacji dane są bardziej intuicyjne i gotowe do prezentacji w raportach.
+
+Zmiany te zapewniają, że wszystkie dane są zgodne ze standardami i umożliwiają łatwiejsze ich przetwarzanie w kolejnych krokach analizy.
+
+
+```{r brudne dane, echo=FALSE}
+
+# Zmiana nazw miast
+dane$city <- case_when(
+  dane$city == "szczecin" ~ "Szczecin",
+  dane$city == "gdynia" ~ "Gdynia",
+  dane$city == "krakow" ~ "Kraków",
+  dane$city == "poznan" ~ "Poznań",
+  dane$city == "bialystok" ~ "Białystok",
+  dane$city == "gdansk" ~ "Gdańsk",
+  dane$city == "wroclaw" ~ "Wrocław",
+  dane$city == "radom" ~ "Radom",
+  dane$city == "rzeszow" ~ "Rzeszów",
+  dane$city == "lodz" ~ "Łódź",
+  dane$city == "katowice" ~ "Katowice",
+  dane$city == "lublin" ~ "Lublin",
+  dane$city == "czestochowa" ~ "Częstochowa",
+  dane$city == "warszawa" ~ "Warszawa",
+  dane$city == "bydgoszcz" ~ "Bydgoszcz",
+  TRUE ~ NA_character_
+)
+
+# Zmiana nazw building_type
+dane$building_type <- case_when(
+  dane$building_type == "blockOfFlats" ~ "block_of_flats",
+  dane$building_type == "apartmentBuilding" ~ "block_of_flats",
+  dane$building_type == "tenement" ~ "tenement",
+  TRUE ~ NA_character_
+)
+
+# Zmiana nazw ownership
+dane$ownership <- case_when(
+  dane$ownership == "condominium" ~ "condominium",
+  dane$ownership == "udział" ~ "condominium",
+  dane$ownership == "cooperative" ~ "cooperative",
+  TRUE ~ NA_character_
+)
+
+# Zmiana nazw ownership
+dane$building_material <- case_when(
+  dane$building_material  == "concreteSlab" ~ "concrete_slab",
+  dane$building_material  == "brick" ~ "brick",
+  TRUE ~ NA_character_
+)
+
+```
+
+
+### **Przejście do walidacji danych**
+<p style="text-align: justify;">
+Po wstępnym usunięciu brudnych danych kolejnym krokiem jest szczegółowa walidacja danych, która pozwoli sprawdzić ich zgodność z regułami logicznymi i jakościowymi. Dzięki temu możemy upewnić się, że dane są gotowe do analizy i modelowania. Poniżej przedstawiamy reguły walidacyjne zastosowane w projekcie.
+</p>
 
 # **Data validation**
 
@@ -183,7 +388,7 @@ Zbiór danych składa się z 28 kolumn, które charakteryzują się następując
 </p>
 
 <p style="text-align: justify;">
-Zmienne numeryczne, takie jak squareMeters, price czy centreDistance, mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne, takie jak type, ownership czy buildingMaterial, mogą być traktowane jako zmienne typu factor i wykorzystane w analizach klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price, również mogą być używane w analizach numerycznych.
+Zmienne numeryczne, takie jak square_meters, price czy centre_distance, mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne, takie jak building_type, ownership czy building_material, mogą być traktowane jako zmienne typu factor i wykorzystane w analizach klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price, również mogą być używane w analizach numerycznych.
 </p>
 
 <p style="text-align: justify;">
@@ -206,14 +411,14 @@ Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniaj�
 # Definiowanie reguł walidacyjnych
 
 rules <- validator(
-  "Floor>Floor Count" = floor <= floorCount,                                            # Piętro nie większe niż liczba kondygnacji
-  "BuildYear<= 2024" = buildYear <= 2024,                                               # Rok budowy nie większy niż rok bieżący
-  "BuildYear > 1600" = buildYear > 1600,                                                 # Rok budowy późniejszy niż 1600
+  "Floor>Floor Count" = floor <= floor_count,                                            # Piętro nie większe niż liczba kondygnacji
+  "build_year<= 2024" = build_year <= 2024,                                               # Rok budowy nie większy niż rok bieżący
+  "build_year > 1600" = build_year > 1600,                                                 # Rok budowy późniejszy niż 1600
   "Floor>= 0" = floor >= 0,                                                              # Piętro nie może być ujemne
-  "FloorCount >= 0" = floorCount >= 0,                                                   # Liczba kondygnacji nie może być ujemna
+  "floor_count >= 0" = floor_count >= 0,                                                   # Liczba kondygnacji nie może być ujemna
   "Rooms> 0" = rooms > 0,                                                                # Liczba pokoi większa niż 0
   "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
-  "Elevator in a building with 0 floors" = !(floorCount == 0 & hasElevator == "yes")      # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")      # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 
 )
 
@@ -224,7 +429,7 @@ rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600
                  "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
 
 expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floorCount == 0 & hasElevator == 'yes')")
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floor_count == 0 & has_elevator == 'yes')")
 
 results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
                     "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
@@ -279,11 +484,11 @@ Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno wizual
 
 Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej zrozumieć przyczyny ich występowania.
 
--   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich jak hasElevator i collegeDistance są losowe i wynikają z technicznych pominięć w zbieraniu danych.
+-   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich jak has_elevator i college_distance są losowe i wynikają z technicznych pominięć w zbieraniu danych.
 
--   **MAR (Missing At Random)**: Braki w kolumnach condition, buildingMaterial, oraz floor wynikają z powiązań między zmiennymi, np. type i floorCount.
+-   **MAR (Missing At Random)**: Braki w kolumnach condition, building_material, oraz floor wynikają z powiązań między zmiennymi, np. building_type i floor_count.
 
--   **MNAR (Missing Not At Random)**: Braki w type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
+-   **MNAR (Missing Not At Random)**: Braki w building_type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
 
 Dzięki tym wstępnym analizom możliwe jest odpowiednie dobranie metod imputacji (np. medianą, modą lub bardziej zaawansowanymi metodami), a także ewentualne usunięcie zmiennych, w których braki są zbyt liczne i niemożliwe do uzupełnienia bez znaczącej utraty jakości danych.
 
@@ -322,15 +527,15 @@ suppressMessages({
 
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na kilka grup pod względem liczby braków:
 
--   **Bardzo duża liczba braków:** condition (74.0%) i buildingMaterial (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się usunąć kolumnę condition, a dla buildingMaterial zastosujemy imputację najczęstszą wartością.
+-   **Bardzo duża liczba braków:** condition (74.0%) i building_material (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się usunąć kolumnę condition, a dla building_material zastosujemy imputację najczęstszą wartością.
 
--   **Umiarkowana liczba braków:** type (20.5%), floor (16.6%), buildYear (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą najczęstszej wartości dla zmiennych kategorycznych (type) oraz medianą dla zmiennych liczbowych (floor, buildYear).
+-   **Umiarkowana liczba braków:** building_type (20.5%), floor (16.6%), build_year (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą najczęstszej wartości dla zmiennych kategorycznych (building_type) oraz medianą dla zmiennych liczbowych (floor, build_year).
 
--   **Niewielka liczba braków:** Kolumny takie jak hasElevator (4.46%) czy collegeDistance (2.72%) zostaną uzupełnione odpowiednio modą i medianą.
+-   **Niewielka liczba braków:** Kolumny takie jak has_elevator (4.46%) czy college_distance (2.72%) zostaną uzupełnione odpowiednio modą i medianą.
 
 -   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1% braków zostaną imputowane prostymi metodami (medianą lub najczęstszą wartością).
 
--   **Kolumny bez braków:** Pozostałe zmienne, takie jak price, squareMeters czy rooms, są kompletne i nie wymagają dodatkowych działań.
+-   **Kolumny bez braków:** Pozostałe zmienne, takie jak price, square_meters czy rooms, są kompletne i nie wymagają dodatkowych działań.
 
 ```{r wzorce_brakow, echo=FALSE, warning=FALSE, message=FALSE}
 # Zwiększenie rozmiaru wykresu
@@ -359,28 +564,28 @@ aggr(dane,
 ################################################################################
 
 dane$floor<-imputate_na(dane, floor, method = "median")
-dane$buildYear<-imputate_na(dane, buildYear, method = "median")
-dane$collegeDistance<-imputate_na(dane, collegeDistance, method = "median")
-dane$schoolDistance<-imputate_na(dane, schoolDistance, method = "median")
-dane$pharmacyDistance<-imputate_na(dane, pharmacyDistance, method = "median")
-dane$kindergartenDistance<-imputate_na(dane, kindergartenDistance, method = "median")
-dane$clinicDistance<-imputate_na(dane, clinicDistance, method = "median")
-dane$postOfficeDistance<-imputate_na(dane, postOfficeDistance, method = "median")
-dane$restaurantDistance<-imputate_na(dane, restaurantDistance, method = "median")
-dane$floorCount<-imputate_na(dane, floorCount, method = "median")
+dane$build_year<-imputate_na(dane, build_year, method = "median")
+dane$college_distance<-imputate_na(dane, college_distance, method = "median")
+dane$school_distance<-imputate_na(dane, school_distance, method = "median")
+dane$pharmacy_distance<-imputate_na(dane, pharmacy_distance, method = "median")
+dane$kindergarten_distance<-imputate_na(dane, kindergarten_distance, method = "median")
+dane$clinic_distance<-imputate_na(dane, clinic_distance, method = "median")
+dane$post_office_distance<-imputate_na(dane, post_office_distance, method = "median")
+dane$restaurant_distance<-imputate_na(dane, restaurant_distance, method = "median")
+dane$floor_count<-imputate_na(dane, floor_count, method = "median")
 ################################################################################
 
-#table(na.omit(dane$type)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
-#table(na.omit(dane$buildingMaterial)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
-#table(na.omit(dane$hasElevator))
+#table(na.omit(dane$building_type)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
+#table(na.omit(dane$building_material)) SPRAWDZENIE CZĘSTOSCI WYSTĘPOWANIA
+#table(na.omit(dane$has_elevator))
 
-dane$type[is.na(dane$type)] <- "blockOfFlats"
-dane$buildingMaterial[is.na(dane$buildingMaterial)] <- "brick"
-dane$hasElevator[is.na(dane$hasElevator)] <- "yes"
+dane$building_type[is.na(dane$building_type)] <- "blockOfFlats"
+dane$building_material[is.na(dane$building_material)] <- "brick"
+dane$has_elevator[is.na(dane$has_elevator)] <- "yes"
 
-dane$type <- factor(dane$type)
-dane$buildingMaterial <- factor(dane$buildingMaterial)
-dane$hasElevator <- factor(dane$hasElevator)
+dane$building_type <- factor(dane$building_type)
+dane$building_material <- factor(dane$building_material)
+dane$has_elevator <- factor(dane$has_elevator)
 
 ################################################################################
 dane$condition <- NA
@@ -392,11 +597,11 @@ dane <- subset(dane, select = -condition)
 ```{r Dodanie_dodatkowych_kolumn_cena_za_metr_wiek_mieszkania,echo = FALSE}
 
 # Dodanie kolumny z ceną za metr kwadratowy
-dane$pricePerSquareMeter <- dane$price / dane$squareMeters
+dane$price_per_square_meter <- dane$price / dane$square_meters
 
 # Dodanie kolumny z wiekiem mieszkania
 currentYear <- format(Sys.Date(), "%Y")
-dane$buildingAge <- ifelse(is.na(dane$buildYear), NA, as.numeric(currentYear) - dane$buildYear)
+dane$building_age <- ifelse(is.na(dane$build_year), NA, as.numeric(currentYear) - dane$build_year)
 ```
 
 ## **Obserwacje odstające**
@@ -433,46 +638,62 @@ Interpretacja jest następująca:
 ### Wykresy pudełkowe
 
 ```{r zamiana_na_numeryczne, echo=FALSE}
-dane$buildingAge <- as.numeric(dane$buildingAge)
+dane$building_age <- as.numeric(dane$building_age)
 dane$latitude <- as.numeric(dane$latitude)
 dane$longitude <- as.numeric(dane$longitude)
-dane$centreDistance <- as.numeric(dane$centreDistance)
-dane$schoolDistance <- as.numeric(dane$schoolDistance)
-dane$clinicDistance <- as.numeric(dane$clinicDistance)
-dane$postOfficeDistance <- as.numeric(dane$postOfficeDistance)
-dane$kindergartenDistance <- as.numeric(dane$kindergartenDistance)
-dane$collegeDistance <- as.numeric(dane$collegeDistance)
-dane$restaurantDistance <- as.numeric(dane$restaurantDistance)
-dane$pharmacyDistance <- as.numeric(dane$pharmacyDistance)
-dane$floorCount <- as.numeric(dane$floorCount)
+dane$centre_distance <- as.numeric(dane$centre_distance)
+dane$school_distance <- as.numeric(dane$school_distance)
+dane$clinic_distance <- as.numeric(dane$clinic_distance)
+dane$post_office_distance <- as.numeric(dane$post_office_distance)
+dane$kindergarten_distance <- as.numeric(dane$kindergarten_distance)
+dane$college_distance <- as.numeric(dane$college_distance)
+dane$restaurant_distance <- as.numeric(dane$restaurant_distance)
+dane$pharmacy_distance <- as.numeric(dane$pharmacy_distance)
+dane$floor_count <- as.numeric(dane$floor_count)
 ```
+
+<a id="square_metersBoxPlot"></a>
+<a id="priceBoxPlot"></a>
+<a id="price_per_square_meterBoxPlot"></a>
+<a id="roomsBoxPlot"></a>
+<a id="floorBoxPlot"></a>
+<a id="floor_countBoxPlot"></a>
+<a id="building_ageBoxPlot"></a>
+<a id="centre_distanceBoxPlot"></a>
+<a id="school_distanceBoxPlot"></a>
 
 ```{r boxplot_odst, fig.height=10, fig.width=10, echo=FALSE, fig.show='hold'}
 # Renderowanie pierwszej strony (9 wykresów)
 par(mfrow = c(3, 3))  # Układ 3x3
-boxplot(dane$squareMeters, main = "Square Meters", col = "skyblue")
+boxplot(dane$square_meters, main = "Square Meters", col = "skyblue")
 boxplot(dane$price, main = "Price", col = "plum")
-boxplot(dane$pricePerSquareMeter, main = "PricePerSquareMeter", col = "peachpuff")
+boxplot(dane$price_per_square_meter, main = "Price Per Square Meter", col = "peachpuff")
 boxplot(dane$rooms, main = "Rooms", col = "palegreen2")
 boxplot(dane$floor, main = "Floors", col = "powderblue")
-boxplot(dane$floorCount, main = "FloorCount", col = "thistle3")
-boxplot(dane$buildingAge, main = "BuildingAge", col = "salmon")
-boxplot(dane$centreDistance, main = "CentreDistance", col = "pink4")
-boxplot(dane$schoolDistance, main = "SchoolDistance", col = "pink")
+boxplot(dane$floor_count, main = "Floor Count", col = "thistle3")
+boxplot(dane$building_age, main = "Building Age", col = "salmon")
+boxplot(dane$centre_distance, main = "Centre Distance", col = "pink4")
+boxplot(dane$school_distance, main = "School Distance", col = "pink")
 ```
 
+<a id="clinic_distanceBoxPlot"></a>
+<a id="post_office_distanceBoxPlot"></a>
+<a id="kindergarten_distanceBoxPlot"></a>
+<a id="restaurant_distanceBoxPlot"></a>
+<a id="college_distanceBoxPlot"></a>
+<a id="pharmacy_distanceBoxPlot"></a>
 
 ```{r boxplot_odst2, fig.height=7, fig.width=10, echo=FALSE, fig.show='hold'}
 # Resetowanie układu
 par(mfrow = c(2, 3))  # Układ 2x3 dla 6 miejsc
 
 # Renderowanie drugiej strony (5 wykresów + puste miejsce)
-boxplot(dane$clinicDistance, main = "ClinicDistance", col = "orange")
-boxplot(dane$postOfficeDistance, main = "PostOfficeDistance", col = "coral")
-boxplot(dane$kindergartenDistance, main = "KindergardenDistance", col = "lavender")
-boxplot(dane$restaurantDistance, main = "RestaurantDistance", col = "khaki")
-boxplot(dane$collegeDistance, main = "CollegeDistance", col = "indianred")
-boxplot(dane$pharmacyDistance, main = "PharmacyDistance", col = "lavenderblush2")
+boxplot(dane$clinic_distance, main = "Clinic Distance", col = "orange")
+boxplot(dane$post_office_distance, main = "Post Office Distance", col = "coral")
+boxplot(dane$kindergarten_distance, main = "Kindergarden Distance", col = "lavender")
+boxplot(dane$restaurant_distance, main = "Restaurant Distance", col = "khaki")
+boxplot(dane$college_distance, main = "College Distance", col = "indianred")
+boxplot(dane$pharmacy_distance, main = "Pharmacy Distance", col = "lavenderblush2")
 ```
 
 
@@ -491,66 +712,66 @@ Poniżej przedstawiono szczegółową interpretację wyników dla każdej z anal
 
 
 
-**Square Meters (Powierzchnia mieszkań):**\
+**[square_meters](#square_metersBoxPlot)** 
 - Mediana powierzchni wynosi około **50-60 m²**.\
 - Większość mieszkań mieści się w zakresie **40-80 m²**.\
 - **Wartości odstające** powyżej **100 m²** wskazują na większe apartamenty lub luksusowe nieruchomości.
 
-**Price (Cena mieszkań):**\
+**[price](#priceBoxPlot)**  
 - Mediana ceny mieszkań wynosi około **750 tys. zł**.\
 - Typowe wartości mieszczą się w przedziale **500 tys. – 1 mln zł**.\
 - Liczne **wartości odstające** powyżej **2,5 mln zł** sugerują obecność luksusowych nieruchomości w analizowanym zbiorze.
 
-**PricePerSquareMeter (Cena za m²):**\
+**[price_per_square_meter](#price_per_square_meterBoxPlot)** 
 - Mediana wynosi około **15 000 zł/m²**, a większość wartości mieści się w zakresie **10 000 – 20 000 zł/m²**.\
 - **Wartości odstające** przekraczające **30 000 zł/m²** mogą wynikać z mieszkań położonych w bardzo prestiżowych lokalizacjach.
 
-**Rooms (Liczba pokoi):**\
+**[rooms](#roomsBoxPlot)**  
 - Typowe mieszkania mają **2-3 pokoje**, co potwierdza mediana.\
 - **Wartości odstające** (4-6 pokoi) mogą wskazywać na większe mieszkania lub apartamenty rodzinne.
 
-**Floors (Piętro):**\
+**[floor](#floorBoxPlot)**   
 - Mediana piętra to około **2**.\
 - Większość mieszkań znajduje się na **1-5 piętrze**.\
 - **Wartości odstające** powyżej **15 piętra** sugerują obecność mieszkań w wieżowcach.
 
-**FloorCount (Liczba pięter w budynku):**\
+**[floor_count](#floor_countBoxPlot)**  
 - Typowe budynki mają **4-6 pięter**.\
 - **Wartości odstające** powyżej **15 pięter** wskazują na obecność wysokich budynków mieszkalnych.
 
-**BuildingAge (Wiek budynku):**\
+**[building_age](#building_ageBoxPlot)**  
 - Mediana wieku budynków wynosi około **50 lat**.\
 - Budynki mające więcej niż **100 lat** to **wartości odstające**, co sugeruje obecność starszych, często zabytkowych nieruchomości.
 
-**CentreDistance (Odległość od centrum):**\
+**[centre_distance](#centre_distanceBoxPlot)** 
 - Typowa odległość to **2-8 km**.\
 - **Wartości odstające** powyżej **15 km** wskazują na nieruchomości położone na przedmieściach lub w odległych lokalizacjach.
 
-**SchoolDistance (Odległość od szkoły):**\
+**[school_distance](#school_distanceBoxPlot)** 
 - Większość szkół znajduje się w odległości **do 1 km**.\
 - **Wartości odstające** powyżej **4 km** mogą świadczyć o gorszej dostępności edukacji w analizowanych lokalizacjach.
 
-**ClinicDistance (Odległość od kliniki):**\
+**[clinic_distance](#clinic_distanceBoxPlot)**  
 - Kliniki są najczęściej położone **do 1 km** od mieszkań.\
 - **Wartości odstające** powyżej **3 km** wskazują na obszary o niższym dostępie do opieki zdrowotnej.
 
-**PostOfficeDistance (Odległość od poczty):**\
+**[post_office_distance](#post_office_distanceBoxPlot)**  
 - Typowa odległość wynosi **0-1 km**.\
 - **Wartości odstające** powyżej **4 km** mogą wynikać z mniej zurbanizowanych obszarów.
 
-**KindergardenDistance (Odległość od przedszkola):**\
+**[kindergarten_distance](#kindergarten_distanceBoxPlot)** 
 - Przedszkola znajdują się głównie **do 1 km** od mieszkań.\
 - **Wartości odstające** powyżej **3 km** sugerują problemy z dostępem do usług dla rodzin z dziećmi.
 
-**RestaurantDistance (Odległość od restauracji):**\
+**[restaurant_distance](#restaurant_distanceBoxPlot)**  
 - Restauracje znajdują się typowo **do 1 km** od mieszkań.\
 - **Wartości odstające** powyżej **5 km** wskazują na peryferyjne lokalizacje z ograniczoną ofertą gastronomiczną.
 
-**CollegeDistance (Odległość od uczelni):**\
+**[college_distance](#college_distanceBoxPlot)** 
 - Typowa odległość wynosi **1-2 km**.\
 - **Wartości odstające** do **5 km** sugerują lokalizacje mniej centralne pod względem infrastruktury edukacyjnej.
 
-**PharmacyDistance (Odległość od apteki):**\
+**[pharmacy_distance](#pharmacy_distanceBoxPlot)**
 - Apteki znajdują się zazwyczaj **do 1 km** od mieszkań.\
 - **Wartości odstające** powyżej **4 km** wskazują na obszary o ograniczonym dostępie do usług farmaceutycznych.
 
@@ -563,153 +784,153 @@ Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym m
 
 ### Skośność
 
-<a id="centreDistancePlot"></a>
-<a id="poiCountPlot"></a>
-<a id="schoolDistancePlot"></a>
-<a id="clinicDistancePlot"></a>
-<a id="postOfficeDistancePlot"></a>
-<a id="kindergartenDistancePlot"></a>
-<a id="restaurantDistancePlot"></a>
-<a id="collegeDistancePlot"></a>
-<a id="pharmacyDistancePlot"></a>
+<a id="centre_distancePlot"></a>
+<a id="poi_countPlot"></a>
+<a id="school_distancePlot"></a>
+<a id="clinic_distancePlot"></a>
+<a id="post_office_distancePlot"></a>
+<a id="kindergarten_distancePlot"></a>
+<a id="restaurant_distancePlot"></a>
+<a id="college_distancePlot"></a>
+<a id="pharmacy_distancePlot"></a>
 
 
 
 ```{r skosnosc, echo = FALSE, eval = TRUE, fig.height=6, fig.width=8}
 par(mfrow = c(3, 3))  # Układ 3x3
-hist(na.omit(dane$centreDistance), 
+hist(na.omit(dane$centre_distance), 
      probability = TRUE, 
      col = "plum1", 
-     main = "Histogram - centreDistance", 
-     xlab = "centreDistance")
-curve(dnorm(x, mean = mean(na.omit(dane$centreDistance)), 
-            sd = sd(na.omit(dane$centreDistance))), 
+     main = "Histogram - centre_distance", 
+     xlab = "centre_distance")
+curve(dnorm(x, mean = mean(na.omit(dane$centre_distance)), 
+            sd = sd(na.omit(dane$centre_distance))), 
       col = "plum4", 
       lwd = 2, 
       add = TRUE)
 
-# poiCount
-hist(na.omit(dane$poiCount), 
+# poi_count
+hist(na.omit(dane$poi_count), 
      probability = TRUE, 
      col = "lightblue", 
-     main = "Histogram - poiCount", 
-     xlab = "poiCount")
-curve(dnorm(x, mean = mean(na.omit(dane$poiCount)), 
-            sd = sd(na.omit(dane$poiCount))), 
+     main = "Histogram - poi_count", 
+     xlab = "poi_count")
+curve(dnorm(x, mean = mean(na.omit(dane$poi_count)), 
+            sd = sd(na.omit(dane$poi_count))), 
       col = "darkblue", 
       lwd = 2, 
       add = TRUE)
 
-# schoolDistance
-hist(na.omit(dane$schoolDistance), 
+# school_distance
+hist(na.omit(dane$school_distance), 
      probability = TRUE, 
      col = "lightgreen", 
-     main = "Histogram - schoolDistance", 
-     xlab = "schoolDistance")
-curve(dnorm(x, mean = mean(na.omit(dane$schoolDistance)), 
-            sd = sd(na.omit(dane$schoolDistance))), 
+     main = "Histogram - school_distance", 
+     xlab = "school_distance")
+curve(dnorm(x, mean = mean(na.omit(dane$school_distance)), 
+            sd = sd(na.omit(dane$school_distance))), 
       col = "green4", 
       lwd = 2, 
       add = TRUE)
 
-# clinicDistance
-hist(na.omit(dane$clinicDistance), 
+# clinic_distance
+hist(na.omit(dane$clinic_distance), 
      probability = TRUE, 
      col = "lightpink", 
-     main = "Histogram - clinicDistance", 
-     xlab = "floorCount")
-curve(dnorm(x, mean = mean(na.omit(dane$clinicDistance)), 
-            sd = sd(na.omit(dane$clinicDistance))), 
+     main = "Histogram - clinic_distance", 
+     xlab = "floor_count")
+curve(dnorm(x, mean = mean(na.omit(dane$clinic_distance)), 
+            sd = sd(na.omit(dane$clinic_distance))), 
       col = "violet", 
       lwd = 2, 
       add = TRUE)
 
-# postOfficeDistance
-hist(na.omit(dane$postOfficeDistance), 
+# post_office_distance
+hist(na.omit(dane$post_office_distance), 
      probability = TRUE, 
      col = "peachpuff", 
-     main = "Histogram - postOfficeDistance", 
-     xlab = "postOfficeDistance")
-curve(dnorm(x, mean = mean(na.omit(dane$postOfficeDistance)), 
-            sd = sd(na.omit(dane$postOfficeDistance))), 
+     main = "Histogram - post_office_distance", 
+     xlab = "post_office_distance")
+curve(dnorm(x, mean = mean(na.omit(dane$post_office_distance)), 
+            sd = sd(na.omit(dane$post_office_distance))), 
       col = "orange1", 
       lwd = 2, 
       add = TRUE)
 
-# kindergartenDistance
-hist(na.omit(dane$kindergartenDistance), 
+# kindergarten_distance
+hist(na.omit(dane$kindergarten_distance), 
      probability = TRUE, 
      col = "lightyellow", 
-     main = "Histogram - kindergartenDistance", 
-     xlab = "kindergartenDistance")
-curve(dnorm(x, mean = mean(na.omit(dane$kindergartenDistance)), 
-            sd = sd(na.omit(dane$kindergartenDistance))), 
+     main = "Histogram - kindergarten_distance", 
+     xlab = "kindergarten_distance")
+curve(dnorm(x, mean = mean(na.omit(dane$kindergarten_distance)), 
+            sd = sd(na.omit(dane$kindergarten_distance))), 
       col = "yellow2", 
       lwd = 2, 
       add = TRUE)
-# restaurantDistance
-hist(na.omit(dane$restaurantDistance), 
+# restaurant_distance
+hist(na.omit(dane$restaurant_distance), 
      probability = TRUE, 
      col = "grey", 
-     main = "Histogram - restaurantDistance", 
-     xlab = "restaurantDistance")
-curve(dnorm(x, mean = mean(na.omit(dane$restaurantDistance)), 
-            sd = sd(na.omit(dane$restaurantDistance))), 
+     main = "Histogram - restaurant_distance", 
+     xlab = "restaurant_distance")
+curve(dnorm(x, mean = mean(na.omit(dane$restaurant_distance)), 
+            sd = sd(na.omit(dane$restaurant_distance))), 
       col = "grey1", 
       lwd = 2, 
       add = TRUE)
-# collegeDistance
-hist(na.omit(dane$collegeDistance), 
+# college_distance
+hist(na.omit(dane$college_distance), 
      probability = TRUE, 
      col = "red4", 
-     main = "Histogram - collegeDistance", 
-     xlab = "collegeDistance")
-curve(dnorm(x, mean = mean(na.omit(dane$collegeDistance)), 
-            sd = sd(na.omit(dane$collegeDistance))), 
+     main = "Histogram - college_distance", 
+     xlab = "college_distance")
+curve(dnorm(x, mean = mean(na.omit(dane$college_distance)), 
+            sd = sd(na.omit(dane$college_distance))), 
       col = "tomato1", 
       lwd = 2, 
       add = TRUE)
-# pharmacyDistance
-hist(na.omit(dane$pharmacyDistance), 
+# pharmacy_distance
+hist(na.omit(dane$pharmacy_distance), 
      probability = TRUE, 
      col = "skyblue1", 
-     main = "Histogram - pharmacyDistance", 
-     xlab = "pharmacyDistance")
-curve(dnorm(x, mean = mean(na.omit(dane$pharmacyDistance)), 
-            sd = sd(na.omit(dane$pharmacyDistance))), 
+     main = "Histogram - pharmacy_distance", 
+     xlab = "pharmacy_distance")
+curve(dnorm(x, mean = mean(na.omit(dane$pharmacy_distance)), 
+            sd = sd(na.omit(dane$pharmacy_distance))), 
       col = "dodgerblue3", 
       lwd = 2, 
       add = TRUE)
 ```
-<a id="buildingAgePlot"></a>
-<a id="squareMetersPlot"></a>
+<a id="building_agePlot"></a>
+<a id="square_metersPlot"></a>
 <a id="pricePlot"></a>
 <a id="floorPlot"></a>
-<a id="floorCountPlot"></a>
-<a id="buildYearPlot"></a>
+<a id="floor_countPlot"></a>
+<a id="build_yearPlot"></a>
 
 ```{r skosnosc_hist2, echo = FALSE, eval = TRUE, fig.height=4, fig.width=8}
 par(mfrow = c(2, 3))  # Układ 3x3
-# postOfficeDistance
-hist(na.omit(dane$buildingAge), 
+# post_office_distance
+hist(na.omit(dane$building_age), 
      probability = TRUE, 
      col = "palegoldenrod", 
-     main = "Histogram - buildingAge", 
-     xlab = "buildingAge")
-curve(dnorm(x, mean = mean(na.omit(dane$buildingAge)), 
-            sd = sd(na.omit(dane$buildingAge))), 
+     main = "Histogram - building_age", 
+     xlab = "building_age")
+curve(dnorm(x, mean = mean(na.omit(dane$building_age)), 
+            sd = sd(na.omit(dane$building_age))), 
       col = "palegreen3", 
       lwd = 2, 
       add = TRUE)
 
-# squareMeters
-hist(na.omit(dane$squareMeters), 
+# square_meters
+hist(na.omit(dane$square_meters), 
      probability = TRUE, 
      col = "deeppink", 
-     main = "Histogram - squareMeters", 
-     xlab = "squareMeters")
-curve(dnorm(x, mean = mean(na.omit(dane$squareMeters)), 
-            sd = sd(na.omit(dane$squareMeters))), 
+     main = "Histogram - square_meters", 
+     xlab = "square_meters")
+curve(dnorm(x, mean = mean(na.omit(dane$square_meters)), 
+            sd = sd(na.omit(dane$square_meters))), 
       col = "deeppink4", 
       lwd = 2, 
       add = TRUE)
@@ -738,26 +959,26 @@ curve(dnorm(x, mean = mean(na.omit(dane$floor)),
       lwd = 2, 
       add = TRUE)
 
-# floorCount
-hist(na.omit(dane$floorCount), 
+# floor_count
+hist(na.omit(dane$floor_count), 
      probability = TRUE, 
      col = "burlywood", 
-     main = "Histogram - floorCount", 
-     xlab = "floorCount")
-curve(dnorm(x, mean = mean(na.omit(dane$floorCount)), 
-            sd = sd(na.omit(dane$floorCount))), 
+     main = "Histogram - floor_count", 
+     xlab = "floor_count")
+curve(dnorm(x, mean = mean(na.omit(dane$floor_count)), 
+            sd = sd(na.omit(dane$floor_count))), 
       col = "burlywood4", 
       lwd = 2, 
       add = TRUE)
 
-# buildYear
-hist(na.omit(dane$buildYear), 
+# build_year
+hist(na.omit(dane$build_year), 
      probability = TRUE, 
      col = "lightblue", 
-     main = "Histogram - buildYear", 
-     xlab = "buildYear")
-curve(dnorm(x, mean = mean(na.omit(dane$buildYear)), 
-            sd = sd(na.omit(dane$buildYear))), 
+     main = "Histogram - build_year", 
+     xlab = "build_year")
+curve(dnorm(x, mean = mean(na.omit(dane$build_year)), 
+            sd = sd(na.omit(dane$build_year))), 
       col = "darkblue", 
       lwd = 2, 
       add = TRUE)
@@ -777,44 +998,44 @@ Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy punkt 
 
 ---
 
-**[centreDistance](#centreDistancePlot):**
+**[centre_distance](#centre_distancePlot):**
 - Rozkład jest **prawoskośny** z koncentracją wartości w zakresie **2-8 km**.  
 - Linia rozkładu normalnego pokazuje, że rozkład empiryczny jest odchylony w prawo.  
 - Wartości powyżej **10 km** stanowią odstępstwa, które wskazują na nieruchomości w peryferyjnych lokalizacjach, co jest nietypowe dla większości analizowanych danych.
 
-**[poiCount](#poiCountPlot)** 
+**[poi_count](#poi_countPlot)** 
 - Histogram pokazuje **wysoce prawoskośny** rozkład, gdzie większość obserwacji znajduje się poniżej **50**.  
 - Linia rozkładu normalnego podkreśla duże odchylenie od symetrii, co sugeruje, że większość lokalizacji ma ograniczoną liczbę punktów użyteczności publicznej, natomiast pojedyncze przypadki z bardzo dużymi wartościami (powyżej **100**) są wyjątkami.
 
-**[schoolDistance](#schoolDistancePlot)**  
+**[school_distance](#school_distancePlot)**  
 - Rozkład odległości jest **prawoskośny**, z dominacją wartości **0-1 km**.  
 - Linia normalna nie pasuje do rozkładu, co wskazuje na silną koncentrację danych blisko **0 km**.  
 - Wartości odstające powyżej **3 km** sugerują lokalizacje z ograniczonym dostępem do szkół.
 
-**[clinicDistance](#clinicDistancePlot)**  
+**[clinic_distance](#clinic_distancePlot)**  
 - Histogram pokazuje **prawoskośny rozkład**, z większością wartości w przedziale **do 1 km**.  
 - Linia rozkładu normalnego wyraźnie nie oddaje koncentracji danych w niższych wartościach.  
 - Wartości powyżej **3 km** sugerują trudniejszy dostęp do opieki zdrowotnej w mniej zurbanizowanych obszarach.
 
-**[postOfficeDistance](#postOfficeDistancePlot)**  
+**[post_office_distance](#post_office_distancePlot)**  
 - Rozkład jest **prawoskośny**, z typowymi wartościami **0,5–1 km**.  
 - Linia rozkładu normalnego wskazuje na istotne odchylenie od normalności, co podkreśla silne skupienie danych w niższych przedziałach.
 
-**[restaurantDistance](#restaurantDistancePlot)**  
+**[restaurant_distance](#restaurant_distancePlot)**  
 - Histogram ujawnia koncentrację wartości w zakresie **do 1 km** z pojedynczymi przypadkami powyżej **3 km**.  
 - Przesunięcie względem linii normalnej podkreśla ograniczoną liczbę nieruchomości o znacznej odległości od restauracji.
 
-**[collegeDistance](#collegeDistancePlot)**  
+**[college_distance](#college_distancePlot)**  
 - Wartości typowe mieszczą się w przedziale **1–2 km**, natomiast histogram jest **lekko prawoskośny**.  
 - Linia rozkładu normalnego dobrze przybliża dane w środkowej części, jednak widać odchylenia w wyższych wartościach (powyżej **4 km**).
 
-**[pharmacyDistance](#pharmacyDistancePlot)** 
+**[pharmacy_distance](#pharmacy_distancePlot)** 
 - Histogram jest **silnie prawoskośny**, z wartościami typowymi **do 1 km**.  
 - Linia normalna nie jest dopasowana, co sugeruje, że rozkład empiryczny jest skupiony na jednym krańcu.
 
 ---
 
-**[squareMeters](#squareMetersPlot)** 
+**[square_meters](#square_metersPlot)** 
 - Rozkład powierzchni mieszkań jest **prawoskośny**, z wartościami dominującymi w przedziale **40–80 m²**.  
 - Linia rozkładu normalnego sugeruje większą symetrię niż istnieje w danych.  
 - **Wartości odstające** powyżej **100 m²** wskazują na duże apartamenty, które są nietypowe.
@@ -827,15 +1048,15 @@ Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy punkt 
 - Większość mieszkań znajduje się na **1-5 piętrze**.  
 - Linia rozkładu normalnego odbiega od rzeczywistego kształtu, który jest **skośny**, z kilkoma wartościami odstającymi powyżej **15 piętra**.
 
-**[floorCount](#floorCountPlot)** 
+**[floor_count](#floor_countPlot)** 
 - Rozkład pokazuje, że typowe budynki mają **4-6 pięter**.  
 - Linia normalna nie oddaje koncentracji w niskich wartościach oraz odstępstw w wysokich budynkach.
 
-**[buildingAge](#buildingAgePlot)** 
+**[building_age](#building_agePlot)** 
 - Histogram wskazuje, że większość budynków ma mniej niż **50 lat**.  
 - Rozkład jest prawoskośny, a linia normalna sugeruje większą symetrię niż rzeczywiście istnieje.
 
-**[buildYear](#buildYearPlot)** 
+**[build_year](#build_yearPlot)** 
 - Rozkład pokazuje koncentrację budynków wybudowanych po **1950 roku**.  
 - Linia normalna dobrze dopasowuje się do danych, jednak rozkład jest lekko przesunięty ku nowszym budynkom.
 
@@ -852,33 +1073,33 @@ Wyniki te potwierdzają specyfikę rynku nieruchomości, gdzie typowe wartości 
 ### Z-score
 
 ```{r z-score, echo = FALSE}
-# mean((dane$buildYear-mean(dane$buildYear))/sd(dane$buildYear))
+# mean((dane$build_year-mean(dane$build_year))/sd(dane$build_year))
 # mean((dane$price-mean(dane$price))/sd(dane$price))
-# mean((dane$squareMeters-mean(dane$squareMeters))/sd(dane$squareMeters))
-# mean((dane$pricePerSquareMeter-mean(dane$pricePerSquareMeter))/sd(dane$pricePerSquareMeter))
+# mean((dane$square_meters-mean(dane$square_meters))/sd(dane$square_meters))
+# mean((dane$price_per_square_meter-mean(dane$price_per_square_meter))/sd(dane$price_per_square_meter))
 # mean((dane$rooms-mean(dane$rooms))/sd(dane$rooms))
 # mean((dane$floor-mean(dane$floor))/sd(dane$floor))
-# mean((dane$floorCount-mean(dane$floorCount))/sd(dane$floorCount))
-# mean((dane$centreDistance-mean(dane$centreDistance))/sd(dane$centreDistance))
-# mean((dane$buildingAge-mean(dane$buildingAge))/sd(dane$buildingAge))
-# mean((dane$schoolDistance-mean(dane$schoolDistance))/sd(dane$schoolDistance))
-# mean((dane$clinicDistance-mean(dane$clinicDistance))/sd(dane$clinicDistance))
-# mean((dane$postOfficeDistance-mean(dane$postOfficeDistance))/sd(dane$postOfficeDistance))
-# mean((dane$kindergartenDistance-mean(dane$kindergartenDistance))/sd(dane$kindergartenDistance))
-# mean((dane$restaurantDistance-mean(dane$restaurantDistance))/sd(dane$restaurantDistance))
-# mean((dane$collegeDistance-mean(dane$collegeDistance))/sd(dane$collegeDistance))
-# mean((dane$pharmacyDistance-mean(dane$pharmacyDistance))/sd(dane$pharmacyDistance))
-# mean((dane$poiCount-mean(dane$poiCount))/sd(dane$poiCount))
+# mean((dane$floor_count-mean(dane$floor_count))/sd(dane$floor_count))
+# mean((dane$centre_distance-mean(dane$centre_distance))/sd(dane$centre_distance))
+# mean((dane$building_age-mean(dane$building_age))/sd(dane$building_age))
+# mean((dane$school_distance-mean(dane$school_distance))/sd(dane$school_distance))
+# mean((dane$clinic_distance-mean(dane$clinic_distance))/sd(dane$clinic_distance))
+# mean((dane$post_office_distance-mean(dane$post_office_distance))/sd(dane$post_office_distance))
+# mean((dane$kindergarten_distance-mean(dane$kindergarten_distance))/sd(dane$kindergarten_distance))
+# mean((dane$restaurant_distance-mean(dane$restaurant_distance))/sd(dane$restaurant_distance))
+# mean((dane$college_distance-mean(dane$college_distance))/sd(dane$college_distance))
+# mean((dane$pharmacy_distance-mean(dane$pharmacy_distance))/sd(dane$pharmacy_distance))
+# mean((dane$poi_count-mean(dane$poi_count))/sd(dane$poi_count))
 ```
 
 
 ```{r tab_zscore, results='asis', eval=TRUE, echo=FALSE}
 
 wyniki <- data.frame(
-  Zmienna = c("buildYear", "price", "squareMeters", "pricePerSquareMeter", "rooms",
-              "floor", "floorCount", "centreDistance", "buildingAge", "schoolDistance",
-              "clinicDistance", "postOfficeDistance", "kindergartenDistance", 
-              "restaurantDistance", "collegeDistance", "pharmacyDistance", "poiCount"),
+  Zmienna = c("build_year", "price", "square_meters", "price_per_square_meter", "rooms",
+              "floor", "floor_count", "centre_distance", "building_age", "school_distance",
+              "clinic_distance", "post_office_distance", "kindergarten_distance", 
+              "restaurant_distance", "college_distance", "pharmacy_distance", "poi_count"),
   Wartosc = c("1.321569e-15", "9.155718e-17", "3.0552e-17", "-5.888089e-17", "-1.961117e-16",
               "-3.274304e-17", "-9.234339e-17", "-1.348539e-16", "8.221441e-17", "1.247826e-17",
              " 2.77439e-17", "9.446714e-17", "-4.220434e-17", "5.62074e-17", "-2.656712e-17",
@@ -929,41 +1150,41 @@ curve(dnorm(x, mean = mean(na.omit(dane$price)),
 
 
 
-```{r transformacja_PricePerSquareMeter, echo = FALSE, fig.height=4, fig.width=8}
+```{r transformacja_price_per_square_meter, echo = FALSE, fig.height=4, fig.width=8}
 par(mfrow = c(1,2))
-# poiCount
+# poi_count
 # wykres przed transformacją
-hist(na.omit(dane$poiCount), 
+hist(na.omit(dane$poi_count), 
      probability = TRUE, 
      col = "goldenrod1", 
-     main = "Original: Histogram - poiCount", 
-     xlab = "poiCount")
-curve(dnorm(x, mean = mean(na.omit(dane$poiCount)), 
-            sd = sd(na.omit(dane$poiCount))), 
+     main = "Original: Histogram - poi_count", 
+     xlab = "poi_count")
+curve(dnorm(x, mean = mean(na.omit(dane$poi_count)), 
+            sd = sd(na.omit(dane$poi_count))), 
       col = "darkblue", 
       lwd = 2, 
       add = TRUE)
 
 # po transformacji
-dane$poiCount <- log(dane$poiCount + 1)
-hist(na.omit(dane$poiCount), 
+dane$poi_count <- log(dane$poi_count + 1)
+hist(na.omit(dane$poi_count), 
      probability = TRUE, 
      col = "goldenrod1", 
-     main = "Histogram - log(poiCount+1)", 
-     xlab = "poiCount")
-curve(dnorm(x, mean = mean(dane$poiCount), 
-            sd = sd(na.omit(dane$poiCount))), 
+     main = "Histogram - log(poi_count+1)", 
+     xlab = "poi_count")
+curve(dnorm(x, mean = mean(dane$poi_count), 
+            sd = sd(na.omit(dane$poi_count))), 
       col = "darkblue", 
       lwd = 2, 
       add = TRUE)
 
 ```
 
-#### Transformacja zmiennej price oraz poiCount
+#### Transformacja zmiennej price oraz poi_count
 
 ##### Powody przeprowadzenia transformacji logarytmicznej:
 1. **Zmniejszenie wpływu wartości odstających**: 
-   - W zmiennych takich jak **price** i **poiCount** występują duże wartości odstające. Dla ceny może to być kilka luksusowych apartamentów o bardzo wysokiej cenie, a dla liczby punktów zainteresowania miejsca z wyjątkowo dużą liczbą udogodnień w okolicy. Transformacja logarytmiczna zmniejsza wpływ tych skrajnych wartości na analizy.
+   - W zmiennych takich jak **price** i **poi_count** występują duże wartości odstające. Dla ceny może to być kilka luksusowych apartamentów o bardzo wysokiej cenie, a dla liczby punktów zainteresowania miejsca z wyjątkowo dużą liczbą udogodnień w okolicy. Transformacja logarytmiczna zmniejsza wpływ tych skrajnych wartości na analizy.
    
 2. **Poprawa rozkładu zmiennych**: 
    - Cena mieszkań oraz liczba punktów zainteresowania często mają rozkład prawoskośny, co oznacza, że większość wartości jest skupiona przy niższych wartościach, ale pojawiają się też wyższe, rzadkie wartości. Logarytm zmniejsza tę asymetrię, zbliżając dane do rozkładu normalnego, co ułatwia interpretację i modelowanie statystyczne.
@@ -971,49 +1192,49 @@ curve(dnorm(x, mean = mean(dane$poiCount),
 ##### Interpretacja:
 Po transformacji:
 - **Rozkład zmiennej price** jest bardziej symetryczny, co ułatwi modelowanie zależności między ceną a innymi zmiennymi.
-- **Rozkład zmiennej poiCount** jest  mniej skośny, co pozwoli lepiej zrozumieć wpływ liczby punktów zainteresowania na analizowane wyniki.
+- **Rozkład zmiennej poi_count** jest  mniej skośny, co pozwoli lepiej zrozumieć wpływ liczby punktów zainteresowania na analizowane wyniki.
 
 
 
 #### Uzasadnienie braku transformacji dla poszczególnych kolumn
 
-1. **squareMeters**  
+1. **square_meters**  
    - **Uzasadnienie**: Duże wartości tej zmiennej (np. powyżej 200 m²) mogą odnosić się do apartamentów luksusowych lub przestronnych domów, co jest zrozumiałe w kontekście rynku nieruchomości. Asymetria rozkładu wynika z faktu, że małe mieszkania są bardziej powszechne, ale większe jednostki wciąż mają naturalne uzasadnienie.  
 
 2. **rooms**  
    - **Uzasadnienie**: Liczba pokoi w mieszkaniach czy domach jest zwykle niewielka i wynika z ich przeznaczenia. Duże liczby (np. 7–10 pokoi) mogą odnosić się do dużych domów jednorodzinnych lub luksusowych apartamentów. Każda wartość zmiennej ma swoje logiczne wyjaśnienie.  
 
-3. **floor oraz floorCount**  
+3. **floor oraz floor_count**  
    - **Uzasadnienie**: Wysokie wartości (np. powyżej 10. piętra) zazwyczaj odnoszą się do mieszkań w wieżowcach, co jest typowe w dużych miastach. Rozkład zmiennej jest zgodny z różnorodnością rynku.  
 
-5. **buildYear**  
+5. **build_year**  
    - **Uzasadnienie**: Starsze budynki (np. przedwojenne) mają swoje unikalne cechy (np. kamienice), a nowe budynki charakteryzują nowoczesne technologie i standardy. Każda wartość zmiennej niesie ze sobą istotny kontekst historyczny i architektoniczny.  
 
-6. **centreDistance**  
+6. **centre_distance**  
    - **Uzasadnienie**: Duże odległości (np. >20 km) zwykle oznaczają mieszkania na przedmieściach lub w miejscowościach satelickich, co jest naturalne w kontekście urbanistycznym. Mniejsze wartości wskazują na nieruchomości w centrum miasta, co również ma sens.  
 
-8. **schoolDistance**  
+8. **school_distance**  
    - **Uzasadnienie**: Krótsze odległości są typowe dla osiedli mieszkaniowych, gdzie szkoły są blisko mieszkańców. Większe odległości mogą dotyczyć obszarów wiejskich lub mniej zurbanizowanych.  
 
-9. **clinicDistance**  
+9. **clinic_distance**  
    - **Uzasadnienie**: Podobnie jak w przypadku szkół, krótsze odległości charakteryzują gęsto zabudowane obszary, a większe – mniej rozwinięte okolice. Rozkład zmiennej jest zgodny z rzeczywistością.  
 
-10. **postOfficeDistance**  
+10. **post_office_distance**  
     - **Uzasadnienie**: Odległości te odzwierciedlają rzeczywisty dostęp do infrastruktury. Krótsze odległości oznaczają bardziej zurbanizowane tereny, a dłuższe – obszary mniej zaludnione.  
 
-11. **kindergartenDistance**  
+11. **kindergarten_distance**  
     - **Uzasadnienie**: Podobnie jak w przypadku szkół, odległości mają naturalne wyjaśnienie w charakterystyce lokalizacji.  
 
-12. **restaurantDistance**  
+12. **restaurant_distance**  
     - **Uzasadnienie**: Krótsze odległości są typowe dla centrów miast, a większe – dla terenów podmiejskich i wiejskich. Zmienna w swojej formie jest wystarczająco zrozumiała.  
 
-13. **collegeDistance**  
+13. **college_distance**  
     - **Uzasadnienie**: Podobnie jak inne odległości, wartości tej zmiennej mają naturalne uzasadnienie w zależności od lokalizacji nieruchomości względem centrów edukacyjnych.  
 
-14. **pharmacyDistance**  
+14. **pharmacy_distance**  
     - **Uzasadnienie**: Odległości te są intuicyjne i w pełni odpowiadają rzeczywistości. Apteki są zlokalizowane bliżej mieszkańców w gęsto zaludnionych obszarach, co tłumaczy krótsze wartości.  
 
-15. **buildingAge**  
+15. **building_age**  
     - **Uzasadnienie**: Starsze budynki (np. >50 lat) są często kamienicami lub historycznymi budynkami, a nowe (np. <10 lat) to inwestycje deweloperskie. Wiek budynku jest intuicyjny i łatwy do zrozumienia bez transformacji.  
 
 
@@ -1025,14 +1246,14 @@ Po transformacji:
 # Walidacja wcześniej zdefiniowanych reguł 
 
 rules <- validator(
-  "Floor>FloorCount" = floor <= floorCount,                                              # Piętro nie większe niż liczba kondygnacji
-  "BuildYear<=2024" = buildYear <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
-  "BuildYear>1600" = buildYear > 1600,                                                   # Rok budowy późniejszy niż 1600
+  "Floor>floor_count" = floor <= floor_count,                                              # Piętro nie większe niż liczba kondygnacji
+  "build_year<=2024" = build_year <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
+  "build_year>1600" = build_year > 1600,                                                   # Rok budowy późniejszy niż 1600
   "Floor>=0" = floor >= 0,                                                               # Piętro nie może być ujemne
-  "FloorCount>= 0" = floorCount >= 0,                                                    # Liczba kondygnacji nie może być ujemna
+  "floor_count>= 0" = floor_count >= 0,                                                    # Liczba kondygnacji nie może być ujemna
   "Rooms>0" = rooms > 0,                                                                 # Liczba pokoi większa niż 0
   "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
-  "Elevator in a building with 0 floors" = !(floorCount == 0 & hasElevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 )
 
 out <- confront(dane, rules)
@@ -1041,7 +1262,7 @@ rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600
                  "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
 
 expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floorCount == 0 & hasElevator == 'yes')")
+                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floor_count == 0 & has_elevator == 'yes')")
 
 results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
                     "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
@@ -1066,7 +1287,7 @@ plot(out)
 ```
 
 <p style="text-align: justify;">
-W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności zmiennych floor i floorCount, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny przekraczać wartości floorCount, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych.
+W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności zmiennych floor i floor_count, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny przekraczać wartości floor_count, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych.
 </p>
 
 <p style="text-align: justify;">
@@ -1074,7 +1295,7 @@ Przed rozpoczęciem walidacji brakujące wartości (NA) zostały uzupełnione, c
 </p>
 
 <p style="text-align: justify;">
-Błędy w danych floor i floorCount mogą wynikać z błędnie uzupełnionych wartości lub nieaktualnych danych (budynki mogły zmienić liczbę kondygnacji po modernizacji).
+Błędy w danych floor i floor_count mogą wynikać z błędnie uzupełnionych wartości lub nieaktualnych danych (budynki mogły zmienić liczbę kondygnacji po modernizacji).
 </p>
 
 ```{r weryfikacja_cz.2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
@@ -1109,13 +1330,13 @@ ggplot(data, aes(x = " ", y = count, fill = category)) +
 
 ```
 
-```{r walidacja_i_korekta_wartości;floor_floorCount,flitracja_duplikatów, echo=FALSE}
+```{r walidacja_i_korekta_wartości;floor_floor_count,flitracja_duplikatów, echo=FALSE}
 
 # Błędne obserwacje - filtracja 
-invalid_observations <- dane %>% filter(floor > floorCount)
+invalid_observations <- dane %>% filter(floor > floor_count)
 
 # Korekta błędnych wartości
-dane <- dane %>% mutate(floorCount = ifelse(floorCount < floor, floor, floorCount))
+dane <- dane %>% mutate(floor_count = ifelse(floor_count < floor, floor, floor_count))
 
 # Sprawdzanie duplikatów
 duplicates <- dane[duplicated(dane), ]
@@ -1123,7 +1344,7 @@ duplicates <- dane[duplicated(dane), ]
 ```
 
 <p style="text-align: justify;">
-W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floorCount, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floorCount) zostanie ustawiona na wartość piętra (floor).
+W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floor_count, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floor_count) zostanie ustawiona na wartość piętra (floor).
 
 Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
 </p>
@@ -1134,33 +1355,33 @@ gml_file <- "ms_A01_Granice_wojewodztw.gml"
 
 # Ukrycie komunikatów st_read
 invisible(capture.output({
-  wojewodztwa <- st_read(gml_file)
+  voivodeship <- st_read(gml_file)
 }))
 
 # Tworzenie punktów z danych (longitude i latitude)
 punkty <- st_as_sf(dane, coords = c("longitude", "latitude"), crs = 4326)
 
 # Dopasowanie układu współrzędnych punktów do układu pliku GML
-punkty <- st_transform(punkty, st_crs(wojewodztwa))
+punkty <- st_transform(punkty, st_crs(voivodeship))
 
 # Dopasowanie punktów do granic województw
-dane_with_region <- st_join(punkty, wojewodztwa)
+dane_with_region <- st_join(punkty, voivodeship)
 
-# Dodanie kolumny 'wojewodztwo' na podstawie JPT_NAZWA_
-dane$wojewodztwo <- dane_with_region$JPT_NAZWA_
+# Dodanie kolumny 'voivodeship' na podstawie JPT_NAZWA_
+dane$voivodeship <- dane_with_region$JPT_NAZWA_
 
 # Obliczenie średniej ceny za metr kwadratowy na województwo
 srednie_ceny_m2 <- dane %>%
-  group_by(wojewodztwo) %>%
-  summarise(srednia_cena_m2 = mean(pricePerSquareMeter, na.rm = TRUE))
+  group_by(voivodeship) %>%
+  summarise(srednia_cena_m2 = mean(price_per_square_meter, na.rm = TRUE))
 
 # Połączenie danych o cenach z granicami województw
-wojewodztwa <- wojewodztwa %>%
-  left_join(srednie_ceny_m2, by = c("JPT_NAZWA_" = "wojewodztwo"))
+voivodeship <- voivodeship %>%
+  left_join(srednie_ceny_m2, by = c("JPT_NAZWA_" = "voivodeship"))
 
 # Obliczenie centroidów województw dla etykiet
-wojewodztwa_centroidy <- suppressWarnings({
-  wojewodztwa %>%
+voivodeship_centroids <- suppressWarnings({
+  voivodeship %>%
     st_centroid() %>%
     mutate(label = JPT_NAZWA_)
 })
@@ -1173,36 +1394,46 @@ wojewodztwa_centroidy <- suppressWarnings({
 
 
 
-```{r wykres_choropleth, echo=FALSE, message=FALSE, warning=FALSE}
-# Tworzenie mapy choropleth
-ggplot(data = wojewodztwa) +
+```{r wykres_choropleth srednia cena mieszk na wojew, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = voivodeship) +
   geom_sf(aes(fill = srednia_cena_m2), color = "black", size = 0.2) +
-  scale_fill_gradient(name = "Śr. cena za m² (PLN)", 
-                      low = "white", high = "red", na.value = "gray",
-                      labels = label_number(big.mark = " ", decimal.mark = ",")) +
-  geom_sf_text(data = wojewodztwa_centroidy, aes(label = label), size = 3, color = "black") +
+  scale_fill_gradientn(
+    name = "Śr. cena za m² (PLN)", 
+    colors = c("lightyellow", "orchid3"), # Gradacja z lightyellow do orchid3
+    na.value = "gray",
+    labels = label_number(big.mark = " ", decimal.mark = ",")
+  ) +
+  geom_sf_text(data = voivodeship_centroids, aes(label = label), size = 3, color = "black") +
   theme_minimal() +
   labs(title = "Średnia cena za m² w Polsce według województw",
        caption = "Źródło: https://www.geoportal.gov.pl/") +
-  theme(legend.position = "right")
+  theme(
+    legend.position = "right",
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    plot.title = element_text(
+      hjust = 0.5,
+      size = rel(1.2)
+    )
+  )
 ```
 
 
 #### **Interpretacja wyników**
 
-##### **Województwo mazowieckie jako lider cenowy**
+1.  **Województwo mazowieckie jako lider cenowy**
 <p style="text-align: justify;">Z wykresu wynika, że województwo mazowieckie, w szczególności Warszawa, dominuje pod względem średnich cen za metr kwadratowy, osiągając wartości powyżej **18 000 PLN/m²**. Jest to odzwierciedleniem centralnej roli stolicy w gospodarce, jej rozwiniętego rynku pracy oraz wysokiego popytu na mieszkania.</p>
-##### **Regiony o najniższych cenach**
+2.  **Regiony o najniższych cenach**
 <p style="text-align: justify;">Województwa takie jak podkarpackie, lubelskie i podlaskie charakteryzują się znacznie niższymi cenami, oscylującymi wokół **10 000 PLN/m²**. Są to regiony o mniejszym stopniu urbanizacji oraz niższym popycie na nieruchomości w porównaniu do dużych miast.</p>
-##### **Regiony o średnich cenach**
+3.  **Regiony o średnich cenach**
 <p style="text-align: justify;">Województwa dolnośląskie, pomorskie i wielkopolskie znajdują się w średnim przedziale cenowym, wynoszącym od **12 000 PLN/m² do 16 000 PLN/m²**. Obejmują one dynamicznie rozwijające się miasta, takie jak Wrocław, Gdańsk czy Poznań, które są istotnymi ośrodkami akademickimi i biznesowymi.</p>
-##### **Różnice między regionami**
+4.  **Różnice między regionami**
 <p style="text-align: justify;">Mapa podkreśla wyraźne różnice w rozwoju regionalnym. Województwa takie jak opolskie czy świętokrzyskie należą do najtańszych, co może być związane z niższym stopniem urbanizacji, mniejszym popytem oraz ograniczoną dostępnością pracy w tych regionach.</p>
 
 #### **Wnioski**
 <p style="text-align: justify;"> Wykres średnich cen mieszkań za metr kwadratowy w podziale na województwa jasno pokazuje istotne różnice regionalne. Najwyższe ceny dominują w centralnej i północno-zachodniej części Polski, szczególnie w miastach takich jak Warszawa, Wrocław, Gdańsk i Kraków. Natomiast regiony wschodnie oraz mniej zurbanizowane województwa charakteryzują się niższymi cenami, co wskazuje na ich mniejszy potencjał rynkowy. Wyniki te sugerują, że dalsze badania powinny uwzględnić czynniki demograficzne, ekonomiczne i infrastrukturalne, które kształtują rynek nieruchomości w Polsce. </p>
-
-
 
 
 ```{r, results='asis', eval=TRUE, echo=FALSE, comment=FALSE, warning=FALSE}
@@ -1215,8 +1446,8 @@ get_mode <- function(v) {
 statystyki <- dane %>%
   group_by(city) %>%
   summarise(
-    "Średnia powierzchnia" = mean(squareMeters, na.rm = TRUE),
-    "Średnia cena za $m^2$" = mean(pricePerSquareMeter, na.rm = TRUE),
+    "Średnia powierzchnia mieszkania" = round(mean(square_meters, na.rm = TRUE), 2),
+    "Średnia cena za $m^2$" = round(mean(price_per_square_meter, na.rm = TRUE), 2),
     "Najczęstsza liczba pokoi" = get_mode(rooms)
   )
 
@@ -1228,35 +1459,35 @@ knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
 # **Analiza udogodnień w nieruchomościach**
 
 ```{r, echo=FALSE, fig.height=10,fig.width=10}
-p1 <- ggplot(dane, aes(x = hasBalcony, y = price)) +
+p1 <- ggplot(dane, aes(x = has_balcony, y = price)) +
   geom_boxplot(fill = c("lightblue", "lightgreen")) +
   labs(title = "Wpływ obecności balkonu na cenę mieszkania",
        x = "Czy mieszkanie ma balkon?",
        y = "Cena (PLN)") +
   theme_minimal()
 
-p2 <- ggplot(dane, aes(x = hasElevator, y = price)) +
+p2 <- ggplot(dane, aes(x = has_elevator, y = price)) +
   geom_boxplot(fill = c("plum", "peachpuff")) +
   labs(title = "Wpływ obecności windy na cenę mieszkania",
        x = "Czy mieszkanie ma windę?",
        y = "Cena (PLN)") +
   theme_minimal()
 
-p3 <- ggplot(dane, aes(x = hasParkingSpace, y = price)) +
+p3 <- ggplot(dane, aes(x = has_parking, y = price)) +
   geom_boxplot(fill = c("lightyellow", "tomato2")) +
   labs(title = "Wpływ obecności parkingu na cenę mieszkania",
        x = "Czy mieszkanie ma parking?",
        y = "Cena (PLN)") +
   theme_minimal()
 
-p4 <- ggplot(dane, aes(x = hasSecurity, y = price)) +
+p4 <- ggplot(dane, aes(x = has_security, y = price)) +
   geom_boxplot(fill = c("thistle", "darkslateblue")) +
   labs(title = "Wpływ obecności ochrony na cenę mieszkania",
        x = "Czy mieszkanie ma ochronę?",
        y = "Cena (PLN)") +
   theme_minimal()
 
-p5 <- ggplot(dane, aes(x = hasStorageRoom, y = price)) +
+p5 <- ggplot(dane, aes(x = has_storage_room, y = price)) +
   geom_boxplot(fill = c("lightsalmon1", "darkseagreen3")) +
   labs(title = "Wpływ obecności komórki lokatorskiej na cenę mieszkania",
        x = "Czy mieszkanie ma komórke lokatorską?",
@@ -1281,13 +1512,13 @@ Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym pudełkiem, co 
 pokoejecenam2 <- dane %>%
   group_by(city, rooms) %>%
   summarise(
-    mean_price_per_m2 = mean(pricePerSquareMeter, na.rm = TRUE)
+    mean_price_per_m2 = mean(price_per_square_meter, na.rm = TRUE)
   )
 
 podsumowanie_m2dlamiast <- dane %>%
   group_by(city) %>%
   summarise(
-    mean_price_per_m2 = mean(pricePerSquareMeter, na.rm = TRUE)
+    mean_price_per_m2 = mean(price_per_square_meter, na.rm = TRUE)
   )
 top5 <- podsumowanie_m2dlamiast %>%
   arrange(desc(mean_price_per_m2)) %>%
@@ -1320,8 +1551,91 @@ barplot_city
 
 ```
 
+### **Sylwetka Gdańska**
 
+<p style="text-align: justify;"> Gdańsk, jedno z najstarszych miast Polski, charakteryzuje się nie tylko bogatą historią i malowniczym położeniem nad Bałtykiem, ale również dynamicznie rozwijającym się rynkiem nieruchomości. W ramach tej analizy dokonaliśmy podziału miasta na 35 dzielnic, aby dokładniej przyjrzeć się zróżnicowaniu średnich cen mieszkań za metr kwadratowy. </p> 
 
+<p style="text-align: justify;"> Mapa wizualizuje ceny mieszkań w różnych obszarach, uwzględniając zarówno centralne, historyczne części miasta, jak Śródmieście, jak i peryferyjne, bardziej spokojne dzielnice. Zaznaczenie Śródmieścia jako centrum miasta pozwala łatwiej interpretować wyniki i lokalizować najważniejsze obszary urbanistyczne Gdańska. </p>
 
+```{r wczytanie dzielnic Gdańska, echo=FALSE, comment=FALSE, warning=FALSE, message = FALSE}
+# Wczytanie danych dzielnic Gdańska
+file_path <- "Dzielnice.shp"
 
+# Przechwycenie komunikatów za pomocą sink() i ukrycie ich
+invisible(capture.output({
+  gdansk_dzielnice <- st_read(file_path)
+}))
 
+# Dopasowanie układu współrzędnych mieszkań do układu współrzędnych dzielnic
+mieszkania_sf <- st_as_sf(dane, coords = c("longitude", "latitude"), crs = 4326)  # Zamiana danych mieszkań na obiekt przestrzenny
+mieszkania_sf <- st_transform(mieszkania_sf, st_crs(gdansk_dzielnice))  # Transformacja układu współrzędnych
+
+# Dopasowanie mieszkań do dzielnic za pomocą przestrzennego połączenia
+mieszkania_z_dzielnicami <- st_join(mieszkania_sf, gdansk_dzielnice, join = st_within)
+
+# Obliczenie średnich cen za metr kwadratowy dla każdej dzielnicy
+srednie_ceny_dzielnic <- mieszkania_z_dzielnicami %>%
+  group_by(dzielnica = NAZWA) %>%
+  summarise(srednia_cena_m2 = mean(price_per_square_meter, na.rm = TRUE))
+
+# Połączenie średnich cen z danymi przestrzennymi dzielnic za pomocą st_join
+gdansk_dzielnice <- gdansk_dzielnice %>%
+  st_join(srednie_ceny_dzielnic, join = st_intersects)
+
+# Wykluczenie Zatoki Gdańskiej
+gdansk_dzielnice <- gdansk_dzielnice %>% 
+  filter(NAZWA != "Zatoka Gdańska")
+
+# Dodanie numerów dzielnic
+gdansk_dzielnice <- gdansk_dzielnice %>%
+  mutate(numer_dzielnicy = row_number())
+
+# Określenie punktu centrum (Śródmieście)
+centrum <- gdansk_dzielnice %>%
+  filter(NAZWA == "Śródmieście") %>%
+  st_centroid()
+
+# Tworzenie mapy
+mapa <- ggplot(data = gdansk_dzielnice) +
+  geom_sf(aes(fill = srednia_cena_m2), color = "black", size = 0.2) +
+  scale_fill_gradientn(
+    name = "Śr. cena za m² (PLN)", 
+    colors = c("lightyellow", "orchid3"),
+    na.value = "gray",
+    labels = label_number(big.mark = " ", decimal.mark = ",")
+  ) +
+  geom_sf_text(aes(label = numer_dzielnicy), size = 3, color = "black") + # Dodanie numerów dzielnic
+  geom_sf(data = centrum, color = "red", size = 4, shape = 18) +  # Punkt centrum
+  geom_sf_text(data = centrum, aes(label = "Centrum"), color = "red", size = 3, vjust = -1.5) +  # Etykieta "Centrum"
+  theme_minimal() +
+  labs(
+    title = "Średnia cena za m² w Gdańsku według dzielnic",
+    caption = "Źródło: https://www.geoportal.gov.pl/"
+  ) +
+  theme(
+    legend.position = "right",
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    plot.title = element_text(hjust = 0.5, size = rel(1.2))
+  )
+
+print(mapa)
+
+# Tworzenie tabeli legendy
+legenda_dzielnic <- gdansk_dzielnice %>%
+  st_drop_geometry() %>%
+  select(numer_dzielnicy, NAZWA) %>%
+  arrange(numer_dzielnicy)
+
+# Wyświetlenie tabeli legendy z numerami i nazwami dzielnic
+knitr::kable(legenda_dzielnic, col.names = c("Numer", "Dzielnica"), caption = "Legenda: Numery dzielnic w Gdańsku")
+```
+#### Interpretacja wyników analizy cen mieszkań per dzielnica:
+
+<p style="text-align: justify;"> Analiza wykazała znaczne zróżnicowanie cen mieszkań w poszczególnych dzielnicach Gdańska. Najwyższe średnie ceny za metr kwadratowy występują w centralnych obszarach miasta, takich jak Śródmieście oraz nadmorskie dzielnice, np. Żabianka–Wejhera–Jelitkowo–Tysiąclecia. Są to miejsca o wysokim prestiżu, dogodnym dostępie do atrakcji turystycznych i rozwiniętej infrastrukturze. </p> 
+
+<p style="text-align: justify;"> Z kolei dzielnice bardziej oddalone od centrum, takie jak Kokoszki czy Matarnia, cechują się znacznie niższymi cenami, co może przyciągać osoby poszukujące spokojniejszych lokalizacji oraz bardziej przystępnych cenowo mieszkań. </p> 
+
+<p style="text-align: justify;"> Porównanie tych różnic uwidacznia rolę lokalizacji w kształtowaniu cen nieruchomości, co może być cenną wskazówką zarówno dla inwestorów, jak i osób planujących zakup nieruchomości. Wyniki te stanowią także podstawę do dalszych analiz, uwzględniających takie czynniki jak dostępność komunikacyjna, sąsiedztwo terenów zielonych czy rozwój lokalnej infrastruktury. </p>
