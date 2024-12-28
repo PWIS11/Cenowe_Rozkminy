@@ -9,6 +9,9 @@ output:
     highlight_color: "goldenrod"
     toc: true
     toc_float: true
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -57,127 +60,210 @@ library(knitr)
 ```
 
 # **Cel projektu**
+
 <p style="text-align: justify;">
-Celem naszego projektu jest analiza cen mieszkań w największych miastach Polski, uwzględniając różnorodne czynniki, które mogą wpływać na wartość nieruchomości. Wykorzystamy metody analizy danych, aby odpowiedzieć na kluczowe pytania, takie jak:
+
+Celem naszego projektu jest analiza cen mieszkań w największych miastach
+Polski, uwzględniając różnorodne czynniki, które mogą wpływać na wartość
+nieruchomości. Wykorzystamy metody analizy danych, aby odpowiedzieć na
+kluczowe pytania, takie jak:
+
 </p>
 
 -   *Od czego zależy cena mieszkań?*
 
 -   *Jakie różnice w cenach występują pomiędzy miastami?*
 
--   *Czy odległość od centrum lub interesujących miejsc (POI) ma znaczenie dla wartości nieruchomości?*
+-   *Czy odległość od centrum lub interesujących miejsc (POI) ma
+    znaczenie dla wartości nieruchomości?*
 
--   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są najbardziej cenione?*
+-   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są
+    najbardziej cenione?*
 
 ## **Analizy w projekcie**
 
-Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
+Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby
+lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
 
--   Badanie zależności między cechami mieszkań (takimi jak lokalizacja, powierzchnia, liczba pokoi) a ich ceną.
+-   Badanie zależności między cechami mieszkań (takimi jak lokalizacja,
+    powierzchnia, liczba pokoi) a ich ceną.
 
--   Porównanie cen nieruchomości pomiędzy największymi polskimi miastami, w celu wykazania kluczowych różnic regionalnych.
+-   Porównanie cen nieruchomości pomiędzy największymi polskimi
+    miastami, w celu wykazania kluczowych różnic regionalnych.
 
--   Modelowanie predykcyjne, które pozwoli oszacować cenę mieszkań na podstawie wybranych zmiennych, takich jak odległość od centrum czy stan mieszkania.
+-   Modelowanie predykcyjne, które pozwoli oszacować cenę mieszkań na
+    podstawie wybranych zmiennych, takich jak odległość od centrum czy
+    stan mieszkania.
 
--   Wykorzystanie interaktywnych wizualizacji, takich jak mapy i wykresy, aby przedstawić wyniki w przystępny sposób.
+-   Wykorzystanie interaktywnych wizualizacji, takich jak mapy i
+    wykresy, aby przedstawić wyniki w przystępny sposób.
 
 ### **Hipotezy i oczekiwane wyniki**
 
-1.  **Odległość od centrum miasta:** Zakładamy, że im bliżej centrum, tym wyższa cena mieszkań, choć siła tego wpływu może różnić się w zależności od miasta.
+1.  **Odległość od centrum miasta:** Zakładamy, że im bliżej centrum,
+    tym wyższa cena mieszkań, choć siła tego wpływu może różnić się w
+    zależności od miasta.
 
-2.  **Cechy nieruchomości:** Udogodnienia takie jak balkon, winda czy miejsce parkingowe znacząco podnoszą wartość mieszkań, zwłaszcza w dużych miastach.
+2.  **Cechy nieruchomości:** Udogodnienia takie jak balkon, winda czy
+    miejsce parkingowe znacząco podnoszą wartość mieszkań, zwłaszcza w
+    dużych miastach.
 
-3.  **Różnice regionalne:** Miasta o wyższym poziomie urbanizacji i rozwiniętej infrastrukturze (np. Warszawa, Kraków, Wrocław) mają wyższe ceny mieszkań w porównaniu do mniejszych miejscowości.
+3.  **Różnice regionalne:** Miasta o wyższym poziomie urbanizacji i
+    rozwiniętej infrastrukturze (np. Warszawa, Kraków, Wrocław) mają
+    wyższe ceny mieszkań w porównaniu do mniejszych miejscowości.
 
-4.  **Rok budowy:** Starsze mieszkania, wymagające remontu, są z reguły tańsze, chyba że znajdują się w prestiżowych lokalizacjach.
+4.  **Rok budowy:** Starsze mieszkania, wymagające remontu, są z reguły
+    tańsze, chyba że znajdują się w prestiżowych lokalizacjach.
 
-Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki wpływające na ceny mieszkań oraz umożliwią stworzenie użytecznych modeli predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
+Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki
+wpływające na ceny mieszkań oraz umożliwią stworzenie użytecznych modeli
+predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
 
 ## **Opis danych**
+
 <p style="text-align: justify;">
-Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa mieszkań.
+
+Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15
+największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te
+obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje
+z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa
+mieszkań.
+
 </p>
 
-**Miasta w zbiorze danych:** Warszawa, Łódź, Kraków, Wrocław, Poznań, Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
+**Miasta w zbiorze danych:** Warszawa, Łódź, Kraków, Wrocław, Poznań,
+Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
 
 **Główne pola w zbiorze danych:**
 
 -   ***Lokalizacja i charakterystyka nieruchomości:***
 
-    -   Miasto, typ budynku, wielkość w metrach kwadratowych, liczba pokoi, piętro, rok budowy.
+    -   Miasto, typ budynku, wielkość w metrach kwadratowych, liczba
+        pokoi, piętro, rok budowy.
 
 -   ***Informacje kontekstowe:***
 
-    -   Odległość od centrum miasta, liczba interesujących punktów w promieniu 500 metrów (np. szkoły, apteki, restauracje) oraz odległość do najbliższego punktu.
+    -   Odległość od centrum miasta, liczba interesujących punktów w
+        promieniu 500 metrów (np. szkoły, apteki, restauracje) oraz
+        odległość do najbliższego punktu.
 
 -   ***Cechy nieruchomości:***
 
-    -   Stan mieszkania, rodzaj własności, obecność udogodnień (np. winda, balkon, miejsce parkingowe, ochrona).
+    -   Stan mieszkania, rodzaj własności, obecność udogodnień (np.
+        winda, balkon, miejsce parkingowe, ochrona).
 
 -   ***Cena ofertowa:***
 
     -   Cena sprzedaży lub miesięczny czynsz.
 
 ## **Dane dodatkowe**
+
 <p style="text-align: justify;">
-W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się wzbogacić nasz zbiór o **granice administracyjne województw**. Dane te zostały pobrane z pliku **`ms_A01_Granice_wojewodztw`** i umożliwiły przypisanie każdego miasta do odpowiedniego województwa.
+
+W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się
+wzbogacić nasz zbiór o **granice administracyjne województw**. Dane te
+zostały pobrane z pliku **`ms_A01_Granice_wojewodztw`** i umożliwiły
+przypisanie każdego miasta do odpowiedniego województwa.
+
 </p>
+
 ### **Cel dodania danych:**
 
 -   **Przypisanie lokalizacji mieszkań do województw**,\
--   **Przeprowadzenie analiz regionalnych**, aby lepiej zrozumieć różnice w cenach i cechach mieszkań w różnych częściach Polski.
+-   **Przeprowadzenie analiz regionalnych**, aby lepiej zrozumieć
+    różnice w cenach i cechach mieszkań w różnych częściach Polski.
 
-Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku nieruchomości na poziomie miast, ale także **porównanie wyników w kontekście regionalnym**.
+Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku
+nieruchomości na poziomie miast, ale także **porównanie wyników w
+kontekście regionalnym**.
 
 ## **Znaczenie projektu**
+
 <p style="text-align: justify;">
-Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników, takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.
+
+Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników,
+takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość
+kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć
+mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia
+wspomagające decyzje zakupowe i inwestycyjne.
+
 </p>
 
+# **Brudne dane i ich znaczenie w analizie**
 
-## **Brudne dane i ich znaczenie w analizie**
+## **Czym są brudne dane?**
 
-### **Czym są brudne dane?**
 <p style="text-align: justify;">
-Brudne dane to dane, które są niekompletne, nieprawidłowe, niespójne lub w inny sposób niezgodne z wymaganiami jakościowymi potrzebnymi do ich analizy. Przykłady brudnych danych obejmują:
+
+Brudne dane to dane, które są niekompletne, nieprawidłowe, niespójne lub
+w inny sposób niezgodne z wymaganiami jakościowymi potrzebnymi do ich
+analizy. Przykłady brudnych danych obejmują:
+
 </p>
 
-- **Braki danych (NA):** Puste komórki w zestawie danych, które mogą być spowodowane błędami w zbieraniu danych lub brakiem odpowiednich informacji.
-- **Niepoprawne wartości:** Dane, które są logicznie sprzeczne, np. liczba pięter większa niż całkowita liczba kondygnacji.
-- **Niespójne formaty:** Dane zapisane w różnych formatach, np. różne sposoby zapisu nazw miast.
-- **Duplikaty:** Powtarzające się rekordy w zbiorze danych.
+-   **Braki danych (NA):** Puste komórki w zestawie danych, które mogą
+    być spowodowane błędami w zbieraniu danych lub brakiem odpowiednich
+    informacji.
+-   **Niepoprawne wartości:** Dane, które są logicznie sprzeczne, np.
+    liczba pięter większa niż całkowita liczba kondygnacji.
+-   **Niespójne formaty:** Dane zapisane w różnych formatach, np. różne
+    sposoby zapisu nazw miast.
+-   **Duplikaty:** Powtarzające się rekordy w zbiorze danych.
 
-### **Dlaczego należy walczyć z brudnymi danymi?**
+## **Dlaczego należy walczyć z brudnymi danymi?**
+
 <p style="text-align: justify;">
-Analiza danych oparta na brudnych danych prowadzi do błędnych wniosków i modeli. Wysoka jakość danych jest kluczowa, ponieważ:
+
+Analiza danych oparta na brudnych danych prowadzi do błędnych wniosków i
+modeli. Wysoka jakość danych jest kluczowa, ponieważ:
+
 </p>
 
-1. **Zapewnia wiarygodność wyników:** Poprawne dane umożliwiają uzyskanie rzetelnych wniosków.
-2. **Ułatwia analizę:** Dane uporządkowane i spójne są łatwiejsze do przetwarzania i modelowania.
-3. **Ogranicza błędy w analizach:** Niespójności w danych mogą prowadzić do błędnych wyników statystycznych.
+1.  **Zapewnia wiarygodność wyników:** Poprawne dane umożliwiają
+    uzyskanie rzetelnych wniosków.
+2.  **Ułatwia analizę:** Dane uporządkowane i spójne są łatwiejsze do
+    przetwarzania i modelowania.
+3.  **Ogranicza błędy w analizach:** Niespójności w danych mogą
+    prowadzić do błędnych wyników statystycznych.
 
-### **Działania naprawcze dla brudnych danych**
+## **Działania naprawcze dla brudnych danych**
+
 <p style="text-align: justify;">
-W naszym projekcie podjęliśmy działania w celu naprawy brudnych danych, obejmujące:
+
+W naszym projekcie podjęliśmy działania w celu naprawy brudnych danych,
+obejmujące:
+
 </p>
 
-1. **Ujednolicenie nazw miast:** Naprawimy niezgodności w zapisie nazw, aby zapewnić spójność.
-2. **Poprawa nazw kolumn:** Nazwy kolumn zostaną zmienione na bardziej opisowe, co ułatwi zrozumienie danych. Planowane zmiany to np.:
-   - `squareMeters` → `square_meters`
-   - `floorCount` → `total_floors`
-   - `clinic_distance` → `distance_to_clinic`
-3. **Uzupełnienie brakujących danych:**
-   - **Metodami statystycznymi:** Użyjemy mediany dla wartości liczbowych oraz najczęściej występujących wartości dla zmiennych kategorycznych.
-   - **Regułami logicznymi:** Uzupełnimy dane na podstawie zależności między zmiennymi.
-4. **Eliminacja błędów logicznych:** Skorygujemy przypadki, gdzie np. piętro jest większe niż liczba kondygnacji.
+1.  **Ujednolicenie nazw miast:** Naprawimy niezgodności w zapisie nazw,
+    aby zapewnić spójność.
+2.  **Poprawa nazw kolumn:** Nazwy kolumn zostaną zmienione na bardziej
+    opisowe, co ułatwi zrozumienie danych. Planowane zmiany to np.:
+    -   `squareMeters` → `square_meters`
+    -   `floorCount` → `total_floors`
+    -   `clinic_distance` → `distance_to_clinic`
+3.  **Uzupełnienie brakujących danych:**
+    -   **Metodami statystycznymi:** Użyjemy mediany dla wartości
+        liczbowych oraz najczęściej występujących wartości dla zmiennych
+        kategorycznych.
+    -   **Regułami logicznymi:** Uzupełnimy dane na podstawie zależności
+        między zmiennymi.
+4.  **Eliminacja błędów logicznych:** Skorygujemy przypadki, gdzie np.
+    piętro jest większe niż liczba kondygnacji.
 
-### **Planowane działania techniczne**
+## **Planowane działania techniczne**
+
 <p style="text-align: justify;">
-Przegląd kolumn w poszukiwaniu braków, niezgodności oraz błędów logicznych. Transformacja danych, aby były zgodne z wymaganiami do analizy i modelowania. Sprawdzenie zgodności z przyjętymi regułami walidacyjnymi oraz weryfikacja efektów imputacji i transformacji danych.
+
+Przegląd kolumn w poszukiwaniu braków, niezgodności oraz błędów
+logicznych. Transformacja danych, aby były zgodne z wymaganiami do
+analizy i modelowania. Sprawdzenie zgodności z przyjętymi regułami
+walidacyjnymi oraz weryfikacja efektów imputacji i transformacji danych.
+
 </p>
 
-**Zmiana nazw kolumn**
-Poniżej znajduje się tabela z przekształconymi nazwami kolumn:
+**Zmiana nazw kolumn** Poniżej znajduje się tabela z przekształconymi
+nazwami kolumn:
 
 ```{r wstepna_obrobka_danych, echo=FALSE}
 dane <- read.csv("apartments_pl_2024_06.csv", sep = ",", header = TRUE)
@@ -222,76 +308,87 @@ dane[dane == ""] <- NA
 
 ```
 
-## Standaryzacja danych
+## **Standaryzacja danych**
 
-W celu ujednolicenia danych i zapewnienia ich spójności, dokonano następujących zmian:
+W celu ujednolicenia danych i zapewnienia ich spójności, dokonano
+następujących zmian:
 
-### **Zmiany nazw miast**
+### Zmiany nazw miast
 
-Standaryzacja nazw miast w kolumnie `city` polegała na poprawie pisowni, m.in. zamianie nazw pisanych małymi literami na wersje z wielką literą oraz wprowadzeniu poprawnych form polskich nazw. Dzięki temu dane są bardziej czytelne i gotowe do dalszych analiz.
+Standaryzacja nazw miast w kolumnie `city` polegała na poprawie pisowni,
+m.in. zamianie nazw pisanych małymi literami na wersje z wielką literą
+oraz wprowadzeniu poprawnych form polskich nazw. Dzięki temu dane są
+bardziej czytelne i gotowe do dalszych analiz.
 
-| Poprzednia nazwa | Nowa nazwa |
-|-------------------|------------|
-| szczecin          | Szczecin   |
-| gdynia            | Gdynia     |
-| krakow            | Kraków     |
-| poznan            | Poznań     |
-| bialystok         | Białystok  |
-| gdansk            | Gdańsk     |
-| wroclaw           | Wrocław    |
-| radom             | Radom      |
-| rzeszow           | Rzeszów    |
-| lodz              | Łódź       |
-| katowice          | Katowice   |
-| lublin            | Lublin     |
-| czestochowa       | Częstochowa|
-| warszawa          | Warszawa   |
-| bydgoszcz         | Bydgoszcz  |
+| Poprzednia nazwa | Nowa nazwa  |
+|------------------|-------------|
+| szczecin         | Szczecin    |
+| gdynia           | Gdynia      |
+| krakow           | Kraków      |
+| poznan           | Poznań      |
+| bialystok        | Białystok   |
+| gdansk           | Gdańsk      |
+| wroclaw          | Wrocław     |
+| radom            | Radom       |
+| rzeszow          | Rzeszów     |
+| lodz             | Łódź        |
+| katowice         | Katowice    |
+| lublin           | Lublin      |
+| czestochowa      | Częstochowa |
+| warszawa         | Warszawa    |
+| bydgoszcz        | Bydgoszcz   |
 
----
+------------------------------------------------------------------------
 
-### **Zmiany nazw w kolumnie `building_type`**
+### Zmiany nazw w kolumnie `building_type`
 
-Ujednolicono nazewnictwo typów budynków. Różne nazwy odnoszące się do tego samego typu budynku zostały sprowadzone do jednej wartości, co upraszcza interpretację i analizę.
-
-| Poprzednia nazwa       | Nowa nazwa      |
-|-------------------------|-----------------|
-| blockOfFlats           | block_of_flats  |
-| apartmentBuilding       | block_of_flats  |
-| tenement               | tenement        |
-
----
-
-### **Zmiany nazw w kolumnie `ownership`**
-
-Poprawiono i ujednolicono nazwy dotyczące formy własności nieruchomości. Różne terminy określające tę samą formę własności zostały scalone.
-
-| Poprzednia nazwa  | Nowa nazwa   |
-|-------------------|--------------|
-| condominium       | condominium  |
-| udział            | condominium  |
-| cooperative       | cooperative  |
-
----
-
-### **Zmiany nazw w kolumnie `building_material`**
-
-Dostosowano nazewnictwo materiałów budowlanych, ujednolicając zapis oraz wprowadzając format z podkreśleniami (`snake_case`).
+Ujednolicono nazewnictwo typów budynków. Różne nazwy odnoszące się do
+tego samego typu budynku zostały sprowadzone do jednej wartości, co
+upraszcza interpretację i analizę.
 
 | Poprzednia nazwa  | Nowa nazwa     |
 |-------------------|----------------|
-| concreteSlab      | concrete_slab  |
-| brick             | brick          |
+| blockOfFlats      | block_of_flats |
+| apartmentBuilding | block_of_flats |
+| tenement          | tenement       |
 
----
+------------------------------------------------------------------------
 
-### **Cel zmian**
-1. **Poprawa jakości danych:** Eliminacja niespójności w nazewnictwie.
-2. **Ułatwienie analizy:** Ujednolicone dane umożliwiają prostsze grupowanie i wyciąganie wniosków.
-3. **Czytelność i przejrzystość:** Dzięki standaryzacji dane są bardziej intuicyjne i gotowe do prezentacji w raportach.
+### Zmiany nazw w kolumnie `ownership`
 
-Zmiany te zapewniają, że wszystkie dane są zgodne ze standardami i umożliwiają łatwiejsze ich przetwarzanie w kolejnych krokach analizy.
+Poprawiono i ujednolicono nazwy dotyczące formy własności nieruchomości.
+Różne terminy określające tę samą formę własności zostały scalone.
 
+| Poprzednia nazwa | Nowa nazwa  |
+|------------------|-------------|
+| condominium      | condominium |
+| udział           | condominium |
+| cooperative      | cooperative |
+
+------------------------------------------------------------------------
+
+### Zmiany nazw w kolumnie `building_material`
+
+Dostosowano nazewnictwo materiałów budowlanych, ujednolicając zapis oraz
+wprowadzając format z podkreśleniami (`snake_case`).
+
+| Poprzednia nazwa | Nowa nazwa    |
+|------------------|---------------|
+| concreteSlab     | concrete_slab |
+| brick            | brick         |
+
+------------------------------------------------------------------------
+
+### Cel zmian
+
+1.  **Poprawa jakości danych:** Eliminacja niespójności w nazewnictwie.
+2.  **Ułatwienie analizy:** Ujednolicone dane umożliwiają prostsze
+    grupowanie i wyciąganie wniosków.
+3.  **Czytelność i przejrzystość:** Dzięki standaryzacji dane są
+    bardziej intuicyjne i gotowe do prezentacji w raportach.
+
+Zmiany te zapewniają, że wszystkie dane są zgodne ze standardami i
+umożliwiają łatwiejsze ich przetwarzanie w kolejnych krokach analizy.
 
 ```{r brudne dane, echo=FALSE}
 
@@ -340,14 +437,47 @@ dane$building_material <- case_when(
 
 ```
 
-
-### **Przejście do walidacji danych**
-<p style="text-align: justify;">
-Po wstępnym usunięciu brudnych danych kolejnym krokiem jest szczegółowa walidacja danych, która pozwoli sprawdzić ich zgodność z regułami logicznymi i jakościowymi. Dzięki temu możemy upewnić się, że dane są gotowe do analizy i modelowania. Poniżej przedstawiamy reguły walidacyjne zastosowane w projekcie.
-</p>
-
 # **Data validation**
 
+<p style="text-align: justify;">
+
+Po wstępnym oczyszczeniu danych, kluczowym krokiem w procesie
+przygotowania zbioru było przeprowadzenie szczegółowej walidacji. Celem
+tego etapu było sprawdzenie zgodności danych z określonymi regułami
+logicznymi i jakościowymi, co pozwoliło upewnić się, że dane są
+kompletne, spójne i gotowe do dalszej analizy oraz modelowania. Poniżej
+przedstawiono reguły walidacyjne zastosowane w projekcie.
+
+</p>
+
+## **Czym jest walidacja danych ?**
+
+Walidacja danych to proces, którego celem jest weryfikacja, czy dane
+spełniają określone kryteria, zapewniając ich poprawność, spójność oraz
+integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z
+wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego
+przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i
+zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności
+logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną
+weryfikację poprawności danych, zapewniając ich zgodność z określonymi
+kryteriami logicznymi.
+
+1.  Piętro (Floor) nie może być większe niż liczba kondygnacji
+    (FloorCount).
+
+2.  Rok budowy (Build Year) nie może być późniejszy niż bieżący rok
+    (2024).
+
+3.  Rok budowy musi być późniejszy niż 1600.
+
+4.  Piętro (Floor) i liczba kondygnacji (Floor Count) muszą być większe
+    lub równe 0.
+
+5.  Liczba pokoi (Rooms) musi być większa niż 0 i nie może
+    przekraczać 15.
+
+6.  Jeżeli liczba kondygnacji (Floor Count) wynosi 0, to nie powinno być
+    w takim budynku windy (Has Elevator).
 
 ```{r weryfikacja_typów_danych, echo=FALSE, results='asis', eval=TRUE}
 # Sprawdzenie struktury danych i sptawdzenie pierwszych kilku wierszy danych
@@ -366,7 +496,6 @@ data_types <- data.frame(
 knitr::kable(data_types, caption = "Typy Danych oraz ich ilość")
 ```
 
-
 ```{r weryfikacja_typów_danych2, echo=FALSE, results='asis', eval=TRUE}
 # Podsumowanie ile kolumn jest każdego typu
 liczba_numeric <- sum(data_types == "numeric")
@@ -383,29 +512,43 @@ data_types <- data.frame(
 knitr::kable(data_types, caption = "Typy Danych")
 
 ```
+
 <p style="text-align: justify;">
-Zbiór danych składa się z 28 kolumn, które charakteryzują się następującymi typami: 18 zmiennych numerycznych (typ numeric), 6 zmiennych tekstowych (typ character), 3 zmiennymi kategorycznymi (typ factor), 2 zmiennymi całkowitymi (typ integer) oraz brakiem zmiennych logicznych. 
+
+Zbiór danych składa się z 28 kolumn, które charakteryzują się
+następującymi typami: 18 zmiennych numerycznych (typ numeric), 6
+zmiennych tekstowych (typ character), 3 zmiennymi kategorycznymi (typ
+factor), 2 zmiennymi całkowitymi (typ integer) oraz brakiem zmiennych
+logicznych.
+
 </p>
 
 <p style="text-align: justify;">
-Zmienne numeryczne, takie jak square_meters, price czy centre_distance, mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne, takie jak building_type, ownership czy building_material, mogą być traktowane jako zmienne typu factor i wykorzystane w analizach klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price, również mogą być używane w analizach numerycznych.
+
+Zmienne numeryczne, takie jak square_meters, price czy centre_distance,
+mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe,
+które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne,
+takie jak building_type, ownership czy building_material, mogą być
+traktowane jako zmienne typu factor i wykorzystane w analizach
+klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price,
+również mogą być używane w analizach numerycznych.
+
 </p>
 
 <p style="text-align: justify;">
-Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej analizy i modelowania. Zmienne numeryczne będą wykorzystywane w analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a zmienne character mogą wymagać kodowania na typ factor, aby mogły być wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w zależności od typu danych i celu analizy.
+
+Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej
+analizy i modelowania. Zmienne numeryczne będą wykorzystywane w
+analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a
+zmienne character mogą wymagać kodowania na typ factor, aby mogły być
+wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść
+do przygotowania danych do modelowania, dobierając odpowiednie metody
+przetwarzania, takie jak kodowanie zmiennych kategorycznych,
+normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w
+zależności od typu danych i celu analizy.
+
 </p>
 
-<p style="text-align: justify;">
-Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają określone kryteria, zapewniając ich poprawność, spójność oraz integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną weryfikację poprawności danych, zapewniając ich zgodność z określonymi kryteriami logicznymi.
-</p>
-
- 1) Piętro (Floor) nie może być większe niż liczba kondygnacji (Floor Count).
- 2) Rok budowy (Build Year) nie może być późniejszy niż bieżący rok (2024).
- 3) Rok budowy musi być późniejszy niż 1600.
- 4) Piętro (Floor) i liczba kondygnacji (Floor Count) muszą być większe lub równe 0.
- 5) Liczba pokoi (Rooms) musi być większa niż 0 i nie może przekraczać 15.
- 6) Jeżeli liczba kondygnacji (Floor Count) wynosi 0, to nie powinno być w takim budynku windy (Has Elevator).
- 
 ```{r walidacja_wstępna_danych, echo=FALSE,out.width="83%", fig.width=14, fig.height=9}
 
 # Definiowanie reguł walidacyjnych
@@ -454,43 +597,81 @@ plot(out)
 
 ```
 
-W wyniku przeprowadzonej walidacji w zbiorze danych zauważono znaczną obecność wartości NA (brakujących danych), które pojawiły się kolumnach. W dalszej części analizy planuje się ich imputację, przy czym wartości te zostaną zastąpione: medianą dla zmiennych o charakterze numerycznym, a modą dla zmiennych kategorycznych. 
-
+W wyniku przeprowadzonej walidacji w zbiorze danych zauważono znaczną
+obecność wartości NA (brakujących danych), które pojawiły się kolumnach.
+W dalszej części analizy planuje się ich imputację, przy czym wartości
+te zostaną zastąpione: medianą dla zmiennych o charakterze numerycznym,
+a modą dla zmiennych kategorycznych.
 
 # **Data wrangling**
 
 <p style="text-align: justify;">
-Proces **data wrangling** umożliwia przekształcenie surowego zbioru danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach: analizie wartości brakujących oraz obserwacji odstających.  
+
+Proces **data wrangling** umożliwia przekształcenie surowego zbioru
+danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W
+ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach:
+analizie wartości brakujących oraz obserwacji odstających.
+
 </p>
 
-W tej części projektu podjęliśmy działania mające na celu:
-- zrozumienie i klasyfikację braków danych (MCAR, MAR, MNAR), 
-- wybór odpowiednich strategii imputacji brakujących wartości,
-- wykrycie i obsługę obserwacji odstających, które mogą zaburzać statystyczne wnioski.
+W tej części projektu podjęliśmy działania mające na celu: - zrozumienie
+i klasyfikację braków danych (MCAR, MAR, MNAR), - wybór odpowiednich
+strategii imputacji brakujących wartości, - wykrycie i obsługę
+obserwacji odstających, które mogą zaburzać statystyczne wnioski.
 
 <p style="text-align: justify;">
-Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score) możliwe było zarówno dokładne zrozumienie problemów związanych z danymi, jak i zaplanowanie działań korygujących. Tak przygotowany zbiór danych stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.
+
+Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów
+pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score)
+możliwe było zarówno dokładne zrozumienie problemów związanych z danymi,
+jak i zaplanowanie działań korygujących. Tak przygotowany zbiór danych
+stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.
+
 </p>
 
 <p style="text-align: justify;">
-W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji wartości odstających, a także opis zastosowanych metod ich obsługi.
+
+W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w
+ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji
+wartości odstających, a także opis zastosowanych metod ich obsługi.
+
 </p>
 
 ## **Obserwacje brakujące**
 
 <p style="text-align: justify;">
-Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny braków w zbiorze danych. Wizualizacje, takie jak **wykresy słupkowe** prezentujące procent brakujących wartości w poszczególnych zmiennych oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe zależności w danych.
+
+Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno
+wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny
+braków w zbiorze danych. Wizualizacje, takie jak **wykresy słupkowe**
+prezentujące procent brakujących wartości w poszczególnych zmiennych
+oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie
+zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących
+danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę
+współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe
+zależności w danych.
+
 </p>
 
-Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej zrozumieć przyczyny ich występowania.
+Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej
+zrozumieć przyczyny ich występowania.
 
--   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich jak has_elevator i college_distance są losowe i wynikają z technicznych pominięć w zbieraniu danych.
+-   **MCAR (Missing Completely At Random)**: Braki w kolumnach takich
+    jak has_elevator i college_distance są losowe i wynikają z
+    technicznych pominięć w zbieraniu danych.
 
--   **MAR (Missing At Random)**: Braki w kolumnach condition, building_material, oraz floor wynikają z powiązań między zmiennymi, np. building_type i floor_count.
+-   **MAR (Missing At Random)**: Braki w kolumnach condition,
+    building_material, oraz floor wynikają z powiązań między zmiennymi,
+    np. building_type i floor_count.
 
--   **MNAR (Missing Not At Random)**: Braki w building_type mogą wynikać z mechanizmu niechęci podawania wartości (np. dla mieszkań luksusowych).
+-   **MNAR (Missing Not At Random)**: Braki w building_type mogą wynikać
+    z mechanizmu niechęci podawania wartości (np. dla mieszkań
+    luksusowych).
 
-Dzięki tym wstępnym analizom możliwe jest odpowiednie dobranie metod imputacji (np. medianą, modą lub bardziej zaawansowanymi metodami), a także ewentualne usunięcie zmiennych, w których braki są zbyt liczne i niemożliwe do uzupełnienia bez znaczącej utraty jakości danych.
+Dzięki tym wstępnym analizom możliwe jest odpowiednie dobranie metod
+imputacji (np. medianą, modą lub bardziej zaawansowanymi metodami), a
+także ewentualne usunięcie zmiennych, w których braki są zbyt liczne i
+niemożliwe do uzupełnienia bez znaczącej utraty jakości danych.
 
 ```{r obserwacje_brakujace_wykresy, echo=FALSE, comment=FALSE}
 missing_summary <- miss_var_summary(dane)
@@ -525,17 +706,30 @@ suppressMessages({
 })
 ```
 
-Analiza brakujących danych wskazuje, że kolumny w zbiorze można podzielić na kilka grup pod względem liczby braków:
+Analiza brakujących danych wskazuje, że kolumny w zbiorze można
+podzielić na kilka grup pod względem liczby braków:
 
--   **Bardzo duża liczba braków:** condition (74.0%) i building_material (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się usunąć kolumnę condition, a dla building_material zastosujemy imputację najczęstszą wartością.
+-   **Bardzo duża liczba braków:** condition (74.0%) i building_material
+    (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się
+    usunąć kolumnę condition, a dla building_material zastosujemy
+    imputację najczęstszą wartością.
 
--   **Umiarkowana liczba braków:** building_type (20.5%), floor (16.6%), build_year (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą najczęstszej wartości dla zmiennych kategorycznych (building_type) oraz medianą dla zmiennych liczbowych (floor, build_year).
+-   **Umiarkowana liczba braków:** building_type (20.5%), floor (16.6%),
+    build_year (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą
+    najczęstszej wartości dla zmiennych kategorycznych (building_type)
+    oraz medianą dla zmiennych liczbowych (floor, build_year).
 
--   **Niewielka liczba braków:** Kolumny takie jak has_elevator (4.46%) czy college_distance (2.72%) zostaną uzupełnione odpowiednio modą i medianą.
+-   **Niewielka liczba braków:** Kolumny takie jak has_elevator (4.46%)
+    czy college_distance (2.72%) zostaną uzupełnione odpowiednio modą i
+    medianą.
 
--   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1% braków zostaną imputowane prostymi metodami (medianą lub najczęstszą wartością).
+-   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1%
+    braków zostaną imputowane prostymi metodami (medianą lub najczęstszą
+    wartością).
 
--   **Kolumny bez braków:** Pozostałe zmienne, takie jak price, square_meters czy rooms, są kompletne i nie wymagają dodatkowych działań.
+-   **Kolumny bez braków:** Pozostałe zmienne, takie jak price,
+    square_meters czy rooms, są kompletne i nie wymagają dodatkowych
+    działań.
 
 ```{r wzorce_brakow, echo=FALSE, warning=FALSE, message=FALSE}
 # Zwiększenie rozmiaru wykresu
@@ -553,8 +747,6 @@ aggr(dane,
 ```
 
 #### usunałbym w tym miejscu ten message który generuje R w postaci tabeli. wykres wzorca braków umieściłbym zaraz pod vismiss, a pod nimi dał ten opis o analizie
-
-### Imputacja medianą oraz modą
 
 
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością, echo = FALSE}
@@ -593,7 +785,6 @@ dane <- subset(dane, select = -condition)
 ################################################################################
 ```
 
-
 ```{r Dodanie_dodatkowych_kolumn_cena_za_metr_wiek_mieszkania,echo = FALSE}
 
 # Dodanie kolumny z ceną za metr kwadratowy
@@ -605,19 +796,43 @@ dane$building_age <- ifelse(is.na(dane$build_year), NA, as.numeric(currentYear) 
 ```
 
 ## **Obserwacje odstające**
+
 <p style="text-align: justify;">
-Do analizy obserwacji odstających decydowaliśmy się użyć **wykresów pudełkowych**, ponieważ są one prostym i skutecznym narzędziem wizualizacyjnym, które pozwala szybko zidentyfikować wartości odstające. Dzięki nim poznamy wartości minimalne, maksymalne, mediane, kwartyle oraz ewentualne wartości wykraczające poza tzw. *wąsy*, czyli zakres między pierwszym a trzecim kwartylem powiększony. Każda z analizowanych zmiennych została przedstawiona na osobnym wykresie pudełkowym, co pozwala dokładnie przyjrzeć się rozkładowi poszczególnych cech, takich jak powierzchnia mieszkania, cena, cena za metr kwadratowy czy odległości od różnych punktów użyteczności publicznej. Dzięki temu można szybko zidentyfikować zmienne, które mogą zawierać nietypowe wartości i potencjalnie wpłynąć na dalsze analizy lub modelowanie danych.
+
+Do analizy obserwacji odstających decydowaliśmy się użyć **wykresów
+pudełkowych**, ponieważ są one prostym i skutecznym narzędziem
+wizualizacyjnym, które pozwala szybko zidentyfikować wartości odstające.
+Dzięki nim poznamy wartości minimalne, maksymalne, mediane, kwartyle
+oraz ewentualne wartości wykraczające poza tzw. *wąsy*, czyli zakres
+między pierwszym a trzecim kwartylem powiększony. Każda z analizowanych
+zmiennych została przedstawiona na osobnym wykresie pudełkowym, co
+pozwala dokładnie przyjrzeć się rozkładowi poszczególnych cech, takich
+jak powierzchnia mieszkania, cena, cena za metr kwadratowy czy
+odległości od różnych punktów użyteczności publicznej. Dzięki temu można
+szybko zidentyfikować zmienne, które mogą zawierać nietypowe wartości i
+potencjalnie wpłynąć na dalsze analizy lub modelowanie danych.
+
 </p>
+
 <p style="text-align: justify;">
-Dodatkowo, aby potwierdzić statystycznie obecność obserwacji odstających zastosowaliśmy metodę Z-score oraz zbadaliśmy czy rozkład danych jest zbliżony do rozkładu normalnego.
+
+Dodatkowo, aby potwierdzić statystycznie obecność obserwacji odstających
+zastosowaliśmy metodę Z-score oraz zbadaliśmy czy rozkład danych jest
+zbliżony do rozkładu normalnego.
+
 </p>
-Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
+
+Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na
+podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
          Z = \frac{x - \bar{x}}{\sigma}
          $$ $x$: wartość obserwacji\
-    $\overline{x}$: średnia dla danej zmiennej\
-    $\sigma$: odchylenie standardowe.
+$\overline{x}$: średnia dla danej zmiennej\
+$\sigma$: odchylenie standardowe.
 
-**Skośność** jest statystyką umożliwiającą porównanie rozkładu analizowanej zmiennej z hipotetycznym rozkładem normalnym. Wskazuje na rozbieżności pomiędzy wartością średnią, a centrum danego rozkładu. Wyraża się wzorem:
+**Skośność** jest statystyką umożliwiającą porównanie rozkładu
+analizowanej zmiennej z hipotetycznym rozkładem normalnym. Wskazuje na
+rozbieżności pomiędzy wartością średnią, a centrum danego rozkładu.
+Wyraża się wzorem:
 
 $$\tilde{\mu}_3 = \frac{\sum_{i}^{N} (X_i - \bar{X})^3}{(N - 1) \cdot \sigma^3}$$
 
@@ -629,11 +844,17 @@ $$\tilde{\mu}_3 = \frac{\sum_{i}^{N} (X_i - \bar{X})^3}{(N - 1) \cdot \sigma^3}$
 
 Interpretacja jest następująca:
 
--   Rozkład prawoskośny -- skośność jest dodatnia, prawe ramię rozkładu jest wydłużone, wyniki poniżej średniej są przeważające w badanej próbce.
+-   Rozkład prawoskośny -- skośność jest dodatnia, prawe ramię rozkładu
+    jest wydłużone, wyniki poniżej średniej są przeważające w badanej
+    próbce.
 
--   Rozkład symetryczny -- skośność wynosi 0, ogony rozkładu są identyczne w obu kierunkach. Jeśli znormalizowana kurtoza wynosi 0, rozkład jest zbliżony do rozkładu normalnego.
+-   Rozkład symetryczny -- skośność wynosi 0, ogony rozkładu są
+    identyczne w obu kierunkach. Jeśli znormalizowana kurtoza wynosi 0,
+    rozkład jest zbliżony do rozkładu normalnego.
 
--   Rozkład lewoskośny -- skośność jest ujemna, lewe ramię rozkładu jest wydłużone, większość obserwacji w próbie ma wartości powyżej średniej.
+-   Rozkład lewoskośny -- skośność jest ujemna, lewe ramię rozkładu jest
+    wydłużone, większość obserwacji w próbie ma wartości powyżej
+    średniej.
 
 ### Wykresy pudełkowe
 
@@ -652,14 +873,10 @@ dane$pharmacy_distance <- as.numeric(dane$pharmacy_distance)
 dane$floor_count <- as.numeric(dane$floor_count)
 ```
 
-<a id="square_metersBoxPlot"></a>
-<a id="priceBoxPlot"></a>
-<a id="price_per_square_meterBoxPlot"></a>
-<a id="roomsBoxPlot"></a>
-<a id="floorBoxPlot"></a>
-<a id="floor_countBoxPlot"></a>
-<a id="building_ageBoxPlot"></a>
-<a id="centre_distanceBoxPlot"></a>
+<a id="square_metersBoxPlot"></a> <a id="priceBoxPlot"></a>
+<a id="price_per_square_meterBoxPlot"></a> <a id="roomsBoxPlot"></a>
+<a id="floorBoxPlot"></a> <a id="floor_countBoxPlot"></a>
+<a id="building_ageBoxPlot"></a> <a id="centre_distanceBoxPlot"></a>
 <a id="school_distanceBoxPlot"></a>
 
 ```{r boxplot_odst, fig.height=10, fig.width=10, echo=FALSE, fig.show='hold'}
@@ -696,105 +913,125 @@ boxplot(dane$college_distance, main = "College Distance", col = "indianred")
 boxplot(dane$pharmacy_distance, main = "Pharmacy Distance", col = "lavenderblush2")
 ```
 
-
-
 #### **Interpretacja wyników wykresów pudełkowych**
 
-Przeprowadzona analiza wykresów pudełkowych pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pokoi oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (mediana, kwartyle) oraz **wartości odstających**, które wykraczają poza zakres wyznaczony przez *wąsy*.\
+Przeprowadzona analiza wykresów pudełkowych pozwoliła na dokładne
+przyjrzenie się rozkładom badanych cech mieszkań, takich jak
+powierzchnia, cena, liczba pokoi oraz odległości do punktów użyteczności
+publicznej. Wykresy te umożliwiły identyfikację wartości **typowych**
+(mediana, kwartyle) oraz **wartości odstających**, które wykraczają poza
+zakres wyznaczony przez *wąsy*.\
 
-Wartości odstające są szczególnie istotne, ponieważ mogą wskazywać na specyficzne obserwacje, takie jak:
+Wartości odstające są szczególnie istotne, ponieważ mogą wskazywać na
+specyficzne obserwacje, takie jak:
 
 -   **Nieruchomości luksusowe** lub o nietypowej wielkości i cenie,\
 -   **Mieszkania położone w trudno dostępnych lokalizacjach**,\
--   **Nieruchomości w starszych budynkach** lub obszarach o słabo rozwiniętej infrastrukturze.
+-   **Nieruchomości w starszych budynkach** lub obszarach o słabo
+    rozwiniętej infrastrukturze.
 
-Poniżej przedstawiono szczegółową interpretację wyników dla każdej z analizowanych zmiennych.
+Poniżej przedstawiono szczegółową interpretację wyników dla każdej z
+analizowanych zmiennych.
 
-
-
-**[square_meters](#square_metersBoxPlot)** 
-- Mediana powierzchni wynosi około **50-60 m²**.\
+[**square_meters**](#square_metersBoxPlot) - Mediana powierzchni wynosi
+około **50-60 m²**.\
 - Większość mieszkań mieści się w zakresie **40-80 m²**.\
-- **Wartości odstające** powyżej **100 m²** wskazują na większe apartamenty lub luksusowe nieruchomości.
+- **Wartości odstające** powyżej **100 m²** wskazują na większe
+apartamenty lub luksusowe nieruchomości.
 
-**[price](#priceBoxPlot)**  
+[**price**](#priceBoxPlot)\
 - Mediana ceny mieszkań wynosi około **750 tys. zł**.\
-- Typowe wartości mieszczą się w przedziale **500 tys. – 1 mln zł**.\
-- Liczne **wartości odstające** powyżej **2,5 mln zł** sugerują obecność luksusowych nieruchomości w analizowanym zbiorze.
+- Typowe wartości mieszczą się w przedziale **500 tys. -- 1 mln zł**.\
+- Liczne **wartości odstające** powyżej **2,5 mln zł** sugerują obecność
+luksusowych nieruchomości w analizowanym zbiorze.
 
-**[price_per_square_meter](#price_per_square_meterBoxPlot)** 
-- Mediana wynosi około **15 000 zł/m²**, a większość wartości mieści się w zakresie **10 000 – 20 000 zł/m²**.\
-- **Wartości odstające** przekraczające **30 000 zł/m²** mogą wynikać z mieszkań położonych w bardzo prestiżowych lokalizacjach.
+[**price_per_square_meter**](#price_per_square_meterBoxPlot) - Mediana
+wynosi około **15 000 zł/m²**, a większość wartości mieści się w
+zakresie **10 000 -- 20 000 zł/m²**.\
+- **Wartości odstające** przekraczające **30 000 zł/m²** mogą wynikać z
+mieszkań położonych w bardzo prestiżowych lokalizacjach.
 
-**[rooms](#roomsBoxPlot)**  
+[**rooms**](#roomsBoxPlot)\
 - Typowe mieszkania mają **2-3 pokoje**, co potwierdza mediana.\
-- **Wartości odstające** (4-6 pokoi) mogą wskazywać na większe mieszkania lub apartamenty rodzinne.
+- **Wartości odstające** (4-6 pokoi) mogą wskazywać na większe
+mieszkania lub apartamenty rodzinne.
 
-**[floor](#floorBoxPlot)**   
+[**floor**](#floorBoxPlot)\
 - Mediana piętra to około **2**.\
 - Większość mieszkań znajduje się na **1-5 piętrze**.\
-- **Wartości odstające** powyżej **15 piętra** sugerują obecność mieszkań w wieżowcach.
+- **Wartości odstające** powyżej **15 piętra** sugerują obecność
+mieszkań w wieżowcach.
 
-**[floor_count](#floor_countBoxPlot)**  
+[**floor_count**](#floor_countBoxPlot)\
 - Typowe budynki mają **4-6 pięter**.\
-- **Wartości odstające** powyżej **15 pięter** wskazują na obecność wysokich budynków mieszkalnych.
+- **Wartości odstające** powyżej **15 pięter** wskazują na obecność
+wysokich budynków mieszkalnych.
 
-**[building_age](#building_ageBoxPlot)**  
+[**building_age**](#building_ageBoxPlot)\
 - Mediana wieku budynków wynosi około **50 lat**.\
-- Budynki mające więcej niż **100 lat** to **wartości odstające**, co sugeruje obecność starszych, często zabytkowych nieruchomości.
+- Budynki mające więcej niż **100 lat** to **wartości odstające**, co
+sugeruje obecność starszych, często zabytkowych nieruchomości.
 
-**[centre_distance](#centre_distanceBoxPlot)** 
-- Typowa odległość to **2-8 km**.\
-- **Wartości odstające** powyżej **15 km** wskazują na nieruchomości położone na przedmieściach lub w odległych lokalizacjach.
+[**centre_distance**](#centre_distanceBoxPlot) - Typowa odległość to
+**2-8 km**.\
+- **Wartości odstające** powyżej **15 km** wskazują na nieruchomości
+położone na przedmieściach lub w odległych lokalizacjach.
 
-**[school_distance](#school_distanceBoxPlot)** 
-- Większość szkół znajduje się w odległości **do 1 km**.\
-- **Wartości odstające** powyżej **4 km** mogą świadczyć o gorszej dostępności edukacji w analizowanych lokalizacjach.
+[**school_distance**](#school_distanceBoxPlot) - Większość szkół
+znajduje się w odległości **do 1 km**.\
+- **Wartości odstające** powyżej **4 km** mogą świadczyć o gorszej
+dostępności edukacji w analizowanych lokalizacjach.
 
-**[clinic_distance](#clinic_distanceBoxPlot)**  
+[**clinic_distance**](#clinic_distanceBoxPlot)\
 - Kliniki są najczęściej położone **do 1 km** od mieszkań.\
-- **Wartości odstające** powyżej **3 km** wskazują na obszary o niższym dostępie do opieki zdrowotnej.
+- **Wartości odstające** powyżej **3 km** wskazują na obszary o niższym
+dostępie do opieki zdrowotnej.
 
-**[post_office_distance](#post_office_distanceBoxPlot)**  
+[**post_office_distance**](#post_office_distanceBoxPlot)\
 - Typowa odległość wynosi **0-1 km**.\
-- **Wartości odstające** powyżej **4 km** mogą wynikać z mniej zurbanizowanych obszarów.
+- **Wartości odstające** powyżej **4 km** mogą wynikać z mniej
+zurbanizowanych obszarów.
 
-**[kindergarten_distance](#kindergarten_distanceBoxPlot)** 
-- Przedszkola znajdują się głównie **do 1 km** od mieszkań.\
-- **Wartości odstające** powyżej **3 km** sugerują problemy z dostępem do usług dla rodzin z dziećmi.
+[**kindergarten_distance**](#kindergarten_distanceBoxPlot) - Przedszkola
+znajdują się głównie **do 1 km** od mieszkań.\
+- **Wartości odstające** powyżej **3 km** sugerują problemy z dostępem
+do usług dla rodzin z dziećmi.
 
-**[restaurant_distance](#restaurant_distanceBoxPlot)**  
+[**restaurant_distance**](#restaurant_distanceBoxPlot)\
 - Restauracje znajdują się typowo **do 1 km** od mieszkań.\
-- **Wartości odstające** powyżej **5 km** wskazują na peryferyjne lokalizacje z ograniczoną ofertą gastronomiczną.
+- **Wartości odstające** powyżej **5 km** wskazują na peryferyjne
+lokalizacje z ograniczoną ofertą gastronomiczną.
 
-**[college_distance](#college_distanceBoxPlot)** 
-- Typowa odległość wynosi **1-2 km**.\
-- **Wartości odstające** do **5 km** sugerują lokalizacje mniej centralne pod względem infrastruktury edukacyjnej.
+[**college_distance**](#college_distanceBoxPlot) - Typowa odległość
+wynosi **1-2 km**.\
+- **Wartości odstające** do **5 km** sugerują lokalizacje mniej
+centralne pod względem infrastruktury edukacyjnej.
 
-**[pharmacy_distance](#pharmacy_distanceBoxPlot)**
-- Apteki znajdują się zazwyczaj **do 1 km** od mieszkań.\
-- **Wartości odstające** powyżej **4 km** wskazują na obszary o ograniczonym dostępie do usług farmaceutycznych.
+[**pharmacy_distance**](#pharmacy_distanceBoxPlot) - Apteki znajdują się
+zazwyczaj **do 1 km** od mieszkań.\
+- **Wartości odstające** powyżej **4 km** wskazują na obszary o
+ograniczonym dostępie do usług farmaceutycznych.
 
+Analiza wykresów pudełkowych potwierdziła występowanie wartości
+odstających w każdej z badanych zmiennych. Są one szczególnie istotne,
+ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości --
+luksusowe mieszkania, nieruchomości historyczne lub obszary z
+ograniczoną infrastrukturą.
 
-Analiza wykresów pudełkowych potwierdziła występowanie wartości odstających w każdej z badanych zmiennych. Są one szczególnie istotne, ponieważ mogą wskazywać na specyficzne segmenty rynku nieruchomości – luksusowe mieszkania, nieruchomości historyczne lub obszary z ograniczoną infrastrukturą.
-
-Zidentyfikowane wartości odstające będą miały istotne znaczenie w dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych krokach rozważyć, czy te obserwacje powinny zostać zachowane jako istotne dla analizy, czy też przekształcone lub usunięte w zależności od kontekstu biznesowego i analitycznego.
-
-
+Zidentyfikowane wartości odstające będą miały istotne znaczenie w
+dalszym modelowaniu oraz analizach statystycznych. Warto w kolejnych
+krokach rozważyć, czy te obserwacje powinny zostać zachowane jako
+istotne dla analizy, czy też przekształcone lub usunięte w zależności od
+kontekstu biznesowego i analitycznego.
 
 ### Skośność
 
-<a id="centre_distancePlot"></a>
-<a id="poi_countPlot"></a>
-<a id="school_distancePlot"></a>
-<a id="clinic_distancePlot"></a>
+<a id="centre_distancePlot"></a> <a id="poi_countPlot"></a>
+<a id="school_distancePlot"></a> <a id="clinic_distancePlot"></a>
 <a id="post_office_distancePlot"></a>
 <a id="kindergarten_distancePlot"></a>
-<a id="restaurant_distancePlot"></a>
-<a id="college_distancePlot"></a>
+<a id="restaurant_distancePlot"></a> <a id="college_distancePlot"></a>
 <a id="pharmacy_distancePlot"></a>
-
-
 
 ```{r skosnosc, echo = FALSE, eval = TRUE, fig.height=6, fig.width=8}
 par(mfrow = c(3, 3))  # Układ 3x3
@@ -902,12 +1139,10 @@ curve(dnorm(x, mean = mean(na.omit(dane$pharmacy_distance)),
       lwd = 2, 
       add = TRUE)
 ```
-<a id="building_agePlot"></a>
-<a id="square_metersPlot"></a>
-<a id="pricePlot"></a>
-<a id="floorPlot"></a>
-<a id="floor_countPlot"></a>
-<a id="build_yearPlot"></a>
+
+<a id="building_agePlot"></a> <a id="square_metersPlot"></a>
+<a id="pricePlot"></a> <a id="floorPlot"></a>
+<a id="floor_countPlot"></a> <a id="build_yearPlot"></a>
 
 ```{r skosnosc_hist2, echo = FALSE, eval = TRUE, fig.height=4, fig.width=8}
 par(mfrow = c(2, 3))  # Układ 3x3
@@ -984,91 +1219,140 @@ curve(dnorm(x, mean = mean(na.omit(dane$build_year)),
       add = TRUE)
 ```
 
-
 #### **Interpretacja wyników histogramów**
+
 <p style="text-align: justify;">
-Przeprowadzona analiza histogramów pozwoliła na dokładne przyjrzenie się rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba pięter oraz odległości do punktów użyteczności publicznej. Wykresy te umożliwiły identyfikację wartości **typowych** (dominanty, gęstość wartości) oraz **wartości odstających**, które znajdują się na krańcach rozkładów.
+
+Przeprowadzona analiza histogramów pozwoliła na dokładne przyjrzenie się
+rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba
+pięter oraz odległości do punktów użyteczności publicznej. Wykresy te
+umożliwiły identyfikację wartości **typowych** (dominanty, gęstość
+wartości) oraz **wartości odstających**, które znajdują się na krańcach
+rozkładów.
+
 </p>
 
-Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy punkt odniesienia do oceny kształtu rozkładów. Pozwalają one zidentyfikować:  
+Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy
+punkt odniesienia do oceny kształtu rozkładów. Pozwalają one
+zidentyfikować:
 
-- **Odstępstwa od normalności**, takie jak skośność czy wielomodalność,  
-- **Stopień zgodności rozkładów empirycznych z teoretycznym rozkładem normalnym**,  
-- **Przesunięcia względem środka rozkładu** sugerujące koncentrację danych.  
+-   **Odstępstwa od normalności**, takie jak skośność czy
+    wielomodalność,\
+-   **Stopień zgodności rozkładów empirycznych z teoretycznym rozkładem
+    normalnym**,\
+-   **Przesunięcia względem środka rozkładu** sugerujące koncentrację
+    danych.
 
----
+------------------------------------------------------------------------
 
-**[centre_distance](#centre_distancePlot):**
-- Rozkład jest **prawoskośny** z koncentracją wartości w zakresie **2-8 km**.  
-- Linia rozkładu normalnego pokazuje, że rozkład empiryczny jest odchylony w prawo.  
-- Wartości powyżej **10 km** stanowią odstępstwa, które wskazują na nieruchomości w peryferyjnych lokalizacjach, co jest nietypowe dla większości analizowanych danych.
+[**centre_distance**](#centre_distancePlot)**:** - Rozkład jest
+**prawoskośny** z koncentracją wartości w zakresie **2-8 km**.\
+- Linia rozkładu normalnego pokazuje, że rozkład empiryczny jest
+odchylony w prawo.\
+- Wartości powyżej **10 km** stanowią odstępstwa, które wskazują na
+nieruchomości w peryferyjnych lokalizacjach, co jest nietypowe dla
+większości analizowanych danych.
 
-**[poi_count](#poi_countPlot)** 
-- Histogram pokazuje **wysoce prawoskośny** rozkład, gdzie większość obserwacji znajduje się poniżej **50**.  
-- Linia rozkładu normalnego podkreśla duże odchylenie od symetrii, co sugeruje, że większość lokalizacji ma ograniczoną liczbę punktów użyteczności publicznej, natomiast pojedyncze przypadki z bardzo dużymi wartościami (powyżej **100**) są wyjątkami.
+[**poi_count**](#poi_countPlot) - Histogram pokazuje **wysoce
+prawoskośny** rozkład, gdzie większość obserwacji znajduje się poniżej
+**50**.\
+- Linia rozkładu normalnego podkreśla duże odchylenie od symetrii, co
+sugeruje, że większość lokalizacji ma ograniczoną liczbę punktów
+użyteczności publicznej, natomiast pojedyncze przypadki z bardzo dużymi
+wartościami (powyżej **100**) są wyjątkami.
 
-**[school_distance](#school_distancePlot)**  
-- Rozkład odległości jest **prawoskośny**, z dominacją wartości **0-1 km**.  
-- Linia normalna nie pasuje do rozkładu, co wskazuje na silną koncentrację danych blisko **0 km**.  
-- Wartości odstające powyżej **3 km** sugerują lokalizacje z ograniczonym dostępem do szkół.
+[**school_distance**](#school_distancePlot)\
+- Rozkład odległości jest **prawoskośny**, z dominacją wartości **0-1
+km**.\
+- Linia normalna nie pasuje do rozkładu, co wskazuje na silną
+koncentrację danych blisko **0 km**.\
+- Wartości odstające powyżej **3 km** sugerują lokalizacje z
+ograniczonym dostępem do szkół.
 
-**[clinic_distance](#clinic_distancePlot)**  
-- Histogram pokazuje **prawoskośny rozkład**, z większością wartości w przedziale **do 1 km**.  
-- Linia rozkładu normalnego wyraźnie nie oddaje koncentracji danych w niższych wartościach.  
-- Wartości powyżej **3 km** sugerują trudniejszy dostęp do opieki zdrowotnej w mniej zurbanizowanych obszarach.
+[**clinic_distance**](#clinic_distancePlot)\
+- Histogram pokazuje **prawoskośny rozkład**, z większością wartości w
+przedziale **do 1 km**.\
+- Linia rozkładu normalnego wyraźnie nie oddaje koncentracji danych w
+niższych wartościach.\
+- Wartości powyżej **3 km** sugerują trudniejszy dostęp do opieki
+zdrowotnej w mniej zurbanizowanych obszarach.
 
-**[post_office_distance](#post_office_distancePlot)**  
-- Rozkład jest **prawoskośny**, z typowymi wartościami **0,5–1 km**.  
-- Linia rozkładu normalnego wskazuje na istotne odchylenie od normalności, co podkreśla silne skupienie danych w niższych przedziałach.
+[**post_office_distance**](#post_office_distancePlot)\
+- Rozkład jest **prawoskośny**, z typowymi wartościami **0,5--1 km**.\
+- Linia rozkładu normalnego wskazuje na istotne odchylenie od
+normalności, co podkreśla silne skupienie danych w niższych
+przedziałach.
 
-**[restaurant_distance](#restaurant_distancePlot)**  
-- Histogram ujawnia koncentrację wartości w zakresie **do 1 km** z pojedynczymi przypadkami powyżej **3 km**.  
-- Przesunięcie względem linii normalnej podkreśla ograniczoną liczbę nieruchomości o znacznej odległości od restauracji.
+[**restaurant_distance**](#restaurant_distancePlot)\
+- Histogram ujawnia koncentrację wartości w zakresie **do 1 km** z
+pojedynczymi przypadkami powyżej **3 km**.\
+- Przesunięcie względem linii normalnej podkreśla ograniczoną liczbę
+nieruchomości o znacznej odległości od restauracji.
 
-**[college_distance](#college_distancePlot)**  
-- Wartości typowe mieszczą się w przedziale **1–2 km**, natomiast histogram jest **lekko prawoskośny**.  
-- Linia rozkładu normalnego dobrze przybliża dane w środkowej części, jednak widać odchylenia w wyższych wartościach (powyżej **4 km**).
+[**college_distance**](#college_distancePlot)\
+- Wartości typowe mieszczą się w przedziale **1--2 km**, natomiast
+histogram jest **lekko prawoskośny**.\
+- Linia rozkładu normalnego dobrze przybliża dane w środkowej części,
+jednak widać odchylenia w wyższych wartościach (powyżej **4 km**).
 
-**[pharmacy_distance](#pharmacy_distancePlot)** 
-- Histogram jest **silnie prawoskośny**, z wartościami typowymi **do 1 km**.  
-- Linia normalna nie jest dopasowana, co sugeruje, że rozkład empiryczny jest skupiony na jednym krańcu.
+[**pharmacy_distance**](#pharmacy_distancePlot) - Histogram jest
+**silnie prawoskośny**, z wartościami typowymi **do 1 km**.\
+- Linia normalna nie jest dopasowana, co sugeruje, że rozkład empiryczny
+jest skupiony na jednym krańcu.
 
----
+------------------------------------------------------------------------
 
-**[square_meters](#square_metersPlot)** 
-- Rozkład powierzchni mieszkań jest **prawoskośny**, z wartościami dominującymi w przedziale **40–80 m²**.  
-- Linia rozkładu normalnego sugeruje większą symetrię niż istnieje w danych.  
-- **Wartości odstające** powyżej **100 m²** wskazują na duże apartamenty, które są nietypowe.
+[**square_meters**](#square_metersPlot) - Rozkład powierzchni mieszkań
+jest **prawoskośny**, z wartościami dominującymi w przedziale **40--80
+m²**.\
+- Linia rozkładu normalnego sugeruje większą symetrię niż istnieje w
+danych.\
+- **Wartości odstające** powyżej **100 m²** wskazują na duże
+apartamenty, które są nietypowe.
 
-**[price](#pricePlot)**
-- Histogram jest **wysoce prawoskośny**, z typowymi cenami **500 tys. – 1 mln zł**.  
-- Rozkład empiryczny jest znacznie przesunięty względem linii normalnej, co podkreśla nierównomierną strukturę cen na rynku.
+[**price**](#pricePlot) - Histogram jest **wysoce prawoskośny**, z
+typowymi cenami **500 tys. -- 1 mln zł**.\
+- Rozkład empiryczny jest znacznie przesunięty względem linii normalnej,
+co podkreśla nierównomierną strukturę cen na rynku.
 
-**[floor](#floorPlot)** 
-- Większość mieszkań znajduje się na **1-5 piętrze**.  
-- Linia rozkładu normalnego odbiega od rzeczywistego kształtu, który jest **skośny**, z kilkoma wartościami odstającymi powyżej **15 piętra**.
+[**floor**](#floorPlot) - Większość mieszkań znajduje się na **1-5
+piętrze**.\
+- Linia rozkładu normalnego odbiega od rzeczywistego kształtu, który
+jest **skośny**, z kilkoma wartościami odstającymi powyżej **15
+piętra**.
 
-**[floor_count](#floor_countPlot)** 
-- Rozkład pokazuje, że typowe budynki mają **4-6 pięter**.  
-- Linia normalna nie oddaje koncentracji w niskich wartościach oraz odstępstw w wysokich budynkach.
+[**floor_count**](#floor_countPlot) - Rozkład pokazuje, że typowe
+budynki mają **4-6 pięter**.\
+- Linia normalna nie oddaje koncentracji w niskich wartościach oraz
+odstępstw w wysokich budynkach.
 
-**[building_age](#building_agePlot)** 
-- Histogram wskazuje, że większość budynków ma mniej niż **50 lat**.  
-- Rozkład jest prawoskośny, a linia normalna sugeruje większą symetrię niż rzeczywiście istnieje.
+[**building_age**](#building_agePlot) - Histogram wskazuje, że większość
+budynków ma mniej niż **50 lat**.\
+- Rozkład jest prawoskośny, a linia normalna sugeruje większą symetrię
+niż rzeczywiście istnieje.
 
-**[build_year](#build_yearPlot)** 
-- Rozkład pokazuje koncentrację budynków wybudowanych po **1950 roku**.  
-- Linia normalna dobrze dopasowuje się do danych, jednak rozkład jest lekko przesunięty ku nowszym budynkom.
+[**build_year**](#build_yearPlot) - Rozkład pokazuje koncentrację
+budynków wybudowanych po **1950 roku**.\
+- Linia normalna dobrze dopasowuje się do danych, jednak rozkład jest
+lekko przesunięty ku nowszym budynkom.
 
----
- 
-Analiza histogramów, w połączeniu z linią rozkładu normalnego, dostarczyła następujących wniosków:
+------------------------------------------------------------------------
 
-- **Większość rozkładów jest prawoskośna**, co sugeruje koncentrację wartości w niższych przedziałach oraz obecność kilku wartości odstających.  
-- Linie normalne pozwoliły zidentyfikować rozbieżności między rozkładami empirycznymi a teoretycznym rozkładem normalnym.  
-- **Wartości odstające** są widoczne w wielu zmiennych, zwłaszcza w powierzchni mieszkań, cenach oraz odległościach do punktów użyteczności publicznej.  
+Analiza histogramów, w połączeniu z linią rozkładu normalnego,
+dostarczyła następujących wniosków:
 
-Wyniki te potwierdzają specyfikę rynku nieruchomości, gdzie typowe wartości są skoncentrowane w określonych zakresach, a odstępstwa wskazują na szczególne przypadki, które mogą być analizowane osobno.
+-   **Większość rozkładów jest prawoskośna**, co sugeruje koncentrację
+    wartości w niższych przedziałach oraz obecność kilku wartości
+    odstających.\
+-   Linie normalne pozwoliły zidentyfikować rozbieżności między
+    rozkładami empirycznymi a teoretycznym rozkładem normalnym.\
+-   **Wartości odstające** są widoczne w wielu zmiennych, zwłaszcza w
+    powierzchni mieszkań, cenach oraz odległościach do punktów
+    użyteczności publicznej.
+
+Wyniki te potwierdzają specyfikę rynku nieruchomości, gdzie typowe
+wartości są skoncentrowane w określonych zakresach, a odstępstwa
+wskazują na szczególne przypadki, które mogą być analizowane osobno.
 
 ### Z-score
 
@@ -1092,7 +1376,6 @@ Wyniki te potwierdzają specyfikę rynku nieruchomości, gdzie typowe wartości 
 # mean((dane$poi_count-mean(dane$poi_count))/sd(dane$poi_count))
 ```
 
-
 ```{r tab_zscore, results='asis', eval=TRUE, echo=FALSE}
 
 wyniki <- data.frame(
@@ -1109,12 +1392,18 @@ knitr::kable(wyniki, caption = "Wyniki Z-Score")
 ```
 
 <p style="text-align: justify;">
-Standaryzacja przy użyciu z-score umożliwia identyfikację wartości odstających. Wartości, które są znacznie większe lub mniejsze niż 3 odchylenia standardowe, mogą być traktowane jako odstające. Zastosowanie z-score zapewniło, że wszystkie analizowane zmienne są zbalansowane wokół średniej, co stanowi podstawę do dalszych, bardziej szczegółowych analiz. Większość wartości w danych jest symetrycznie rozłożona wokół średniej i nie dominuje żaden zbiór ekstremalnych wartości.
+
+Standaryzacja przy użyciu z-score umożliwia identyfikację wartości
+odstających. Wartości, które są znacznie większe lub mniejsze niż 3
+odchylenia standardowe, mogą być traktowane jako odstające. Zastosowanie
+z-score zapewniło, że wszystkie analizowane zmienne są zbalansowane
+wokół średniej, co stanowi podstawę do dalszych, bardziej szczegółowych
+analiz. Większość wartości w danych jest symetrycznie rozłożona wokół
+średniej i nie dominuje żaden zbiór ekstremalnych wartości.
+
 </p>
 
 ### Transformacje
-
-
 
 ```{r transformacja_price, echo = FALSE, fig.height=4, fig.width=8}
 par(mfrow = c(1,2))
@@ -1145,10 +1434,6 @@ curve(dnorm(x, mean = mean(na.omit(dane$price)),
       add = TRUE)
 
 ```
-
-
-
-
 
 ```{r transformacja_price_per_square_meter, echo = FALSE, fig.height=4, fig.width=8}
 par(mfrow = c(1,2))
@@ -1183,63 +1468,102 @@ curve(dnorm(x, mean = mean(dane$poi_count),
 #### Transformacja zmiennej price oraz poi_count
 
 ##### Powody przeprowadzenia transformacji logarytmicznej:
-1. **Zmniejszenie wpływu wartości odstających**: 
-   - W zmiennych takich jak **price** i **poi_count** występują duże wartości odstające. Dla ceny może to być kilka luksusowych apartamentów o bardzo wysokiej cenie, a dla liczby punktów zainteresowania miejsca z wyjątkowo dużą liczbą udogodnień w okolicy. Transformacja logarytmiczna zmniejsza wpływ tych skrajnych wartości na analizy.
-   
-2. **Poprawa rozkładu zmiennych**: 
-   - Cena mieszkań oraz liczba punktów zainteresowania często mają rozkład prawoskośny, co oznacza, że większość wartości jest skupiona przy niższych wartościach, ale pojawiają się też wyższe, rzadkie wartości. Logarytm zmniejsza tę asymetrię, zbliżając dane do rozkładu normalnego, co ułatwia interpretację i modelowanie statystyczne.
+
+1.  **Zmniejszenie wpływu wartości odstających**:
+    -   W zmiennych takich jak **price** i **poi_count** występują duże
+        wartości odstające. Dla ceny może to być kilka luksusowych
+        apartamentów o bardzo wysokiej cenie, a dla liczby punktów
+        zainteresowania miejsca z wyjątkowo dużą liczbą udogodnień w
+        okolicy. Transformacja logarytmiczna zmniejsza wpływ tych
+        skrajnych wartości na analizy.
+2.  **Poprawa rozkładu zmiennych**:
+    -   Cena mieszkań oraz liczba punktów zainteresowania często mają
+        rozkład prawoskośny, co oznacza, że większość wartości jest
+        skupiona przy niższych wartościach, ale pojawiają się też
+        wyższe, rzadkie wartości. Logarytm zmniejsza tę asymetrię,
+        zbliżając dane do rozkładu normalnego, co ułatwia interpretację
+        i modelowanie statystyczne.
 
 ##### Interpretacja:
-Po transformacji:
-- **Rozkład zmiennej price** jest bardziej symetryczny, co ułatwi modelowanie zależności między ceną a innymi zmiennymi.
-- **Rozkład zmiennej poi_count** jest  mniej skośny, co pozwoli lepiej zrozumieć wpływ liczby punktów zainteresowania na analizowane wyniki.
 
-
+Po transformacji: - **Rozkład zmiennej price** jest bardziej
+symetryczny, co ułatwi modelowanie zależności między ceną a innymi
+zmiennymi. - **Rozkład zmiennej poi_count** jest mniej skośny, co
+pozwoli lepiej zrozumieć wpływ liczby punktów zainteresowania na
+analizowane wyniki.
 
 #### Uzasadnienie braku transformacji dla poszczególnych kolumn
 
-1. **square_meters**  
-   - **Uzasadnienie**: Duże wartości tej zmiennej (np. powyżej 200 m²) mogą odnosić się do apartamentów luksusowych lub przestronnych domów, co jest zrozumiałe w kontekście rynku nieruchomości. Asymetria rozkładu wynika z faktu, że małe mieszkania są bardziej powszechne, ale większe jednostki wciąż mają naturalne uzasadnienie.  
+1.  **square_meters**
+    -   **Uzasadnienie**: Duże wartości tej zmiennej (np. powyżej 200
+        m²) mogą odnosić się do apartamentów luksusowych lub
+        przestronnych domów, co jest zrozumiałe w kontekście rynku
+        nieruchomości. Asymetria rozkładu wynika z faktu, że małe
+        mieszkania są bardziej powszechne, ale większe jednostki wciąż
+        mają naturalne uzasadnienie.
+2.  **rooms**
+    -   **Uzasadnienie**: Liczba pokoi w mieszkaniach czy domach jest
+        zwykle niewielka i wynika z ich przeznaczenia. Duże liczby (np.
+        7--10 pokoi) mogą odnosić się do dużych domów jednorodzinnych
+        lub luksusowych apartamentów. Każda wartość zmiennej ma swoje
+        logiczne wyjaśnienie.
+3.  **floor oraz floor_count**
+    -   **Uzasadnienie**: Wysokie wartości (np. powyżej 10. piętra)
+        zazwyczaj odnoszą się do mieszkań w wieżowcach, co jest typowe w
+        dużych miastach. Rozkład zmiennej jest zgodny z różnorodnością
+        rynku.
+4.  **build_year**
+    -   **Uzasadnienie**: Starsze budynki (np. przedwojenne) mają swoje
+        unikalne cechy (np. kamienice), a nowe budynki charakteryzują
+        nowoczesne technologie i standardy. Każda wartość zmiennej
+        niesie ze sobą istotny kontekst historyczny i architektoniczny.
+5.  **centre_distance**
+    -   **Uzasadnienie**: Duże odległości (np. \>20 km) zwykle oznaczają
+        mieszkania na przedmieściach lub w miejscowościach satelickich,
+        co jest naturalne w kontekście urbanistycznym. Mniejsze wartości
+        wskazują na nieruchomości w centrum miasta, co również ma sens.
+6.  **school_distance**
+    -   **Uzasadnienie**: Krótsze odległości są typowe dla osiedli
+        mieszkaniowych, gdzie szkoły są blisko mieszkańców. Większe
+        odległości mogą dotyczyć obszarów wiejskich lub mniej
+        zurbanizowanych.
+7.  **clinic_distance**
+    -   **Uzasadnienie**: Podobnie jak w przypadku szkół, krótsze
+        odległości charakteryzują gęsto zabudowane obszary, a większe --
+        mniej rozwinięte okolice. Rozkład zmiennej jest zgodny z
+        rzeczywistością.
+8.  **post_office_distance**
+    -   **Uzasadnienie**: Odległości te odzwierciedlają rzeczywisty
+        dostęp do infrastruktury. Krótsze odległości oznaczają bardziej
+        zurbanizowane tereny, a dłuższe -- obszary mniej zaludnione.
+9.  **kindergarten_distance**
+    -   **Uzasadnienie**: Podobnie jak w przypadku szkół, odległości
+        mają naturalne wyjaśnienie w charakterystyce lokalizacji.
+10. **restaurant_distance**
+    -   **Uzasadnienie**: Krótsze odległości są typowe dla centrów
+        miast, a większe -- dla terenów podmiejskich i wiejskich.
+        Zmienna w swojej formie jest wystarczająco zrozumiała.
+11. **college_distance**
+    -   **Uzasadnienie**: Podobnie jak inne odległości, wartości tej
+        zmiennej mają naturalne uzasadnienie w zależności od lokalizacji
+        nieruchomości względem centrów edukacyjnych.
+12. **pharmacy_distance**
+    -   **Uzasadnienie**: Odległości te są intuicyjne i w pełni
+        odpowiadają rzeczywistości. Apteki są zlokalizowane bliżej
+        mieszkańców w gęsto zaludnionych obszarach, co tłumaczy krótsze
+        wartości.
+13. **building_age**
+    -   **Uzasadnienie**: Starsze budynki (np. \>50 lat) są często
+        kamienicami lub historycznymi budynkami, a nowe (np. \<10 lat)
+        to inwestycje deweloperskie. Wiek budynku jest intuicyjny i
+        łatwy do zrozumienia bez transformacji.
 
-2. **rooms**  
-   - **Uzasadnienie**: Liczba pokoi w mieszkaniach czy domach jest zwykle niewielka i wynika z ich przeznaczenia. Duże liczby (np. 7–10 pokoi) mogą odnosić się do dużych domów jednorodzinnych lub luksusowych apartamentów. Każda wartość zmiennej ma swoje logiczne wyjaśnienie.  
-
-3. **floor oraz floor_count**  
-   - **Uzasadnienie**: Wysokie wartości (np. powyżej 10. piętra) zazwyczaj odnoszą się do mieszkań w wieżowcach, co jest typowe w dużych miastach. Rozkład zmiennej jest zgodny z różnorodnością rynku.  
-
-5. **build_year**  
-   - **Uzasadnienie**: Starsze budynki (np. przedwojenne) mają swoje unikalne cechy (np. kamienice), a nowe budynki charakteryzują nowoczesne technologie i standardy. Każda wartość zmiennej niesie ze sobą istotny kontekst historyczny i architektoniczny.  
-
-6. **centre_distance**  
-   - **Uzasadnienie**: Duże odległości (np. >20 km) zwykle oznaczają mieszkania na przedmieściach lub w miejscowościach satelickich, co jest naturalne w kontekście urbanistycznym. Mniejsze wartości wskazują na nieruchomości w centrum miasta, co również ma sens.  
-
-8. **school_distance**  
-   - **Uzasadnienie**: Krótsze odległości są typowe dla osiedli mieszkaniowych, gdzie szkoły są blisko mieszkańców. Większe odległości mogą dotyczyć obszarów wiejskich lub mniej zurbanizowanych.  
-
-9. **clinic_distance**  
-   - **Uzasadnienie**: Podobnie jak w przypadku szkół, krótsze odległości charakteryzują gęsto zabudowane obszary, a większe – mniej rozwinięte okolice. Rozkład zmiennej jest zgodny z rzeczywistością.  
-
-10. **post_office_distance**  
-    - **Uzasadnienie**: Odległości te odzwierciedlają rzeczywisty dostęp do infrastruktury. Krótsze odległości oznaczają bardziej zurbanizowane tereny, a dłuższe – obszary mniej zaludnione.  
-
-11. **kindergarten_distance**  
-    - **Uzasadnienie**: Podobnie jak w przypadku szkół, odległości mają naturalne wyjaśnienie w charakterystyce lokalizacji.  
-
-12. **restaurant_distance**  
-    - **Uzasadnienie**: Krótsze odległości są typowe dla centrów miast, a większe – dla terenów podmiejskich i wiejskich. Zmienna w swojej formie jest wystarczająco zrozumiała.  
-
-13. **college_distance**  
-    - **Uzasadnienie**: Podobnie jak inne odległości, wartości tej zmiennej mają naturalne uzasadnienie w zależności od lokalizacji nieruchomości względem centrów edukacyjnych.  
-
-14. **pharmacy_distance**  
-    - **Uzasadnienie**: Odległości te są intuicyjne i w pełni odpowiadają rzeczywistości. Apteki są zlokalizowane bliżej mieszkańców w gęsto zaludnionych obszarach, co tłumaczy krótsze wartości.  
-
-15. **building_age**  
-    - **Uzasadnienie**: Starsze budynki (np. >50 lat) są często kamienicami lub historycznymi budynkami, a nowe (np. <10 lat) to inwestycje deweloperskie. Wiek budynku jest intuicyjny i łatwy do zrozumienia bez transformacji.  
-
-
-**Podsumowanie**: Brak transformacji dla większości zmiennych wynika z ich naturalnego znaczenia w kontekście rynku nieruchomości. Transformacje stosujemy wyłącznie w sytuacjach, gdy poprawiają one analizę, bez utraty interpretowalności. W przypadku tych zmiennych, zachowanie ich w pierwotnej formie pozwala na lepsze oddanie rzeczywistości i kontekstu analizy.
-
+**Podsumowanie**: Brak transformacji dla większości zmiennych wynika z
+ich naturalnego znaczenia w kontekście rynku nieruchomości.
+Transformacje stosujemy wyłącznie w sytuacjach, gdy poprawiają one
+analizę, bez utraty interpretowalności. W przypadku tych zmiennych,
+zachowanie ich w pierwotnej formie pozwala na lepsze oddanie
+rzeczywistości i kontekstu analizy.
 
 ```{r walidacja_i_weryfikacja_logicznej_spójności_danych, echo=FALSE, out.width="83%", fig.width=14, fig.height=9}
 
@@ -1287,15 +1611,32 @@ plot(out)
 ```
 
 <p style="text-align: justify;">
-W procesie walidacji danych większość reguł została spełniona, jednak w przypadku jednej reguły, dotyczącej zgodności zmiennych floor i floor_count, wykryto 545 nieprawidłowych obserwacji, które wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny przekraczać wartości floor_count, co jest kluczowe dla spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych innych istotnych problemów w analizowanych danych.
+
+W procesie walidacji danych większość reguł została spełniona, jednak w
+przypadku jednej reguły, dotyczącej zgodności zmiennych floor i
+floor_count, wykryto 545 nieprawidłowych obserwacji, które wymagają
+dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny
+przekraczać wartości floor_count, co jest kluczowe dla spójności danych.
+Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych
+innych istotnych problemów w analizowanych danych.
+
 </p>
 
 <p style="text-align: justify;">
-Przed rozpoczęciem walidacji brakujące wartości (NA) zostały uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z regułami. Imputacja brakujących danych była kluczowym krokiem, umożliwiającym dalsze etapy weryfikacji danych.
+
+Przed rozpoczęciem walidacji brakujące wartości (NA) zostały
+uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z
+regułami. Imputacja brakujących danych była kluczowym krokiem,
+umożliwiającym dalsze etapy weryfikacji danych.
+
 </p>
 
 <p style="text-align: justify;">
-Błędy w danych floor i floor_count mogą wynikać z błędnie uzupełnionych wartości lub nieaktualnych danych (budynki mogły zmienić liczbę kondygnacji po modernizacji).
+
+Błędy w danych floor i floor_count mogą wynikać z błędnie uzupełnionych
+wartości lub nieaktualnych danych (budynki mogły zmienić liczbę
+kondygnacji po modernizacji).
+
 </p>
 
 ```{r weryfikacja_cz.2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
@@ -1344,9 +1685,18 @@ duplicates <- dane[duplicated(dane), ]
 ```
 
 <p style="text-align: justify;">
-W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość floor była większa niż liczba floor_count, co jest logicznie nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji (floor_count) zostanie ustawiona na wartość piętra (floor).
 
-Jeśli wartość liczby kondygnacji była równa lub większa od wartości piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność danych i eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych. 
+W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość
+floor była większa niż liczba floor_count, co jest logicznie
+nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich
+sytuacjach wartość liczby kondygnacji (floor_count) zostanie ustawiona
+na wartość piętra (floor).
+
+Jeśli wartość liczby kondygnacji była równa lub większa od wartości
+piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność
+danych i eliminuje przypadki, w których piętro przewyższa liczbę
+kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych.
+
 </p>
 
 ```{r dodanie_nowych_danych, echo=FALSE, message=FALSE, warning=FALSE}
@@ -1387,12 +1737,20 @@ voivodeship_centroids <- suppressWarnings({
 })
 ```
 
-# Analiza średnich cen mieszkań według województw
+# **Analiza średnich cen mieszkań według województw**
 
-<p style="text-align: justify;"> Celem analizy regionalnej cen mieszkań jest zrozumienie zróżnicowania poziomu cen nieruchomości w Polsce. Wykorzystanie mapy województw pozwala zobrazować różnice w średnich cenach za metr kwadratowy w poszczególnych regionach kraju. Tego rodzaju wizualizacja umożliwia identyfikację obszarów o najwyższych oraz najniższych cenach, co może stanowić punkt wyjścia do dalszej analizy rynku nieruchomości, uwzględniającej czynniki wpływające na cenę, takie jak urbanizacja, poziom dochodów czy lokalna infrastruktura. </p>
+<p style="text-align: justify;">
 
+Celem analizy regionalnej cen mieszkań jest zrozumienie zróżnicowania
+poziomu cen nieruchomości w Polsce. Wykorzystanie mapy województw
+pozwala zobrazować różnice w średnich cenach za metr kwadratowy w
+poszczególnych regionach kraju. Tego rodzaju wizualizacja umożliwia
+identyfikację obszarów o najwyższych oraz najniższych cenach, co może
+stanowić punkt wyjścia do dalszej analizy rynku nieruchomości,
+uwzględniającej czynniki wpływające na cenę, takie jak urbanizacja,
+poziom dochodów czy lokalna infrastruktura.
 
-
+</p>
 
 ```{r wykres_choropleth srednia cena mieszk na wojew, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(data = voivodeship) +
@@ -1420,21 +1778,69 @@ ggplot(data = voivodeship) +
   )
 ```
 
-
 #### **Interpretacja wyników**
 
 1.  **Województwo mazowieckie jako lider cenowy**
-<p style="text-align: justify;">Z wykresu wynika, że województwo mazowieckie, w szczególności Warszawa, dominuje pod względem średnich cen za metr kwadratowy, osiągając wartości powyżej **18 000 PLN/m²**. Jest to odzwierciedleniem centralnej roli stolicy w gospodarce, jej rozwiniętego rynku pracy oraz wysokiego popytu na mieszkania.</p>
+
+    <p style="text-align: justify;">
+
+    Z wykresu wynika, że województwo mazowieckie, w szczególności
+    Warszawa, dominuje pod względem średnich cen za metr kwadratowy,
+    osiągając wartości powyżej **18 000 PLN/m²**. Jest to
+    odzwierciedleniem centralnej roli stolicy w gospodarce, jej
+    rozwiniętego rynku pracy oraz wysokiego popytu na mieszkania.
+
+    </p>
+
 2.  **Regiony o najniższych cenach**
-<p style="text-align: justify;">Województwa takie jak podkarpackie, lubelskie i podlaskie charakteryzują się znacznie niższymi cenami, oscylującymi wokół **10 000 PLN/m²**. Są to regiony o mniejszym stopniu urbanizacji oraz niższym popycie na nieruchomości w porównaniu do dużych miast.</p>
+
+    <p style="text-align: justify;">
+
+    Województwa takie jak podkarpackie, lubelskie i podlaskie
+    charakteryzują się znacznie niższymi cenami, oscylującymi wokół **10
+    000 PLN/m²**. Są to regiony o mniejszym stopniu urbanizacji oraz
+    niższym popycie na nieruchomości w porównaniu do dużych miast.
+
+    </p>
+
 3.  **Regiony o średnich cenach**
-<p style="text-align: justify;">Województwa dolnośląskie, pomorskie i wielkopolskie znajdują się w średnim przedziale cenowym, wynoszącym od **12 000 PLN/m² do 16 000 PLN/m²**. Obejmują one dynamicznie rozwijające się miasta, takie jak Wrocław, Gdańsk czy Poznań, które są istotnymi ośrodkami akademickimi i biznesowymi.</p>
+
+    <p style="text-align: justify;">
+
+    Województwa dolnośląskie, pomorskie i wielkopolskie znajdują się w
+    średnim przedziale cenowym, wynoszącym od **12 000 PLN/m² do 16 000
+    PLN/m²**. Obejmują one dynamicznie rozwijające się miasta, takie jak
+    Wrocław, Gdańsk czy Poznań, które są istotnymi ośrodkami
+    akademickimi i biznesowymi.
+
+    </p>
+
 4.  **Różnice między regionami**
-<p style="text-align: justify;">Mapa podkreśla wyraźne różnice w rozwoju regionalnym. Województwa takie jak opolskie czy świętokrzyskie należą do najtańszych, co może być związane z niższym stopniem urbanizacji, mniejszym popytem oraz ograniczoną dostępnością pracy w tych regionach.</p>
+
+    <p style="text-align: justify;">
+
+    Mapa podkreśla wyraźne różnice w rozwoju regionalnym. Województwa
+    takie jak opolskie czy świętokrzyskie należą do najtańszych, co może
+    być związane z niższym stopniem urbanizacji, mniejszym popytem oraz
+    ograniczoną dostępnością pracy w tych regionach.
+
+    </p>
 
 #### **Wnioski**
-<p style="text-align: justify;"> Wykres średnich cen mieszkań za metr kwadratowy w podziale na województwa jasno pokazuje istotne różnice regionalne. Najwyższe ceny dominują w centralnej i północno-zachodniej części Polski, szczególnie w miastach takich jak Warszawa, Wrocław, Gdańsk i Kraków. Natomiast regiony wschodnie oraz mniej zurbanizowane województwa charakteryzują się niższymi cenami, co wskazuje na ich mniejszy potencjał rynkowy. Wyniki te sugerują, że dalsze badania powinny uwzględnić czynniki demograficzne, ekonomiczne i infrastrukturalne, które kształtują rynek nieruchomości w Polsce. </p>
 
+<p style="text-align: justify;">
+
+Wykres średnich cen mieszkań za metr kwadratowy w podziale na
+województwa jasno pokazuje istotne różnice regionalne. Najwyższe ceny
+dominują w centralnej i północno-zachodniej części Polski, szczególnie w
+miastach takich jak Warszawa, Wrocław, Gdańsk i Kraków. Natomiast
+regiony wschodnie oraz mniej zurbanizowane województwa charakteryzują
+się niższymi cenami, co wskazuje na ich mniejszy potencjał rynkowy.
+Wyniki te sugerują, że dalsze badania powinny uwzględnić czynniki
+demograficzne, ekonomiczne i infrastrukturalne, które kształtują rynek
+nieruchomości w Polsce.
+
+</p>
 
 ```{r, results='asis', eval=TRUE, echo=FALSE, comment=FALSE, warning=FALSE}
 
@@ -1449,64 +1855,126 @@ statystyki <- dane %>%
     "Średnia powierzchnia mieszkania" = round(mean(square_meters, na.rm = TRUE), 2),
     "Średnia cena za $m^2$" = round(mean(price_per_square_meter, na.rm = TRUE), 2),
     "Najczęstsza liczba pokoi" = get_mode(rooms)
-  )
+  ) %>%
+  arrange(desc(`Średnia cena za $m^2$`)) 
 
 knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
 ```
 
+# MOŻE TABELKA POD MAPKE ?
 
+### Wybór miast do dalszej analizy
+
+W ramach dalszej analizy postanowiliśmy skupić się na szczegółowym
+porównaniu miast w naszym zbiorze danych pod kątem cen mieszkań za metr
+kwadratowy. W tym celu wybraliśmy po dwa miasta z trzech grup cenowych:
+
+1.  **Miasta z najwyższymi cenami za** $m^2$ -- są to lokalizacje
+    charakteryzujące się wyjątkowo wysokim poziomem cen, które mogą być
+    związane z prestiżem, dostępem do wyjątkowych udogodnień, czy
+    lokalizacją w centralnych dzielnicach dużych miast. Analiza tych
+    miast jakimi są Warszawa oraz Kraków pozwoli zrozumieć, jakie czynniki najbardziej wpływają na tak
+    wysokie ceny.
+
+2.  **Miasta o średnich cenach za** $m^2$ -- wybraliśmy dwa miasta
+    znajdujące się w średniej półce cenowej tj Rzeszów i Białystok. Analiza tej grupy pozwoli
+    na identyfikację, jak różnią się te lokalizacje od najdroższych i
+    najtańszych pod względem dostępności mieszkań, udogodnień oraz
+    charakterystyki demograficznej.
+
+3.  **Miasta z najniższymi cenami za** $m^2$ -- dwa miasta o najniższych
+    cenach za metr kwadratowy (Radom, Częstochowa) zostały wybrane w celu zbadania, czy
+    niższe ceny wynikają z lokalizacji, ograniczonej liczby udogodnień,
+    czy może innych czynników, takich jak mniejsze zainteresowanie
+    rynkiem nieruchomości.
+
+#### Uzasadnienie wyboru
+
+Decyzja o podziale miast na trzy grupy wynika z chęci uchwycenia
+zróżnicowania na polskim rynku nieruchomości. Taki podział pozwala:
+
+-   **Lepiej zrozumieć czynniki wpływające na ceny mieszkań** w skrajnie
+    różnych lokalizacjach.
+-   **Zidentyfikować potencjalne różnice w charakterystyce mieszkań**
+    (np. powierzchnia, liczba pokoi, stan techniczny) pomiędzy miastami.
+-   **Opracować bardziej uniwersalne wnioski**, które mogą być przydatne
+    zarówno dla inwestorów, jak i osób zainteresowanych zakupem
+    mieszkań.
+
+Dzięki temu podziałowi możemy porównać, jakie cechy i trendy są unikalne
+dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
+łączą te grupy.
 
 # **Analiza udogodnień w nieruchomościach**
 
-```{r, echo=FALSE, fig.height=10,fig.width=10}
-p1 <- ggplot(dane, aes(x = has_balcony, y = price)) +
-  geom_boxplot(fill = c("lightblue", "lightgreen")) +
-  labs(title = "Wpływ obecności balkonu na cenę mieszkania",
+```{r, echo=FALSE, fig.height=12,fig.width=12}
+# Filtruj dane dla wybranych miast
+wybrane_miasta <- c("Warszawa", "Kraków", "Częstochowa", "Radom", "Białystok", "Rzeszów")
+dane_filtr <- dane %>% filter(city %in% wybrane_miasta)
+
+p1 <- ggplot(dane_filtr, aes(x = has_balcony, y = price)) +
+  geom_boxplot(aes(fill = city)) +
+  labs(title = "Balkon",
        x = "Czy mieszkanie ma balkon?",
        y = "Cena (PLN)") +
-  theme_minimal()
+  theme_minimal() +
+  facet_wrap(~city)
 
-p2 <- ggplot(dane, aes(x = has_elevator, y = price)) +
-  geom_boxplot(fill = c("plum", "peachpuff")) +
-  labs(title = "Wpływ obecności windy na cenę mieszkania",
+p2 <- ggplot(dane_filtr, aes(x = has_elevator, y = price)) +
+  geom_boxplot(aes(fill = city)) +
+  labs(title = "Winda",
        x = "Czy mieszkanie ma windę?",
        y = "Cena (PLN)") +
-  theme_minimal()
+  theme_minimal() +
+  facet_wrap(~city)
 
-p3 <- ggplot(dane, aes(x = has_parking, y = price)) +
-  geom_boxplot(fill = c("lightyellow", "tomato2")) +
-  labs(title = "Wpływ obecności parkingu na cenę mieszkania",
+p3 <- ggplot(dane_filtr, aes(x = has_parking, y = price)) +
+  geom_boxplot(aes(fill = city)) +
+  labs(title = "Parking",
        x = "Czy mieszkanie ma parking?",
        y = "Cena (PLN)") +
-  theme_minimal()
+  theme_minimal() +
+  facet_wrap(~city)
 
-p4 <- ggplot(dane, aes(x = has_security, y = price)) +
-  geom_boxplot(fill = c("thistle", "darkslateblue")) +
-  labs(title = "Wpływ obecności ochrony na cenę mieszkania",
+p4 <- ggplot(dane_filtr, aes(x = has_security, y = price)) +
+  geom_boxplot(aes(fill = city)) +
+  labs(title = "Ochrona",
        x = "Czy mieszkanie ma ochronę?",
        y = "Cena (PLN)") +
-  theme_minimal()
+  theme_minimal() +
+  facet_wrap(~city)
 
-p5 <- ggplot(dane, aes(x = has_storage_room, y = price)) +
-  geom_boxplot(fill = c("lightsalmon1", "darkseagreen3")) +
-  labs(title = "Wpływ obecności komórki lokatorskiej na cenę mieszkania",
-       x = "Czy mieszkanie ma komórke lokatorską?",
+p5 <- ggplot(dane_filtr, aes(x = has_storage_room, y = price)) +
+  geom_boxplot(aes(fill = city)) +
+  labs(title = "Komórka lokatorska",
+       x = "Czy mieszkanie ma komórkę lokatorską?",
        y = "Cena (PLN)") +
-  theme_minimal()
+  theme_minimal() +
+  facet_wrap(~city)
 
-grid.arrange(p1, p2, p3, p4, p5, nrow =3)
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, p5, nrow = 3)
+
 
 ```
 
-
 #### Interpretacja wyników analizy wpływu obecności balkonu na cenę mieszkań:
 
-W analizie porównaliśmy ceny mieszkań w dwóch grupach: z balkonem oraz bez balkonu. Obserwacje z wykresów pudełkowych wskazują, że poziomy mediany w obu grupach są podobne, co sugeruje, że obecność balkonu nie ma znaczącego wpływu na centralną tendencję ceny mieszkań.
+W analizie porównaliśmy ceny mieszkań w dwóch grupach: z balkonem oraz
+bez balkonu. Obserwacje z wykresów pudełkowych wskazują, że poziomy
+mediany w obu grupach są podobne, co sugeruje, że obecność balkonu nie
+ma znaczącego wpływu na centralną tendencję ceny mieszkań.
 
-Jednakże mediana w grupie mieszkań z balkonem jest nieco wyższa niż w grupie bez balkonu, co może wskazywać na minimalną przewagę cenową mieszkań wyposażonych w to udogodnienie. Dodatkowo pudełko w tej grupie (symbolizujące zakres między dolnym a górnym kwartylem) jest węższe, co oznacza mniejsze zróżnicowanie cen wśród mieszkań z balkonem.
+Jednakże mediana w grupie mieszkań z balkonem jest nieco wyższa niż w
+grupie bez balkonu, co może wskazywać na minimalną przewagę cenową
+mieszkań wyposażonych w to udogodnienie. Dodatkowo pudełko w tej grupie
+(symbolizujące zakres między dolnym a górnym kwartylem) jest węższe, co
+oznacza mniejsze zróżnicowanie cen wśród mieszkań z balkonem.
 
-Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z różnorodności innych czynników wpływających na cenę, które w tej grupie mają większe znaczenie.
-
+Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym
+pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z
+różnorodności innych czynników wpływających na cenę, które w tej grupie
+mają większe znaczenie.
 
 ```{r, echo=FALSE, comment=FALSE, warning=FALSE}
 pokoejecenam2 <- dane %>%
@@ -1527,9 +1995,6 @@ top5 <- podsumowanie_m2dlamiast %>%
 top5pokojecenamiasta <- pokoejecenam2 %>% filter(city %in% top5$city)
 
 ```
-
-
-
 
 ```{r, echo=FALSE, comment=FALSE, warning=FALSE}
 barplot_city <- plot_ly(
@@ -1553,9 +2018,25 @@ barplot_city
 
 ### **Sylwetka Gdańska**
 
-<p style="text-align: justify;"> Gdańsk, jedno z najstarszych miast Polski, charakteryzuje się nie tylko bogatą historią i malowniczym położeniem nad Bałtykiem, ale również dynamicznie rozwijającym się rynkiem nieruchomości. W ramach tej analizy dokonaliśmy podziału miasta na 35 dzielnic, aby dokładniej przyjrzeć się zróżnicowaniu średnich cen mieszkań za metr kwadratowy. </p> 
+<p style="text-align: justify;">
 
-<p style="text-align: justify;"> Mapa wizualizuje ceny mieszkań w różnych obszarach, uwzględniając zarówno centralne, historyczne części miasta, jak Śródmieście, jak i peryferyjne, bardziej spokojne dzielnice. Zaznaczenie Śródmieścia jako centrum miasta pozwala łatwiej interpretować wyniki i lokalizować najważniejsze obszary urbanistyczne Gdańska. </p>
+Gdańsk, jedno z najstarszych miast Polski, charakteryzuje się nie tylko
+bogatą historią i malowniczym położeniem nad Bałtykiem, ale również
+dynamicznie rozwijającym się rynkiem nieruchomości. W ramach tej analizy
+dokonaliśmy podziału miasta na 35 dzielnic, aby dokładniej przyjrzeć się
+zróżnicowaniu średnich cen mieszkań za metr kwadratowy.
+
+</p>
+
+<p style="text-align: justify;">
+
+Mapa wizualizuje ceny mieszkań w różnych obszarach, uwzględniając
+zarówno centralne, historyczne części miasta, jak Śródmieście, jak i
+peryferyjne, bardziej spokojne dzielnice. Zaznaczenie Śródmieścia jako
+centrum miasta pozwala łatwiej interpretować wyniki i lokalizować
+najważniejsze obszary urbanistyczne Gdańska.
+
+</p>
 
 ```{r wczytanie dzielnic Gdańska, echo=FALSE, comment=FALSE, warning=FALSE, message = FALSE}
 # Wczytanie danych dzielnic Gdańska
@@ -1632,10 +2113,36 @@ legenda_dzielnic <- gdansk_dzielnice %>%
 # Wyświetlenie tabeli legendy z numerami i nazwami dzielnic
 knitr::kable(legenda_dzielnic, col.names = c("Numer", "Dzielnica"), caption = "Legenda: Numery dzielnic w Gdańsku")
 ```
+
 #### Interpretacja wyników analizy cen mieszkań per dzielnica:
 
-<p style="text-align: justify;"> Analiza wykazała znaczne zróżnicowanie cen mieszkań w poszczególnych dzielnicach Gdańska. Najwyższe średnie ceny za metr kwadratowy występują w centralnych obszarach miasta, takich jak Śródmieście oraz nadmorskie dzielnice, np. Żabianka–Wejhera–Jelitkowo–Tysiąclecia. Są to miejsca o wysokim prestiżu, dogodnym dostępie do atrakcji turystycznych i rozwiniętej infrastrukturze. </p> 
+<p style="text-align: justify;">
 
-<p style="text-align: justify;"> Z kolei dzielnice bardziej oddalone od centrum, takie jak Kokoszki czy Matarnia, cechują się znacznie niższymi cenami, co może przyciągać osoby poszukujące spokojniejszych lokalizacji oraz bardziej przystępnych cenowo mieszkań. </p> 
+Analiza wykazała znaczne zróżnicowanie cen mieszkań w poszczególnych
+dzielnicach Gdańska. Najwyższe średnie ceny za metr kwadratowy występują
+w centralnych obszarach miasta, takich jak Śródmieście oraz nadmorskie
+dzielnice, np. Żabianka--Wejhera--Jelitkowo--Tysiąclecia. Są to miejsca
+o wysokim prestiżu, dogodnym dostępie do atrakcji turystycznych i
+rozwiniętej infrastrukturze.
 
-<p style="text-align: justify;"> Porównanie tych różnic uwidacznia rolę lokalizacji w kształtowaniu cen nieruchomości, co może być cenną wskazówką zarówno dla inwestorów, jak i osób planujących zakup nieruchomości. Wyniki te stanowią także podstawę do dalszych analiz, uwzględniających takie czynniki jak dostępność komunikacyjna, sąsiedztwo terenów zielonych czy rozwój lokalnej infrastruktury. </p>
+</p>
+
+<p style="text-align: justify;">
+
+Z kolei dzielnice bardziej oddalone od centrum, takie jak Kokoszki czy
+Matarnia, cechują się znacznie niższymi cenami, co może przyciągać osoby
+poszukujące spokojniejszych lokalizacji oraz bardziej przystępnych
+cenowo mieszkań.
+
+</p>
+
+<p style="text-align: justify;">
+
+Porównanie tych różnic uwidacznia rolę lokalizacji w kształtowaniu cen
+nieruchomości, co może być cenną wskazówką zarówno dla inwestorów, jak i
+osób planujących zakup nieruchomości. Wyniki te stanowią także podstawę
+do dalszych analiz, uwzględniających takie czynniki jak dostępność
+komunikacyjna, sąsiedztwo terenów zielonych czy rozwój lokalnej
+infrastruktury.
+
+</p>
