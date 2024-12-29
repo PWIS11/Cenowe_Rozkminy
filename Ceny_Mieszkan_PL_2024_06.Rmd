@@ -36,6 +36,7 @@ if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
 if (!requireNamespace("validate", quietly = TRUE)) install.packages("validate")
 if (!requireNamespace("plotly", quietly = TRUE)) install.packages("plotly")
 if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")
+
 ```
 
 ```{r libraries, include=FALSE}
@@ -2146,3 +2147,21 @@ komunikacyjna, sąsiedztwo terenów zielonych czy rozwój lokalnej
 infrastruktury.
 
 </p>
+
+
+```{r, echo=FALSE}
+
+ggplot(dane_filtr, aes(x = centre_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "plum") +
+  geom_smooth(method = "lm", color = "orange", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od centrum miasta na ceny mieszkań",
+    x = "Odległość od centrum (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+
+```
+
+
