@@ -438,7 +438,7 @@ dane$building_material <- case_when(
 
 ```
 
-# **Data validation**
+# **Walidacja danych**
 
 <p style="text-align: justify;">
 
@@ -569,6 +569,7 @@ rules <- validator(
 
 out <- confront(dane, rules)
 
+
 # Sprawdzenie wyników przed obliczeniem
 results <- lapply(names(rules), function(x) out$`._value`[[x]])
 observations_passing_rule <- sapply(results, function(x) sum(x == 1, na.rm = TRUE))
@@ -584,6 +585,11 @@ validation_results <- data.frame(
   observations_missing = observations_missing
 )
 
+# zle_obserwacje <- dane %>%
+#   filter(floor <= floor_count) %>%
+#   nrow()
+# 
+# 21501-17928
 ```
 
 
@@ -1581,11 +1587,13 @@ analizę, bez utraty interpretowalności. W przypadku tych zmiennych,
 zachowanie ich w pierwotnej formie pozwala na lepsze oddanie
 rzeczywistości i kontekstu analizy.
 
+# **Walidacja Danych - kontynuacja**
+
 ```{r walidacja_kontrolna_danych, echo=FALSE}
 
 # Walidacja wcześniej zdefiniowanych reguł 
 
-rules <- validator(
+rules2 <- validator(
   "Floor>floor_count" = floor <= floor_count,                                              # Piętro nie większe niż liczba kondygnacji
   "build_year<=2024" = build_year <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
   "build_year>1600" = build_year > 1600,                                                   # Rok budowy późniejszy niż 1600
@@ -1596,53 +1604,27 @@ rules <- validator(
   "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 )
 
-out <- confront(dane, rules)
-
-rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
-
-expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floor_count == 0 & has_elevator == 'yes')")
-
-results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                    "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
-                  function(x) out$`._value`[[x]])
-
-validation_results <- data.frame(
-  rule = c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-           "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"),
-  observations_failing_rule = c(545, 0, 0, 0, 0, 0, 0, 0)  
-)
-
-```
+out2 <- confront(dane, rules)
+addwwfw <- as.data.frame(summary(out2))
+addwwfw$expression <- c("Floor>floor_count", "build_year<=2024","build_year>1600","Floor>=0", "floor_count>= 0", "Rooms>0", "Rooms<= 15", "Elevator in a building with 0 floors")
 
 
-```{r walidacja_kontrolna_danych2, echo=FALSE}
-
-# Wykres liczby niespełnionych reguł walidacji
-failing_plot <- ggplot(validation_results, aes(x = reorder(rule, observations_failing_rule), y = observations_failing_rule)) +
-  geom_bar(stat = "identity", fill = "plum2") +  
-  geom_text(aes(label = observations_failing_rule), hjust = -0.1, size = 4) +  
-  coord_flip() +  
-  labs(
-    title = "Liczba niespełnionych reguł walidacji",
-    x = "Reguły walidacji",
-    y = "Liczba niespełnionych reguł"
-  ) +
-  theme_minimal() +  # Prosty styl
+ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  ggtitle("Wyniki Walidacji Danych") +
+  xlab("Reguły walidacji") +
+  ylab("Liczba naruszeń") +
+  theme_minimal() +
   theme(
-    plot.title = element_text(hjust = 0.1, size = 15),  
-    axis.text.y = element_text(size = 15),  
-    axis.text.x = element_text(size = 14),  
-    axis.title.x = element_text(size = 15),  
-    axis.title.y = element_text(size = 15)  
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10)
   ) +
-  scale_y_continuous(limits = c(0, max(validation_results$observations_failing_rule) * 1.1)) 
-
-# Wyświetlenie wykresu
-print(failing_plot)
+  scale_fill_manual(values = c("lightgreen", "tomato"))
 
 ```
+
 
 <p style="text-align: justify;">
 
@@ -1669,41 +1651,16 @@ umożliwiającym dalsze etapy weryfikacji danych.
 
 Błędy w danych floor i floor_count mogą wynikać z błędnie uzupełnionych
 wartości lub nieaktualnych danych (budynki mogły zmienić liczbę
-kondygnacji po modernizacji).
+kondygnacji po modernizacji). Aby poprawić te błędy, przyjęto zasadę, że w takich
+sytuacjach wartość liczby kondygnacji (floor_count) zostanie ustawiona
+na wartość piętra (floor). Jeśli wartość liczby kondygnacji była równa lub większa od wartości
+piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność
+danych i eliminuje przypadki, w których piętro przewyższa liczbę
+kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych.
 
 </p>
 
-```{r walidacja_kontrolna_danych_2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
 
-# Wykres kołowy dla obserwacji "Piętro > liczba kondygnacji"
-data <- data.frame(
-  category = c("Spełniające regułę", "Niespełniające reguły"),
-  count = c(20956, 545)
-)
-
-ggplot(data, aes(x = " ", y = count, fill = category)) +
-  geom_bar(stat = "identity", width = 1) +
-  coord_polar(theta = "y") +
-  labs(title = "Floor > Floor Count") +
-  theme_minimal() +
-  theme(
-    axis.text = element_blank(), 
-    axis.ticks = element_blank(), 
-    plot.title = element_text(hjust = 0.5, size = 30, face = "bold"),
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    legend.title = element_blank(),
-    legend.text = element_text(size = 19),
-    plot.margin = margin(30, 30, 30, 30),
-    panel.grid = element_blank(),
-    panel.border = element_blank()
-  ) +
-  geom_text(aes(label = paste0(count, " (", round(count / sum(count) * 100, 1), "%)")),
-            color = "black", size = 8, fontface = "bold", 
-            position = position_stack(vjust = 0.7)) +
-  scale_fill_manual(values = c("peachpuff", "plum3"))
-
-```
 
 ```{r walidacja_i_korekta_wartości;floor_floor_count,flitracja_duplikatów, echo=FALSE}
 
@@ -1718,20 +1675,8 @@ duplicates <- dane[duplicated(dane), ]
 
 ```
 
-<p style="text-align: justify;">
 
-W wyniku analizy danych stwierdzono, że w niektórych przypadkach wartość
-floor była większa niż liczba floor_count, co jest logicznie
-nieprawidłowe. Aby poprawić te błędy, przyjęto zasadę, że w takich
-sytuacjach wartość liczby kondygnacji (floor_count) zostanie ustawiona
-na wartość piętra (floor).
-
-Jeśli wartość liczby kondygnacji była równa lub większa od wartości
-piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność
-danych i eliminuje przypadki, w których piętro przewyższa liczbę
-kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych.
-
-</p>
+# **Analiza średnich cen mieszkań według województw**
 
 ```{r dodanie_nowych_danych, echo=FALSE, message=FALSE, warning=FALSE}
 # Wczytanie granic administracyjnych województw
@@ -1771,8 +1716,6 @@ voivodeship_centroids <- suppressWarnings({
 })
 ```
 
-# **Analiza średnich cen mieszkań według województw**
-
 <p style="text-align: justify;">
 
 Celem analizy regionalnej cen mieszkań jest zrozumienie zróżnicowania
@@ -1811,6 +1754,28 @@ ggplot(data = voivodeship) +
     )
   )
 ```
+
+```{r, results='asis', eval=TRUE, echo=FALSE, comment=FALSE, warning=FALSE}
+
+get_mode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+statystyki <- dane %>%
+  group_by(city) %>%
+  summarise(
+    "Średnia powierzchnia mieszkania" = round(mean(square_meters, na.rm = TRUE), 2),
+    "Średnia cena za $m^2$" = round(mean(price_per_square_meter, na.rm = TRUE), 2),
+    "Najczęstsza liczba pokoi" = get_mode(rooms)
+  ) %>%
+  arrange(desc(`Średnia cena za $m^2$`)) 
+
+knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
+```
+
+
+
 
 #### **Interpretacja wyników**
 
@@ -1876,27 +1841,6 @@ nieruchomości w Polsce.
 
 </p>
 
-```{r, results='asis', eval=TRUE, echo=FALSE, comment=FALSE, warning=FALSE}
-
-get_mode <- function(v) {
-  uniqv <- unique(v)
-  uniqv[which.max(tabulate(match(v, uniqv)))]
-}
-
-statystyki <- dane %>%
-  group_by(city) %>%
-  summarise(
-    "Średnia powierzchnia mieszkania" = round(mean(square_meters, na.rm = TRUE), 2),
-    "Średnia cena za $m^2$" = round(mean(price_per_square_meter, na.rm = TRUE), 2),
-    "Najczęstsza liczba pokoi" = get_mode(rooms)
-  ) %>%
-  arrange(desc(`Średnia cena za $m^2$`)) 
-
-knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
-```
-
-# MOŻE TABELKA POD MAPKE ?
-
 ### Wybór miast do dalszej analizy
 
 W ramach dalszej analizy postanowiliśmy skupić się na szczegółowym
@@ -1941,8 +1885,7 @@ dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 
 # **Analiza udogodnień w nieruchomościach**
 
-```{r, echo=FALSE, fig.height=12,fig.width=12}
-# Filtruj dane dla wybranych miast
+```{r zaleznosciboxplot1, echo=FALSE, fig.height=8,fig.width=12}
 wybrane_miasta <- c("Warszawa", "Kraków", "Częstochowa", "Radom", "Białystok", "Rzeszów")
 dane_filtr <- dane %>% filter(city %in% wybrane_miasta)
 
@@ -1952,7 +1895,13 @@ p1 <- ggplot(dane_filtr, aes(x = has_balcony, y = price)) +
        x = "Czy mieszkanie ma balkon?",
        y = "Cena (PLN)") +
   theme_minimal() +
-  facet_wrap(~city)
+  facet_wrap(~city) +
+  theme(
+    text = element_text(size = 12),
+    title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
+    axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
+    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+  )
 
 p2 <- ggplot(dane_filtr, aes(x = has_elevator, y = price)) +
   geom_boxplot(aes(fill = city)) +
@@ -1960,15 +1909,31 @@ p2 <- ggplot(dane_filtr, aes(x = has_elevator, y = price)) +
        x = "Czy mieszkanie ma windę?",
        y = "Cena (PLN)") +
   theme_minimal() +
-  facet_wrap(~city)
+  facet_wrap(~city) +
+  theme(
+    text = element_text(size = 12), 
+    title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
+    axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
+    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+  )
+grid.arrange(p1, p2, nrow = 1)
+```
 
+
+```{r zaleznoscibozplot2, echo=FALSE, fig.height=15,fig.width=15}
 p3 <- ggplot(dane_filtr, aes(x = has_parking, y = price)) +
   geom_boxplot(aes(fill = city)) +
   labs(title = "Parking",
        x = "Czy mieszkanie ma parking?",
        y = "Cena (PLN)") +
   theme_minimal() +
-  facet_wrap(~city)
+  facet_wrap(~city) +
+  theme(
+    text = element_text(size = 12), 
+    title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
+    axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
+    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+  )
 
 p4 <- ggplot(dane_filtr, aes(x = has_security, y = price)) +
   geom_boxplot(aes(fill = city)) +
@@ -1976,7 +1941,13 @@ p4 <- ggplot(dane_filtr, aes(x = has_security, y = price)) +
        x = "Czy mieszkanie ma ochronę?",
        y = "Cena (PLN)") +
   theme_minimal() +
-  facet_wrap(~city)
+  facet_wrap(~city) +
+  theme(
+    text = element_text(size = 12), 
+    title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
+    axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
+    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+  )
 
 p5 <- ggplot(dane_filtr, aes(x = has_storage_room, y = price)) +
   geom_boxplot(aes(fill = city)) +
@@ -1984,13 +1955,17 @@ p5 <- ggplot(dane_filtr, aes(x = has_storage_room, y = price)) +
        x = "Czy mieszkanie ma komórkę lokatorską?",
        y = "Cena (PLN)") +
   theme_minimal() +
-  facet_wrap(~city)
+  facet_wrap(~city) +
+  theme(
+    text = element_text(size = 12),  
+    title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
+    axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
+    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+  )
 
-library(gridExtra)
-grid.arrange(p1, p2, p3, p4, p5, nrow = 3)
-
-
+grid.arrange(p3, p4, p5, nrow = 2)
 ```
+
 
 #### Interpretacja wyników analizy wpływu obecności balkonu na cenę mieszkań:
 
@@ -2010,45 +1985,6 @@ pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z
 różnorodności innych czynników wpływających na cenę, które w tej grupie
 mają większe znaczenie.
 
-```{r, echo=FALSE, comment=FALSE, warning=FALSE}
-pokoejecenam2 <- dane %>%
-  group_by(city, rooms) %>%
-  summarise(
-    mean_price_per_m2 = mean(price_per_square_meter, na.rm = TRUE)
-  )
-
-podsumowanie_m2dlamiast <- dane %>%
-  group_by(city) %>%
-  summarise(
-    mean_price_per_m2 = mean(price_per_square_meter, na.rm = TRUE)
-  )
-top5 <- podsumowanie_m2dlamiast %>%
-  arrange(desc(mean_price_per_m2)) %>%
-  slice_head(n = 5)
-
-top5pokojecenamiasta <- pokoejecenam2 %>% filter(city %in% top5$city)
-
-```
-
-```{r, echo=FALSE, comment=FALSE, warning=FALSE}
-barplot_city <- plot_ly(
-  data = top5pokojecenamiasta,
-  x = ~rooms,
-  y = ~mean_price_per_m2,
-  color = ~city, 
-  type = "bar"
-) %>%
-  layout(
-    title = "Średnia cena za m^2 w zależności od liczby pokoi i miasta",
-    xaxis = list(title = "Liczba pokoi"),
-    yaxis = list(title = "Średnia cena za $m^2$ [PLN]"),
-    barmode = "group",
-    legend = list(title = list(text = "Miasto"))
-  )
-
-barplot_city
-
-```
 
 ### **Sylwetka Gdańska**
 
