@@ -490,8 +490,9 @@ data_types <- sapply(dane, class)
 unique_values <- sapply(dane, function(x) length(unique(x)))
 
 data_types <- data.frame(
-  Typ = data_types,              
-  Liczba_unikalnych = unique_values
+  Kolumna = names(data_types),
+  Typ = as.character(data_types),              
+  Liczba_unikalnych = as.character(unique_values)
 )
 
 knitr::kable(data_types, caption = "Typy Danych oraz ich ilość")
@@ -550,51 +551,65 @@ zależności od typu danych i celu analizy.
 
 </p>
 
-```{r walidacja_wstępna_danych, echo=FALSE,out.width="83%", fig.width=14, fig.height=9}
+```{r walidacja_wstępna_danych, echo=FALSE}
 
-# Definiowanie reguł walidacyjnych
+# Definiowanie reguł walidacyjnych i przeprowadzenie walidacji 
 
 rules <- validator(
   "Floor>Floor Count" = floor <= floor_count,                                            # Piętro nie większe niż liczba kondygnacji
-  "build_year<= 2024" = build_year <= 2024,                                               # Rok budowy nie większy niż rok bieżący
-  "build_year > 1600" = build_year > 1600,                                                 # Rok budowy późniejszy niż 1600
+  "build_year<= 2024" = build_year <= 2024,                                              # Rok budowy nie większy niż rok bieżący
+  "build_year > 1600" = build_year > 1600,                                               # Rok budowy późniejszy niż 1600
   "Floor>= 0" = floor >= 0,                                                              # Piętro nie może być ujemne
-  "floor_count >= 0" = floor_count >= 0,                                                   # Liczba kondygnacji nie może być ujemna
+  "floor_count >= 0" = floor_count >= 0,                                                 # Liczba kondygnacji nie może być ujemna
   "Rooms> 0" = rooms > 0,                                                                # Liczba pokoi większa niż 0
   "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
-  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")      # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")   # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 
 )
-
 
 out <- confront(dane, rules)
 
-rules_names <- c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
+# Sprawdzenie wyników przed obliczeniem
+results <- lapply(names(rules), function(x) out$`._value`[[x]])
+observations_passing_rule <- sapply(results, function(x) sum(x == 1, na.rm = TRUE))
+observations_failing_rule <- sapply(results, function(x) sum(x == 0, na.rm = TRUE))
+observations_missing <- sapply(results, function(x) sum(is.na(x)))
 
-expressions <- c("Floor <= Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                 "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "!(floor_count == 0 & has_elevator == 'yes')")
-
-results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1600", 
-                    "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
-                  function(x) out$`._value`[[x]])
-
-
-results_logical <- lapply(results, function(x) x == 1)
-passes <- sapply(results_logical, sum)
-nNA <- sapply(results_logical, function(x) sum(!x))  
-
-# Przygotowanie wyników walidacji
+# Przygotowanie wyników do wyświetlenia
 validation_results <- data.frame(
-  rule = rules_names,
-  examined_observations = rep(21501, 8),
-  observations_passing_rule = passes,
-  observations_failing_rule = nNA,
-  rule_expression = expressions
+  rule = names(rules),
+  examined_observations = rep(nrow(dane), length(rules)),
+  observations_passing_rule = observations_passing_rule,
+  observations_failing_rule = observations_failing_rule,
+  observations_missing = observations_missing
 )
 
-# Wykres wyników walidacji z podziałem na reguły
-plot(out)
+```
+
+
+```{r wykres_dla_wstępnej_walidacji_danych, echo=FALSE}
+
+# Wykres liczby brakujących danych (NA) dla każdej reguły walidacji
+na_plot <- ggplot(validation_results, aes(x = reorder(rule, observations_missing), y = observations_missing)) +
+  geom_bar(stat = "identity", fill = "plum2") +
+  geom_text(aes(label = observations_missing), hjust = 0.5, size = 4) +
+  coord_flip() +
+  labs(
+    title = "Liczba brakujących danych (NA) dla reguł walidacji",
+    x = "Reguły walidacji",
+    y = "Liczba brakujących danych"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.1, size = 15),
+    axis.text.y = element_text(size = 15),
+    axis.text.x = element_text(size = 14),  
+    axis.title.x = element_text(size = 15),
+    axis.title.y = element_text(size = 15)
+  ) +
+  scale_y_continuous(limits = c(0, max(validation_results$observations_missing) * 1.1))  
+
+print(na_plot)
 
 ```
 
@@ -1566,7 +1581,7 @@ analizę, bez utraty interpretowalności. W przypadku tych zmiennych,
 zachowanie ich w pierwotnej formie pozwala na lepsze oddanie
 rzeczywistości i kontekstu analizy.
 
-```{r walidacja_i_weryfikacja_logicznej_spójności_danych, echo=FALSE, out.width="83%", fig.width=14, fig.height=9}
+```{r walidacja_kontrolna_danych, echo=FALSE, out.width="83%", fig.width=14, fig.height=9}
 
 # Walidacja wcześniej zdefiniowanych reguł 
 
@@ -1574,10 +1589,10 @@ rules <- validator(
   "Floor>floor_count" = floor <= floor_count,                                              # Piętro nie większe niż liczba kondygnacji
   "build_year<=2024" = build_year <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
   "build_year>1600" = build_year > 1600,                                                   # Rok budowy późniejszy niż 1600
-  "Floor>=0" = floor >= 0,                                                               # Piętro nie może być ujemne
+  "Floor>=0" = floor >= 0,                                                                 # Piętro nie może być ujemne
   "floor_count>= 0" = floor_count >= 0,                                                    # Liczba kondygnacji nie może być ujemna
-  "Rooms>0" = rooms > 0,                                                                 # Liczba pokoi większa niż 0
-  "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
+  "Rooms>0" = rooms > 0,                                                                   # Liczba pokoi większa niż 0
+  "Rooms<= 15" = rooms <= 15,                                                              # Liczba pokoi nie większa niż 15
   "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 )
 
@@ -1593,18 +1608,42 @@ results <- lapply(c("Floor > Floor Count", "Build Year <= 2024", "Build Year > 1
                     "Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors"), 
                   function(x) out$`._value`[[x]])
 
-
+results_logical <- lapply(results, function(x) x == 1)
 passes <- sapply(results_logical, sum)
 nNA <- sapply(results_logical, function(x) sum(!x))  
 
-# Przygotowanie wyników walidacji
+
+# Przygotowanie danych do wykresu
 validation_results <- data.frame(
-  rule = rules_names,
-  examined_observations = rep(21501, 8),
-  observations_passing_rule = passes,
-  observations_failing_rule = nNA,
-  rule_expression = expressions
+  rule = rules_names,  # Nazwy reguł walidacji
+  examined_observations = rep(21501, 8),  # Liczba obserwacji (dla każdej reguły ta sama wartość)
+  observations_passing_rule = passes,  # Liczba obserwacji, które spełniają regułę
+  observations_failing_rule = fails   # Liczba obserwacji, które nie spełniają regułę
 )
+
+# Nowy wykres z ulepszonym stylem
+failing_plot <- ggplot(validation_results, aes(x = reorder(rule, -observations_failing_rule), y = observations_failing_rule)) +
+  geom_bar(stat = "identity", fill = "#FF6F61", color = "black", size = 0.5, width = 0.7) +  # Zmieniony kolor i obramowanie
+  geom_text(aes(label = observations_failing_rule), hjust = 1.1, size = 5, fontface = "bold", color = "white") +  # Białe liczby z pogrubieniem
+  coord_flip() +  # Obrócenie wykresu, aby reguły były na osi Y
+  labs(
+    title = "Liczba niespełnionych reguł walidacji",
+    x = "Reguły walidacji",
+    y = "Liczba niespełnionych"
+  ) +
+  theme_minimal() +  # Minimalistyczny wygląd wykresu
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold", color = "#333333"),  # Tytuł pogrubiony
+    axis.text.y = element_text(size = 10, color = "#333333", face = "italic"),  # Tekst osi Y w kursywie
+    axis.title = element_text(size = 12, color = "#333333"),  # Tekst osi w ciemnym kolorze
+    panel.grid = element_blank(),  # Usuwanie siatki
+    plot.background = element_rect(fill = "white", color = "white")  # Tło wykresu
+  )
+
+# Wyświetlenie wykresu
+print(failing_plot)
+
+
 
 # Wykres wyników walidacji z podziałem na reguły
 plot(out)
@@ -1640,7 +1679,7 @@ kondygnacji po modernizacji).
 
 </p>
 
-```{r weryfikacja_cz.2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
+```{r walidacja_kontrolna_danych_2, wykres_kołowy_dla_obserwacji, echo=FALSE, fig.width=13, fig.height=7}
 
 # Wykres kołowy dla obserwacji "Piętro > liczba kondygnacji"
 data <- data.frame(
