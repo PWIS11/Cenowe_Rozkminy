@@ -474,8 +474,8 @@ kryteriami logicznymi.
 4.  Piętro (Floor) i liczba kondygnacji (Floor Count) muszą być większe
     lub równe 0.
 
-5.  Liczba pokoi (Rooms) musi być większa niż 0 i nie może
-    przekraczać 15.
+5.  Liczba pokoi (Rooms) musi być większa niż 0 i nie może przekraczać
+    15.
 
 6.  Jeżeli liczba kondygnacji (Floor Count) wynosi 0, to nie powinno być
     w takim budynku windy (Has Elevator).
@@ -591,7 +591,6 @@ validation_results <- data.frame(
 # 
 # 21501-17928
 ```
-
 
 ```{r wykres_dla_wstępnej_walidacji_danych, echo=FALSE}
 
@@ -769,7 +768,6 @@ aggr(dane,
 ```
 
 #### usunałbym w tym miejscu ten message który generuje R w postaci tabeli. wykres wzorca braków umieściłbym zaraz pod vismiss, a pod nimi dał ten opis o analizie
-
 
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością, echo = FALSE}
 
@@ -1625,7 +1623,6 @@ ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
 
 ```
 
-
 <p style="text-align: justify;">
 
 W procesie walidacji danych większość reguł została spełniona, jednak w
@@ -1651,16 +1648,15 @@ umożliwiającym dalsze etapy weryfikacji danych.
 
 Błędy w danych floor i floor_count mogą wynikać z błędnie uzupełnionych
 wartości lub nieaktualnych danych (budynki mogły zmienić liczbę
-kondygnacji po modernizacji). Aby poprawić te błędy, przyjęto zasadę, że w takich
-sytuacjach wartość liczby kondygnacji (floor_count) zostanie ustawiona
-na wartość piętra (floor). Jeśli wartość liczby kondygnacji była równa lub większa od wartości
-piętra, dane pozostały niezmienione. Taka korekta zapewnia spójność
-danych i eliminuje przypadki, w których piętro przewyższa liczbę
-kondygnacji w budynku.Nie znaleziono duplikatów wierszy w danych.
+kondygnacji po modernizacji). Aby poprawić te błędy, przyjęto zasadę, że
+w takich sytuacjach wartość liczby kondygnacji (floor_count) zostanie
+ustawiona na wartość piętra (floor). Jeśli wartość liczby kondygnacji
+była równa lub większa od wartości piętra, dane pozostały niezmienione.
+Taka korekta zapewnia spójność danych i eliminuje przypadki, w których
+piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów
+wierszy w danych.
 
 </p>
-
-
 
 ```{r walidacja_i_korekta_wartości;floor_floor_count,flitracja_duplikatów, echo=FALSE}
 
@@ -1674,7 +1670,6 @@ dane <- dane %>% mutate(floor_count = ifelse(floor_count < floor, floor, floor_c
 duplicates <- dane[duplicated(dane), ]
 
 ```
-
 
 # **Analiza średnich cen mieszkań według województw**
 
@@ -1774,9 +1769,6 @@ statystyki <- dane %>%
 knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
 ```
 
-
-
-
 #### **Interpretacja wyników**
 
 1.  **Województwo mazowieckie jako lider cenowy**
@@ -1851,20 +1843,20 @@ kwadratowy. W tym celu wybraliśmy po dwa miasta z trzech grup cenowych:
     charakteryzujące się wyjątkowo wysokim poziomem cen, które mogą być
     związane z prestiżem, dostępem do wyjątkowych udogodnień, czy
     lokalizacją w centralnych dzielnicach dużych miast. Analiza tych
-    miast jakimi są Warszawa oraz Kraków pozwoli zrozumieć, jakie czynniki najbardziej wpływają na tak
-    wysokie ceny.
+    miast jakimi są Warszawa oraz Kraków pozwoli zrozumieć, jakie
+    czynniki najbardziej wpływają na tak wysokie ceny.
 
 2.  **Miasta o średnich cenach za** $m^2$ -- wybraliśmy dwa miasta
-    znajdujące się w średniej półce cenowej tj Rzeszów i Białystok. Analiza tej grupy pozwoli
-    na identyfikację, jak różnią się te lokalizacje od najdroższych i
-    najtańszych pod względem dostępności mieszkań, udogodnień oraz
-    charakterystyki demograficznej.
+    znajdujące się w średniej półce cenowej tj Rzeszów i Białystok.
+    Analiza tej grupy pozwoli na identyfikację, jak różnią się te
+    lokalizacje od najdroższych i najtańszych pod względem dostępności
+    mieszkań, udogodnień oraz charakterystyki demograficznej.
 
 3.  **Miasta z najniższymi cenami za** $m^2$ -- dwa miasta o najniższych
-    cenach za metr kwadratowy (Radom, Częstochowa) zostały wybrane w celu zbadania, czy
-    niższe ceny wynikają z lokalizacji, ograniczonej liczby udogodnień,
-    czy może innych czynników, takich jak mniejsze zainteresowanie
-    rynkiem nieruchomości.
+    cenach za metr kwadratowy (Radom, Częstochowa) zostały wybrane w
+    celu zbadania, czy niższe ceny wynikają z lokalizacji, ograniczonej
+    liczby udogodnień, czy może innych czynników, takich jak mniejsze
+    zainteresowanie rynkiem nieruchomości.
 
 #### Uzasadnienie wyboru
 
@@ -1919,7 +1911,6 @@ p2 <- ggplot(dane_filtr, aes(x = has_elevator, y = price)) +
 grid.arrange(p1, p2, nrow = 1)
 ```
 
-
 ```{r zaleznoscibozplot2, echo=FALSE, fig.height=15,fig.width=15}
 p3 <- ggplot(dane_filtr, aes(x = has_parking, y = price)) +
   geom_boxplot(aes(fill = city)) +
@@ -1966,7 +1957,6 @@ p5 <- ggplot(dane_filtr, aes(x = has_storage_room, y = price)) +
 grid.arrange(p3, p4, p5, nrow = 2)
 ```
 
-
 #### Interpretacja wyników analizy wpływu obecności balkonu na cenę mieszkań:
 
 W analizie porównaliśmy ceny mieszkań w dwóch grupach: z balkonem oraz
@@ -1984,7 +1974,6 @@ Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym
 pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z
 różnorodności innych czynników wpływających na cenę, które w tej grupie
 mają większe znaczenie.
-
 
 ### **Sylwetka Gdańska**
 
@@ -2117,8 +2106,7 @@ infrastruktury.
 
 </p>
 
-
-```{r, echo=FALSE}
+```{r, echo=FALSE, comment=FALSE, warning=FALSE}
 
 ggplot(dane_filtr, aes(x = centre_distance, y = price)) +
   geom_point(alpha = 0.5, color = "plum") +
@@ -2133,4 +2121,73 @@ ggplot(dane_filtr, aes(x = centre_distance, y = price)) +
 
 ```
 
+#### Ogólne wnioski:
 
+1.  **Warszawa i Kraków**:
+    -   W obu miastach widać wyraźny spadek cen mieszkań wraz z rosnącą
+        odległością od centrum (linia regresji jest nachylona w dół). To
+        może świadczyć o tym, że w tych dużych miastach lokalizacja
+        bliżej centrum jest kluczowym czynnikiem wpływającym na cenę.
+2.  **Częstochowa, Radom**:
+    -   W tych miastach linie regresji są prawie płaskie lub lekko
+        nachylone w górę, co sugeruje brak wyraźnej zależności między
+        odległością od centrum a ceną. Może to wskazywać, że w
+        mniejszych miastach czynniki takie jak standard mieszkania lub
+        lokalne preferencje mogą odgrywać większą rolę niż sama
+        odległość od centrum.
+3.  **Białystok, Rzeszów**:
+    -   W przypadku Rzeszowa widzimy, że linia jest nachylona w górę,
+        oznacza to, że wraz ze wzrostem odległości od centrum miasta,
+        ceny mieszkań rosną. Białystok również cechuje się linią
+        nachyloną w górę jednak w mniejszym stopniu w przeciwieństwie do
+        Rzeszowa.
+4.  **Rozrzut danych**:
+    -   W miastach takich jak Warszawa czy Kraków widać większy rozrzut
+        cen (punkty są bardziej rozproszone), co oznacza, że mieszkania
+        w tych miastach mają znacznie większe zróżnicowanie cen.
+
+#### Interpretacja:
+
+W miastach takich jak Warszawa i Kraków bliskość centrum jest istotnym
+czynnikiem wpływającym na ceny mieszkań -- im bliżej centrum, tym ceny
+są wyższe. W mniejszych miastach, takich jak Radom czy Białystok,
+odległość od centrum nie ma tak dużego wpływu na ceny mieszkań, a inne
+czynniki mogą dominować w kształtowaniu wartości nieruchomości.
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_odl <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(centre_distance, price) 
+  )
+knitr::kable(korelacje_cena_odl, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od centrum miasta a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od centrum
+miasta a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+1.  **Białystok**:
+    -   Występuje niewielka dodatnia korelacja. Oznacza to, że wraz ze
+        wzrostem odległości od centrum ceny mieszkań delikatnie rosną,
+        choć zależność nie jest silna.
+2.  **Rzeszów**:
+    -   Średnia dodatnia korelacja. W Rzeszowie obserwujemy wyraźniejszą
+        tendencję wzrostu cen mieszkań w miarę oddalania się od centrum,
+        choć zależność nie jest bardzo silna.
+3.  **Częstochowa**:
+    -   Podobnie jak w Białymstoku, korelacja jest dodatnia, ale bardzo
+        słaba. Oznacza to, że odległość od centrum ma niewielki wpływ na
+        ceny mieszkań, z tendencją do ich wzrostu na obrzeżach miasta.
+4.  **Kraków**:
+    -   Silna ujemna korelacja wskazuje, że w Krakowie im dalej od
+        centrum, tym ceny mieszkań wyraźnie maleją. Centrum miasta
+        wydaje się być znacznie bardziej atrakcyjne cenowo niż obrzeża.
+5.  **Warszawa**:
+    -   Słaba ujemna korelacja wskazuje, że w Warszawie ceny mieszkań
+        nieznacznie spadają wraz z oddalaniem się od centrum, ale
+        zależność nie jest silna.
+6.  **Radom**:
+    -   Praktycznie brak korelacji. Oznacza to, że w Radomiu odległość
+        od centrum nie ma znaczącego wpływu na ceny mieszkań.
