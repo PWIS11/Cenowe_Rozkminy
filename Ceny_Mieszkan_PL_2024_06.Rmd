@@ -1587,6 +1587,18 @@ rzeczywistości i kontekstu analizy.
 
 # **Walidacja Danych - kontynuacja**
 
+<p style="text-align: justify;">
+Po przeprowadzeniu pierwszej walidacji, która ujawniła znaczną liczbę brakujących danych (NA) w zbiorze, zdecydowano się na przeprowadzenie kolejnej, bardziej szczegółowej analizy, aby upewnić się, że dokonana imputacja została prawidłowo wykonana, a dane są spójne i gotowe do dalszej obróbki. Celem ponownej walidacji jest weryfikacja skuteczności uzupełniania brakujących wartości oraz sprawdzenie, czy po tej operacji dane są spójne z przyjętymi regułami. 
+</p>
+
+<p style="text-align: justify;">
+W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych numerycznych i kategorycznych (mediana i moda) zostały odpowiednio dobrane, a także czy nie wprowadziły nowych niezgodności w danych. Ponadto zweryfikowano, czy po przeprowadzonej imputacji i innych korektach, dane są logicznie spójne, a reguły dotyczące relacji między zmiennymi, takie jak zgodność zmiennych floor i floor_count, zostały właściwie zastosowane.
+</p>
+
+<p style="text-align: justify;">
+Druga walidacja ma na celu zapewnienie, że dane są w pełni spójne i zgodne z wymaganiami, eliminując ryzyko wystąpienia problemów, które mogłyby wpływać na jakość dalszej analizy. Dzięki tym czynnościom dane będą gotowe do kolejnych etapów analizy i przetwarzania.
+</p>
+
 ```{r walidacja_kontrolna_danych, echo=FALSE}
 
 # Walidacja wcześniej zdefiniowanych reguł 
@@ -1597,7 +1609,7 @@ rules2 <- validator(
   "build_year>1600" = build_year > 1600,                                                   # Rok budowy późniejszy niż 1600
   "Floor>=0" = floor >= 0,                                                                 # Piętro nie może być ujemne
   "floor_count>= 0" = floor_count >= 0,                                                    # Liczba kondygnacji nie może być ujemna
-  "Rooms>0" = rooms > 0,                                                                 # Liczba pokoi większa niż 0
+  "Rooms>0" = rooms > 0,                                                                   # Liczba pokoi większa niż 0
   "Rooms<= 15" = rooms <= 15,                                                              # Liczba pokoi nie większa niż 15
   "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 )
