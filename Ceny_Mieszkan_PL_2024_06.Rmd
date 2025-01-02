@@ -438,6 +438,7 @@ dane$building_material <- case_when(
 
 ```
 
+
 # **Walidacja danych**
 
 <p style="text-align: justify;">
@@ -446,39 +447,22 @@ Po wstępnym oczyszczeniu danych, kluczowym krokiem w procesie
 przygotowania zbioru było przeprowadzenie szczegółowej walidacji. Celem
 tego etapu było sprawdzenie zgodności danych z określonymi regułami
 logicznymi i jakościowymi, co pozwoliło upewnić się, że dane są
-kompletne, spójne i gotowe do dalszej analizy oraz modelowania. Poniżej
-przedstawiono reguły walidacyjne zastosowane w projekcie.
+kompletne, spójne i gotowe do dalszej analizy oraz modelowania.
 
 </p>
 
 ## **Czym jest walidacja danych ?**
 
-Walidacja danych to proces, którego celem jest weryfikacja, czy dane
-spełniają określone kryteria, zapewniając ich poprawność, spójność oraz
-integralność. Jego zadaniem jest upewnienie się, że dane są zgodne z
-wymaganiami jakościowymi i formatowymi, które są kluczowe dla dalszego
-przetwarzania i analizy. W ramach tego procesu zdefiniowaliśmy i
-zastosowaliśmy reguły walidacyjne, mające na celu analizę spójności
-logicznej badanych zmiennych. Przyjęte zasady pozwalają na dokładną
-weryfikację poprawności danych, zapewniając ich zgodność z określonymi
-kryteriami logicznymi.
+Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają 
+określone kryteria, zapewniając ich poprawność, spójność oraz integralność.
+Jednym z kluczowych elementów tego procesu jest weryfikacja typów danych 
+oraz analiza unikalnych wartości w poszczególnych kolumnach. Ważne jest,
+aby każda kolumna miała odpowiedni typ danych (np. numeryczny, tekstowy,całkowity),
+a liczba unikalnych wartości była zgodna z oczekiwaniami. Taka analiza pozwala 
+wykryć potencjalne błędy w strukturze danych, jak niewłaściwe przypisanie typu 
+do kolumny czy nieoczekiwane wartości. Dzięki temu mamy pewność, że dane 
+są odpowiednio przygotowane do dalszej analizy i modelowania.
 
-1.  Piętro (Floor) nie może być większe niż liczba kondygnacji
-    (FloorCount).
-
-2.  Rok budowy (Build Year) nie może być późniejszy niż bieżący rok
-    (2024).
-
-3.  Rok budowy musi być późniejszy niż 1600.
-
-4.  Piętro (Floor) i liczba kondygnacji (Floor Count) muszą być większe
-    lub równe 0.
-
-5.  Liczba pokoi (Rooms) musi być większa niż 0 i nie może przekraczać
-    15.
-
-6.  Jeżeli liczba kondygnacji (Floor Count) wynosi 0, to nie powinno być
-    w takim budynku windy (Has Elevator).
 
 ```{r weryfikacja_typów_danych, echo=FALSE, results='asis', eval=TRUE}
 # Sprawdzenie struktury danych i sptawdzenie pierwszych kilku wierszy danych
@@ -550,6 +534,27 @@ normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w
 zależności od typu danych i celu analizy.
 
 </p>
+
+
+## **Walidacja wstępna danych i określenie reguł logicznych**
+
+Kolejnym krokiem w procesie walidacji jest zastosowanie określonych reguł 
+logicznych, które zapewniają spójność danych. W projekcie zastosowano następujące
+reguły walidacyjne:
+
+1. Piętro (Floor) nie może być większe niż liczba kondygnacji (FloorCount).
+2. Rok budowy (Build Year) nie może być późniejszy niż bieżący rok (2024).
+3. Rok budowy musi być późniejszy niż 1600.
+4. Piętro (Floor) i liczba kondygnacji (Floor Count) muszą być większe lub równe 
+0.
+5. Liczba pokoi (Rooms) musi być większa niż 0 i nie może przekraczać 15.
+6. Jeżeli liczba kondygnacji (Floor Count) wynosi 0, to w takim budynku nie 
+powinno być windy (Has Elevator).
+
+Dzięki weryfikacji typów danych oraz zastosowaniu reguł walidacyjnych, 
+upewniamy się, że dane są zgodne z określonymi kryteriami logicznymi 
+i są gotowe do dalszej analizy.
+
 
 ```{r walidacja_wstępna_danych, echo=FALSE}
 
