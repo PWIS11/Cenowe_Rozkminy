@@ -443,26 +443,24 @@ dane$building_material <- case_when(
 
 <p style="text-align: justify;">
 
-Po wstępnym oczyszczeniu danych, kluczowym krokiem w procesie
-przygotowania zbioru było przeprowadzenie szczegółowej walidacji. Celem
-tego etapu było sprawdzenie zgodności danych z określonymi regułami
-logicznymi i jakościowymi, co pozwoliło upewnić się, że dane są
-kompletne, spójne i gotowe do dalszej analizy oraz modelowania.
+Walidacja danych to kluczowy etap przygotowania zbioru, który następuje 
+po wstępnym oczyszczeniu danych. Jej celem jest sprawdzenie zgodności danych 
+z określonymi regułami logicznymi i jakościowymi, aby upewnić się, że dane 
+są kompletne, spójne <br>i gotowe do dalszej analizy oraz modelowania.
+
+Proces ten polega na weryfikacji, czy dane spełniają określone kryteria, 
+zapewniając ich poprawność, spójność oraz integralność. Szczególną uwagę 
+zwraca się na typy danych i analizę unikalnych wartości w poszczególnych kolumnach. 
+Każda kolumna powinna mieć odpowiedni typ danych (np. numeryczny, tekstowy, całkowity),
+a liczba unikalnych wartości powinna być zgodna <br> z oczekiwaniami.
+
+Dzięki takiej analizie można wykryć potencjalne błędy w strukturze danych, 
+takie jak niewłaściwe przypisanie typu do kolumny czy nieoczekiwane wartości. 
+Zapewnia to odpowiednie przygotowanie danych do dalszych etapów analizy i modelowania.
 
 </p>
 
-## **Czym jest walidacja danych ?**
-
-Walidacja danych to proces, którego celem jest weryfikacja, czy dane spełniają 
-określone kryteria, zapewniając ich poprawność, spójność oraz integralność.
-Jednym z kluczowych elementów tego procesu jest weryfikacja typów danych 
-oraz analiza unikalnych wartości w poszczególnych kolumnach. Ważne jest,
-aby każda kolumna miała odpowiedni typ danych (np. numeryczny, tekstowy,całkowity),
-a liczba unikalnych wartości była zgodna z oczekiwaniami. Taka analiza pozwala 
-wykryć potencjalne błędy w strukturze danych, jak niewłaściwe przypisanie typu 
-do kolumny czy nieoczekiwane wartości. Dzięki temu mamy pewność, że dane 
-są odpowiednio przygotowane do dalszej analizy i modelowania.
-
+### Typy danych oraz ich charakterystyka
 
 ```{r weryfikacja_typów_danych, echo=FALSE, results='asis', eval=TRUE}
 # Sprawdzenie struktury danych i sptawdzenie pierwszych kilku wierszy danych
@@ -501,23 +499,26 @@ knitr::kable(data_types, caption = "Typy Danych")
 
 <p style="text-align: justify;">
 
-Zbiór danych składa się z 28 kolumn, które charakteryzują się
-następującymi typami: 18 zmiennych numerycznych (typ numeric), 6
-zmiennych tekstowych (typ character), 3 zmiennymi kategorycznymi (typ
-factor), 2 zmiennymi całkowitymi (typ integer) oraz brakiem zmiennych
-logicznych.
+Zbiór danych składa się z **28 kolumn**, które charakteryzują się
+następującymi typami: **18 zmiennych numerycznych (typ numeric)**, **6
+zmiennych tekstowych (typ character)**, **3 zmiennymi kategorycznymi (typ
+factor)**, **2 zmiennymi całkowitymi (typ integer)** oraz **brakiem zmiennych
+logicznych.**
 
 </p>
 
 <p style="text-align: justify;">
 
-Zmienne numeryczne, takie jak square_meters, price czy centre_distance,
-mają dużą liczbę unikalnych wartości, co sugeruje, że są to dane ciągłe,
-które będą odpowiednie do analizy regresyjnej. Zmienne kategoryczne,
-takie jak building_type, ownership czy building_material, mogą być
-traktowane jako zmienne typu factor i wykorzystane w analizach
-klasyfikacyjnych. Z kolei kolumny z typem integer, jak np. price,
-również mogą być używane w analizach numerycznych.
+- Zmienne **numeryczne**, takie jak `square_meters`, `price` czy `centre_distance`,
+mają dużą liczbę unikalnych wartości, <br> co sugeruje, że są to dane ciągłe,
+które będą odpowiednie do analizy regresyjnej. 
+
+- Zmienne **kategoryczne**, takie jak `building_type`, `ownership` czy `building_material`, 
+mogą być traktowane jako zmienne typu factor i wykorzystane w analizach
+klasyfikacyjnych. 
+
+- Kolumny z typem **integer**, jak np. `price` mogą być również używane 
+w analizach numerycznych.
 
 </p>
 
@@ -527,29 +528,30 @@ Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej
 analizy i modelowania. Zmienne numeryczne będą wykorzystywane w
 analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a
 zmienne character mogą wymagać kodowania na typ factor, aby mogły być
-wykorzystane w dalszej analizie. Na podstawie tej analizy możemy przejść
-do przygotowania danych do modelowania, dobierając odpowiednie metody
-przetwarzania, takie jak kodowanie zmiennych kategorycznych,
-normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, w
-zależności od typu danych i celu analizy.
+wykorzystane w dalszej analizie. 
+
+Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, 
+dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych,
+normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, 
+<br>w zależności od typu danych i celu analizy.
 
 </p>
 
 
-## **Walidacja wstępna danych i określenie reguł logicznych**
+## Walidacja wstępna danych i określenie reguł logicznych
 
 Kolejnym krokiem w procesie walidacji jest zastosowanie określonych reguł 
-logicznych, które zapewniają spójność danych. W projekcie zastosowano następujące
-reguły walidacyjne:
+logicznych, które zapewniają spójność danych. 
+<br>
+<br>**W projekcie zastosowano następujące reguły walidacyjne**:
 
-1. Piętro (Floor) nie może być większe niż liczba kondygnacji (FloorCount).
-2. Rok budowy (Build Year) nie może być późniejszy niż bieżący rok (2024).
-3. Rok budowy musi być późniejszy niż 1600.
-4. Piętro (Floor) i liczba kondygnacji (Floor Count) muszą być większe lub równe 
-0.
-5. Liczba pokoi (Rooms) musi być większa niż 0 i nie może przekraczać 15.
-6. Jeżeli liczba kondygnacji (Floor Count) wynosi 0, to w takim budynku nie 
-powinno być windy (Has Elevator).
+1. Piętro (`Floor`) nie może być większe niż liczba kondygnacji (`FloorCount`).
+2. Rok budowy (`Build Year`) nie może być późniejszy niż bieżący rok (2024).
+3. Rok budowy (`Build Year`) musi być późniejszy niż 1600.
+4. Piętro (`Floor`) i liczba kondygnacji (`Floor Count`) muszą być większe lub równe 0.
+5. Liczba pokoi (`Rooms`) musi być większa niż 0 i nie może przekraczać 15.
+6. Jeżeli liczba kondygnacji (`Floor Count`) wynosi 0, to w takim budynku nie 
+powinno być windy (`Has Elevator`).
 
 Dzięki weryfikacji typów danych oraz zastosowaniu reguł walidacyjnych, 
 upewniamy się, że dane są zgodne z określonymi kryteriami logicznymi 
@@ -623,11 +625,14 @@ print(na_plot)
 
 ```
 
-W wyniku przeprowadzonej walidacji w zbiorze danych zauważono znaczną
-obecność wartości NA (brakujących danych), które pojawiły się kolumnach.
+W wyniku przeprowadzonej walidacji zauważono, że w zbiorze danych występuje znaczna
+liczba **wartości brakujących (NA)**, <br> w niektórych kolumnach.
+
 W dalszej części analizy planuje się ich imputację, przy czym wartości
-te zostaną zastąpione: medianą dla zmiennych o charakterze numerycznym,
-a modą dla zmiennych kategorycznych.
+te zostaną zastąpione: 
+
+-  **medianą** dla zmiennych o **charakterze numerycznym**,
+-  **modą** dla zmiennych o **charakterze kategorycznym**. 
 
 # **Data wrangling**
 
@@ -1590,18 +1595,18 @@ analizę, bez utraty interpretowalności. W przypadku tych zmiennych,
 zachowanie ich w pierwotnej formie pozwala na lepsze oddanie
 rzeczywistości i kontekstu analizy.
 
-# **Walidacja Danych - kontynuacja**
+# **Ponowna Walidacja Danych**
 
 <p style="text-align: justify;">
-Po przeprowadzeniu pierwszej walidacji, która ujawniła znaczną liczbę brakujących danych (NA) w zbiorze, zdecydowano się na przeprowadzenie kolejnej, bardziej szczegółowej analizy, aby upewnić się, że dokonana imputacja została prawidłowo wykonana, a dane są spójne i gotowe do dalszej obróbki. Celem ponownej walidacji jest weryfikacja skuteczności uzupełniania brakujących wartości oraz sprawdzenie, czy po tej operacji dane są spójne z przyjętymi regułami. 
+Po przeprowadzeniu **pierwszej, wstępnej walidacji**, która ujawniła **znaczną liczbę brakujących danych (NA)** w zbiorze, zdecydowano się na przeprowadzenie **kolejnej, bardziej szczegółowej analizy**, aby upewnić się, że dokonana **imputacja** została prawidłowo wykonana, a dane są spójne i gotowe do dalszej obróbki. **Celem ponownej walidacji** jest weryfikacja skuteczności uzupełniania brakujących wartości oraz sprawdzenie, czy po tej operacji dane są spójne z przyjętymi regułami. 
 </p>
 
 <p style="text-align: justify;">
-W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych numerycznych i kategorycznych (mediana i moda) zostały odpowiednio dobrane, a także czy nie wprowadziły nowych niezgodności w danych. Ponadto zweryfikowano, czy po przeprowadzonej imputacji i innych korektach, dane są logicznie spójne, a reguły dotyczące relacji między zmiennymi, takie jak zgodność zmiennych floor i floor_count, zostały właściwie zastosowane.
+W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych numerycznych i kategorycznych **(mediana i moda)** zostały odpowiednio dobrane, a także czy nie wprowadziły nowych niezgodności w danych. Ponadto zweryfikowano, czy po przeprowadzonej imputacji i innych korektach, dane są logicznie spójne, a reguły dotyczące relacji między zmiennymi, takie jak zgodność zmiennych `floor` i `floor_count`, zostały właściwie zastosowane.
 </p>
 
 <p style="text-align: justify;">
-Druga walidacja ma na celu zapewnienie, że dane są w pełni spójne i zgodne z wymaganiami, eliminując ryzyko wystąpienia problemów, które mogłyby wpływać na jakość dalszej analizy. Dzięki tym czynnościom dane będą gotowe do kolejnych etapów analizy i przetwarzania.
+**Druga walidacja** ma na celu zapewnienie, że dane są w pełni spójne i zgodne z wymaganiami, eliminując ryzyko wystąpienia problemów, które mogłyby wpływać na jakość dalszej analizy. Dzięki tym czynnościom dane będą gotowe do kolejnych etapów analizy i przetwarzania.
 </p>
 
 ```{r walidacja_kontrolna_danych, echo=FALSE}
@@ -1643,35 +1648,35 @@ ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
 <p style="text-align: justify;">
 
 W procesie walidacji danych większość reguł została spełniona, jednak w
-przypadku jednej reguły, dotyczącej zgodności zmiennych floor i
-floor_count, wykryto 545 nieprawidłowych obserwacji, które wymagają
-dalszej analizy i korekty. Zgodnie z regułą, wartości floor nie powinny
-przekraczać wartości floor_count, co jest kluczowe dla spójności danych.
-Pozostałe reguły zostały prawidłowo zastosowane i nie wykryto żadnych
-innych istotnych problemów w analizowanych danych.
+przypadku jednej reguły, dotyczącej zgodności zmiennych `floor` i
+`floor_count`, wykryto **545 nieprawidłowych obserwacji**, które wymagają
+dalszej analizy i korekty. Zgodnie z regułą, wartości `floor` nie powinny
+przekraczać wartości `floor_count`, co jest kluczowe dla spójności danych.
+Pozostałe reguły zostały prawidłowo zastosowane i **nie wykryto żadnych
+innych istotnych problemów** w analizowanych danych.
 
 </p>
 
 <p style="text-align: justify;">
 
-Przed rozpoczęciem walidacji brakujące wartości (NA) zostały
+Przed rozpoczęciem walidacji **brakujące wartości (NA)** zostały
 uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z
-regułami. Imputacja brakujących danych była kluczowym krokiem,
+regułami. **Imputacja brakujących danych** była kluczowym krokiem,
 umożliwiającym dalsze etapy weryfikacji danych.
 
 </p>
 
 <p style="text-align: justify;">
 
-Błędy w danych floor i floor_count mogą wynikać z błędnie uzupełnionych
-wartości lub nieaktualnych danych (budynki mogły zmienić liczbę
+Błędy w danych `floor` i `floor_count` mogą wynikać z błędnie uzupełnionych
+wartości lub **nieaktualnych danych** (budynki mogły zmienić liczbę
 kondygnacji po modernizacji). Aby poprawić te błędy, przyjęto zasadę, że
-w takich sytuacjach wartość liczby kondygnacji (floor_count) zostanie
-ustawiona na wartość piętra (floor). Jeśli wartość liczby kondygnacji
+w takich sytuacjach wartość liczby kondygnacji (`floor_count`) zostanie
+ustawiona na wartość piętra (`floor`). Jeśli wartość liczby kondygnacji
 była równa lub większa od wartości piętra, dane pozostały niezmienione.
-Taka korekta zapewnia spójność danych i eliminuje przypadki, w których
-piętro przewyższa liczbę kondygnacji w budynku.Nie znaleziono duplikatów
-wierszy w danych.
+Taka korekta zapewnia **spójność danych** i eliminuje przypadki, w których
+piętro przewyższa liczbę kondygnacji w budynku.**Nie znaleziono duplikatów
+wierszy w danych**.
 
 </p>
 
