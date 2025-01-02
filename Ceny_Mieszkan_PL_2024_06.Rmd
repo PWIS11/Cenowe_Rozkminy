@@ -1972,8 +1972,63 @@ oznacza mniejsze zróżnicowanie cen wśród mieszkań z balkonem.
 
 Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym
 pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z
-różnorodności innych czynników wpływających na cenę, które w tej grupie
-mają większe znaczenie.
+różnorodności innych czynników wpływających na cenę, które w tej grupie mają większe znaczenie.
+
+rzut cen (długość pudełek) jest większy dla mieszkań bez parkingu, co sugeruje większą zmienność cen w tej grupie.
+
+#### Wpływ parkingu na cenę mieszkań
+
+Analiza wskazuje, że obecność parkingu jest istotnym czynnikiem wpływającym na medianę cen mieszkań, szczególnie w większych aglomeracjach. 
+
+- **Warszawa** wykazuje najwyższą medianę cen dla mieszkań z parkingiem, co może sugerować, że dostępność parkingu w stolicy jest szczególnie pożądana przez nabywców. 
+- W miastach takich jak **Kraków** i **Rzeszów**, różnica między cenami mieszkań z parkingiem i bez jest również wyraźna, choć nie tak wysoka jak w Warszawie. Może to wynikać z urbanistycznych potrzeb mieszkańców.
+- **Częstochowa** i **Radom** charakteryzują się stosunkowo niewielką różnicą w medianach cen, co wskazuje na mniejsze znaczenie parkingu jako czynnika wpływającego na decyzje zakupowe.
+- Rozrzut cen (odchylenie) w grupie mieszkań bez parkingu jest większy, co może wskazywać na większą różnorodność mieszkań w tej grupie pod względem lokalizacji, standardu i powierzchni.
+
+
+#### Wpływ ochrony na cenę mieszkań
+
+Obecność ochrony na terenie nieruchomości jest silnym czynnikiem zwiększającym wartość mieszkań w dużych i dynamicznie rozwijających się miastach.
+
+- W takich lokalizacjach jak **Warszawa** i **Kraków**, mieszkania z ochroną osiągają zauważalnie wyższe ceny, co świadczy o znaczeniu bezpieczeństwa w decyzjach zakupowych. 
+- **Radom** i **Częstochowa** wykazują niewielkie różnice w medianach cen mieszkań z i bez ochrony, co sugeruje, że w mniejszych miastach czynniki takie jak lokalizacja i stan techniczny nieruchomości mogą być ważniejsze niż bezpieczeństwo.
+- Analiza rozrzutu cen pokazuje, że mieszkania z ochroną charakteryzują się mniejszym odchyleniem standardowym, co oznacza większą stabilność cenową w tej grupie.
+
+
+#### Wpływ komórki lokatorskiej na cenę mieszkań
+
+Komórka lokatorska stanowi ważny element funkcjonalności nieruchomości, szczególnie w bardziej zatłoczonych miastach, gdzie przestrzeń dodatkowa ma istotne znaczenie.
+
+- **Warszawa**, **Kraków** i **Rzeszów** wykazują wyraźne różnice w medianach cen mieszkań z i bez komórki lokatorskiej. W tych miastach komórka lokatorska może być postrzegana jako istotne udogodnienie, które podnosi wartość użytkową mieszkania.
+- W miastach takich jak **Radom** i **Częstochowa**, różnice w medianach są mniej wyraźne, co sugeruje, że lokalne preferencje zakupowe mogą nie uwzględniać tego udogodnienia jako kluczowego.
+- Rozrzut cen mieszkań bez komórki lokatorskiej jest większy, co może sugerować większą różnorodność w tej grupie pod względem lokalizacji i standardu nieruchomości.
+
+
+#### Wpływ balkonu na cenę mieszkań
+
+Balkon jest jednym z kluczowych elementów wpływających na wartość mieszkania, zwłaszcza w dużych miastach.
+
+- W **Warszawie** i **Krakowie**, mieszkania z balkonem mają wyraźnie wyższe mediany cen w porównaniu do mieszkań bez tego udogodnienia. Może to wynikać z zapotrzebowania na przestrzeń zewnętrzną w dużych aglomeracjach, gdzie dostęp do terenów zielonych bywa ograniczony.
+- W miastach takich jak **Radom**, **Rzeszów** i **Częstochowa**, różnice w medianach cen są mniej wyraźne, co wskazuje, że balkon w tych lokalizacjach jest czynnikiem mniej istotnym.
+- Warto zauważyć, że rozrzut cen w grupie mieszkań z balkonem jest mniejszy, co może świadczyć o większej standaryzacji tej grupy mieszkań pod względem ceny.
+
+
+#### Wpływ windy na cenę mieszkań
+
+Obecność windy ma istotne znaczenie dla wartości mieszkań, szczególnie w nowoczesnych budynkach i wyższych kondygnacjach.
+
+- **Warszawa**, **Kraków** i **Rzeszów** charakteryzują się znaczącą różnicą w medianach cen mieszkań z i bez windy, co wskazuje na preferencje kupujących związane z wygodą użytkowania. Winda może być szczególnie istotna w budynkach wielopiętrowych.
+- W mniejszych miastach, takich jak **Radom** i **Częstochowa**, różnice w medianach są mniej zauważalne, co może sugerować, że winda nie jest tam równie cenionym udogodnieniem.
+- Rozrzut cen mieszkań bez windy jest większy, co może świadczyć o różnorodności oferty mieszkań w tej grupie.
+
+
+#### Podsumowanie
+
+1. **Parking:** Kluczowy czynnik w dużych miastach, zwłaszcza w Warszawie, gdzie dostępność miejsc parkingowych jest ograniczona.
+2. **Ochrona:** Wysoko cenione w dużych aglomeracjach, szczególnie tam, gdzie bezpieczeństwo jest priorytetem.
+3. **Komórka lokatorska:** Ważna w miastach o wysokim zagęszczeniu, gdzie przestrzeń przechowywania ma istotne znaczenie.
+4. **Balkon:** Istotny czynnik w Warszawie i Krakowie, gdzie dostęp do przestrzeni zewnętrznej jest ograniczony.
+5. **Winda:** Znaczący wpływ na wartość mieszkań, szczególnie w dużych miastach z nowoczesną zabudową.
 
 ### **Sylwetka Gdańska**
 
@@ -2069,8 +2124,32 @@ legenda_dzielnic <- gdansk_dzielnice %>%
   select(numer_dzielnicy, NAZWA) %>%
   arrange(numer_dzielnicy)
 
-# Wyświetlenie tabeli legendy z numerami i nazwami dzielnic
-knitr::kable(legenda_dzielnic, col.names = c("Numer", "Dzielnica"), caption = "Legenda: Numery dzielnic w Gdańsku")
+# Podzielenie tabeli na dwie części
+num_rows <- nrow(legenda_dzielnic)
+split_index <- ceiling(num_rows / 2)
+
+# Uzupełnienie brakujących wartości pustymi znakami
+numer_2 <- legenda_dzielnic$numer_dzielnicy[(split_index + 1):num_rows]
+dzielnica_2 <- legenda_dzielnic$NAZWA[(split_index + 1):num_rows]
+
+# Wyrównanie długości i zastąpienie braków pustymi znakami
+numer_2 <- c(numer_2, rep("", split_index - length(numer_2)))
+dzielnica_2 <- c(dzielnica_2, rep("", split_index - length(dzielnica_2)))
+
+# Stworzenie kompaktowej tabeli
+legenda_dzielnic_compact <- tibble(
+  Numer_1 = legenda_dzielnic$numer_dzielnicy[1:split_index],
+  Dzielnica_1 = legenda_dzielnic$NAZWA[1:split_index],
+  Numer_2 = numer_2,
+  Dzielnica_2 = dzielnica_2
+)
+
+# Wyświetlenie tabeli w nowym formacie
+knitr::kable(
+  legenda_dzielnic_compact, 
+  col.names = c("Numer", "Dzielnica", "Numer", "Dzielnica"),
+  caption = "Legenda: Numery dzielnic w Gdańsku"
+)
 ```
 
 #### Interpretacja wyników analizy cen mieszkań per dzielnica:
