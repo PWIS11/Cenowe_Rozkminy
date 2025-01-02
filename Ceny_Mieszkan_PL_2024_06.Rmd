@@ -1966,14 +1966,150 @@ ma znaczącego wpływu na centralną tendencję ceny mieszkań.
 
 Jednakże mediana w grupie mieszkań z balkonem jest nieco wyższa niż w
 grupie bez balkonu, co może wskazywać na minimalną przewagę cenową
-mieszkań wyposażonych w to udogodnienie. Dodatkowo pudełko w tej grupie
-(symbolizujące zakres między dolnym a górnym kwartylem) jest węższe, co
-oznacza mniejsze zróżnicowanie cen wśród mieszkań z balkonem.
+mieszkań wyposażonych w to udogodnienie (szczególnie w dużych miastach, 
+takich jak Warszawa i Kraków, gdzie dostęp do prywatnej przestrzeni zewnętrznej 
+może być bardziej ceniony przez kupujących). Dodatkowo pudełko w tej grupie
+(symbolizujące zakres między dolnym a górnym kwartylem) jest węższe,
+co oznacza mniejsze zróżnicowanie cen wśród mieszkań z balkonem.
 
 Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym
 pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z
 różnorodności innych czynników wpływających na cenę, które w tej grupie
 mają większe znaczenie.
+
+Obecność balkonu może być szczególnie istotna w miastach o wyższej gęstości zabudowy 
+(np. Warszawa, Kraków), gdzie dostęp do przestrzeni zewnętrznej, nawet w formie 
+niewielkiego balkonu, jest bardziej ceniony. 
+
+
+#### Interpretacja wyników analizy wpływu obecności windy na cenę mieszkań: 
+
+W analizie porównaliśmy ceny mieszkań w dwóch grupach: z windą i bez windy. 
+Obserwacje z wykresów pudełkowych wskazują, że mediana cen w obu grupach jest 
+do siebie zbliżona, co sugeruje, że obecność windy nie ma znaczącego wpływu 
+na główną tendencję cenową mieszkań. W większości przypadków różnice są minimalne, 
+ale mogą występować subtelne różnice w zależności od lokalizacji, 
+co może wynikać z dodatkowych czynników wpływających na wartość nieruchomości.
+
+Jednakże mediana w grupie mieszkań z windą jest nieco wyższa w miastach takich 
+jak Kraków i Warszawa, co może wskazywać na minimalną przewagę cenową mieszkań 
+wyposażonych w to udogodnienie, szczególnie w większych miastach, gdzie dostęp do wygody, 
+jaką daje winda, jest bardziej ceniony przez kupujących. Dodatkowo pudełko w tej grupie 
+(symbolizujące zakres między dolnym a górnym kwartylem) jest węższe, co oznacza mniejsze
+zróżnicowanie cen wśród mieszkań z windą.
+
+Z kolei grupa mieszkań bez windy charakteryzuje się szerszym pudełkiem,
+co sugeruje większą zmienność cen. Może to wynikać z różnorodności innych czynników
+wpływających na cenę, które w tej grupie mają większe znaczenie. W miastach takich jak Białystok,
+Radom czy Rzeszów, gdzie różnice cenowe są subtelne, zmienność cen jest porównywalna w obu grupach, 
+co wskazuje na inne czynniki, które mają wpływ na cenę mieszkań.
+
+Obecność windy może być szczególnie istotna w miastach o wyższej gęstości zabudowy, 
+jak Warszawa i Kraków, gdzie łatwiejszy dostęp do wyższych pięter, szczególnie 
+w blokach mieszkalnych, może wpływać na postrzeganą wartość nieruchomości.
+
+
+#### Interpretacja wyników analizy wpływu obecności parkingu na cenę mieszkań: 
+
+W analizie porównaliśmy ceny mieszkań w dwóch grupach: z parkingiem i bez parkingu. 
+Obserwacje z wykresów pudełkowych wskazują, że wpływ obecności parkingu na ceny mieszkań 
+różni się w zależności od lokalizacji. W miastach takich jak Częstochowa i Radom mediana 
+cen mieszkań z parkingiem jest wyraźnie wyższa niż w grupie mieszkań bez parkingu. 
+Wskazuje to, że w tych lokalizacjach parking jest kluczowym udogodnieniem, które 
+znacznie podnosi wartość nieruchomości. 
+
+Z kolei w miastach takich jak Warszawa, Kraków i Rzeszów różnice między medianami 
+w obu grupach są niewielkie. Sugeruje to, że obecność parkingu w tych lokalizacjach 
+jest standardowym udogodnieniem i ma mniejsze znaczenie w kształtowaniu cen nieruchomości. 
+W szczególności w Warszawie i Krakowie, gdzie ceny mieszkań są ogólnie wyższe, większe 
+znaczenie mogą mieć inne czynniki, takie jak lokalizacja czy standard wykończenia. 
+
+Dodatkowo, w miastach takich jak Radom i Częstochowa grupa mieszkań „z parkingiem” 
+charakteryzuje się węższym pudełkiem (mniejszą zmiennością cen), co sugeruje 
+bardziej jednolite ceny w tej grupie. W miastach o niższych medianach (jak Radom) 
+obecność parkingu może być cechą premium, szczególnie cenioną przez kupujących.
+
+W miastach takich jak Białystok różnice między medianami są subtelne, 
+co wskazuje, że w tych lokalizacjach parking nie jest głównym czynnikiem 
+wpływającym na cenę nieruchomości. Jednakże zauważalna przewaga mediany w grupie mieszkań 
+z parkingiem może świadczyć o tym, że w wyższych segmentach cenowych obecność parkingu jest dodatkowym atutem.
+
+Obecność parkingu ma szczególnie istotne znaczenie w miastach takich jak Radom i Częstochowa,
+gdzie różnice cen między grupami są wyraźne. W dużych aglomeracjach, takich jak Warszawa czy Kraków, 
+wpływ parkingu na ceny jest mniej widoczny, co może wynikać z większego znaczenia 
+innych czynników wpływających na wartość nieruchomości. 
+
+
+#### Interpretacja wyników analizy wpływu obecności ochrony na cenę mieszkań: 
+
+W analizie porównaliśmy ceny mieszkań w dwóch grupach: z ochroną i bez ochrony.
+Obserwacje z wykresów pudełkowych wskazują, że wpływ obecności ochrony na ceny mieszkań 
+jest różnorodny w zależności od lokalizacji. W miastach takich jak Warszawa i Kraków
+mediana cen mieszkań z ochroną jest wyraźnie wyższa niż w grupie mieszkań bez ochrony.
+Sugeruje to, że w tych dużych aglomeracjach ochrona jest postrzegana jako 
+istotne udogodnienie, które wpływa na postrzeganą wartość nieruchomości. 
+
+W miastach takich jak Radom czy Częstochowa różnice między medianami w obu grupach są subtelne. 
+Wskazuje to, że obecność ochrony nie odgrywa kluczowej roli w kształtowaniu cen nieruchomości 
+w tych lokalizacjach.W Radomiu dodatkowo można zauważyć, że pudełka w obu grupach są podobne 
+pod względem szerokości, co oznacza zbliżoną zmienność cen niezależnie od obecności ochrony.
+
+W Rzeszowie różnica median jest zauważalna – mieszkania z ochroną są droższe niż te bez ochrony.
+Może to wynikać z faktu, że ochrona jest bardziej pożądanym udogodnieniem w nowoczesnych osiedlach,
+które mogą być dominujące w ofercie mieszkań w tej lokalizacji. Jednocześnie pudełko w grupie 
+mieszkań „z ochroną” jest nieco szersze, co świadczy o większej zmienności cen w tej grupie.
+
+W miastach takich jak Białystok różnice w medianach są minimalne, co może oznaczać, 
+że ochrona nie jest postrzegana jako istotny czynnik wpływający na wartość mieszkania. 
+W tych lokalizacjach inne czynniki, takie jak dostępność komunikacyjna czy standard 
+wykończenia, mogą odgrywać większą rolę w kształtowaniu cen.
+
+Ochrona ma największy wpływ na ceny mieszkań w miastach takich jak:
+Warszawa, Kraków i Rzeszów, gdzie mediana cen w grupie mieszkań z ochroną jest wyraźnie wyższa. 
+W mniejszych miastach, takich jak Radom, Częstochowa czy Białystok, różnice w medianach są mniejsze, 
+co wskazuje, że obecność ochrony nie jest kluczowym czynnikiem determinującym cenę nieruchomości.
+W dużych miastach, gdzie bezpieczeństwo jest istotnym aspektem dla kupujących, 
+ochrona wydaje się być bardziej cenionym udogodnieniem.
+
+W dużych miastach, takich jak Warszawa, Kraków i Rzeszów, grupa mieszkań „z ochroną” 
+charakteryzuje się większą liczbą wartości odstających (outliers). 
+Wskazuje to, że ochrona jest często obecna w droższych i bardziej luksusowych nieruchomościach,
+co podnosi górne granice cen.
+
+Z kolei w mniejszych miastach, takich jak Radom, Częstochowa i Białystok,
+liczba outliers jest niewielka w obu grupach. Świadczy to o bardziej jednorodnym rynku mieszkań,
+gdzie obecność ochrony nie prowadzi do ekstremalnie wysokich cen
+
+
+#### Interpretacja wyników analizy wpływu obecności komórki lokatorskiej na cenę mieszkań: 
+
+W analizie porównaliśmy ceny mieszkań w dwóch grupach: z komórką lokatorską i bez komórki lokatorskiej.
+Obserwacje z wykresów pudełkowych wskazują, że obecność komórki lokatorskiej ma zauważalny, 
+ale nie zawsze decydujący wpływ na ceny mieszkań, a różnice w medianach cen są zależne od lokalizacji.
+
+W miastach takich jak Warszawa i Kraków, gdzie ceny mieszkań są najwyższe, 
+posiadanie komórki lokatorskiej wiąże się z nieco wyższymi medianami cen.
+Sugeruje to, że w tych dużych aglomeracjach dodatkowe przestrzenie, takie jak komórki lokatorskie,
+są postrzegane jako istotne udogodnienie, które podnosi wartość nieruchomości.
+W tych miastach wyższe ceny mogą wynikać z większego popytu na mieszkania, 
+gdzie dodatkowa przestrzeń magazynowa jest uznawana za istotny atut.
+
+W miastach takich jak Rzeszów czy Radom wpływ posiadania komórki lokatorskiej 
+na ceny mieszkań jest minimalny. Różnice między medianami cen w obu grupach są nieznaczne, 
+co wskazuje, że w tych lokalizacjach komórka lokatorska nie odgrywa kluczowej roli 
+w kształtowaniu wartości nieruchomości. W tych miastach inne czynniki,
+takie jak standard mieszkania czy jego lokalizacja, mogą mieć większe znaczenie dla ceny.
+
+Z kolei w miastach takich jak Białystok różnice między medianami cen są również niewielkie,
+co może sugerować, że komórka lokatorska nie jest postrzegana jako ważne udogodnienie,
+a inne czynniki mogą mieć dominujący wpływ na ceny mieszkań. 
+
+Obecność komórki lokatorskiej w mieszkaniach ma zauważalny wpływ na ceny, 
+ale jego znaczenie różni się w zależności od miasta. W większych miastach, 
+takich jak Warszawa i Kraków, komórka lokatorska przyczynia się do wyższych cen, 
+natomiast w miastach średniej wielkości, takich jak Rzeszów czy Radom, jej wpływ na ceny jest minimalny.
+
+
 
 ### **Sylwetka Gdańska**
 
