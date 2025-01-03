@@ -563,14 +563,14 @@ i są gotowe do dalszej analizy.
 # Definiowanie reguł walidacyjnych i przeprowadzenie walidacji 
 
 rules <- validator(
-  "Floor>Floor Count" = floor <= floor_count,                                            # Piętro nie większe niż liczba kondygnacji
-  "build_year<= 2024" = build_year <= 2024,                                              # Rok budowy nie większy niż rok bieżący
-  "build_year > 1600" = build_year > 1600,                                               # Rok budowy późniejszy niż 1600
-  "Floor>= 0" = floor >= 0,                                                              # Piętro nie może być ujemne
-  "floor_count >= 0" = floor_count >= 0,                                                 # Liczba kondygnacji nie może być ujemna
-  "Rooms> 0" = rooms > 0,                                                                # Liczba pokoi większa niż 0
-  "Rooms<= 15" = rooms <= 15,                                                            # Liczba pokoi nie większa niż 15
-  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")   # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+  "Floor > Floor Count" = floor <= floor_count,                                            # Piętro nie większe niż liczba kondygnacji
+  "build_year <= 2024" = build_year <= 2024,                                               # Rok budowy nie większy niż rok bieżący
+  "build_year > 1600" = build_year > 1600,                                                 # Rok budowy późniejszy niż 1600
+  "Floor >= 0" = floor >= 0,                                                               # Piętro nie może być ujemne
+  "floor_count >= 0" = floor_count >= 0,                                                   # Liczba kondygnacji nie może być ujemna
+  "Rooms > 0" = rooms > 0,                                                                 # Liczba pokoi większa niż 0
+  "Rooms <= 15" = rooms <= 15,                                                             # Liczba pokoi nie większa niż 15
+  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 
 )
 
@@ -601,7 +601,18 @@ validation_results <- data.frame(
 
 ```{r wykres_dla_wstępnej_walidacji_danych, echo=FALSE}
 
+  validation_results$rule <- c(
+  "Floor > Floor Count",                                       
+  "Build Year <= 2024",                                           
+  "Build Year > 1600",                                             
+  "Floor >= 0",                                                              
+  "Floor Count >= 0",                                          
+  "Rooms > 0",                                                            
+  "Rooms <= 15",                                                            
+  "Elevator in a building with 0 floors") 
+
 # Wykres liczby brakujących danych (NA) dla każdej reguły walidacji
+suppressMessages({
 na_plot <- ggplot(validation_results, aes(x = reorder(rule, observations_missing), y = observations_missing)) +
   geom_bar(stat = "identity", fill = "plum2") +
   geom_text(aes(label = observations_missing), hjust = 0.5, size = 4) +
@@ -619,10 +630,12 @@ na_plot <- ggplot(validation_results, aes(x = reorder(rule, observations_missing
     axis.title.x = element_text(size = 15),
     axis.title.y = element_text(size = 15)
   ) +
+  scale_x_discrete(labels = function(x) gsub("\\.+", " ", x))
   scale_y_continuous(limits = c(0, max(validation_results$observations_missing) * 1.1))  
 
+  
 print(na_plot)
-
+})
 ```
 
 W wyniku przeprowadzonej walidacji zauważono, że w zbiorze danych występuje znaczna
@@ -1614,19 +1627,19 @@ W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych numeryc
 # Walidacja wcześniej zdefiniowanych reguł 
 
 rules2 <- validator(
-  "Floor>floor_count" = floor <= floor_count,                                              # Piętro nie większe niż liczba kondygnacji
-  "build_year<=2024" = build_year <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
-  "build_year>1600" = build_year > 1600,                                                   # Rok budowy późniejszy niż 1600
-  "Floor>=0" = floor >= 0,                                                                 # Piętro nie może być ujemne
-  "floor_count>= 0" = floor_count >= 0,                                                    # Liczba kondygnacji nie może być ujemna
-  "Rooms>0" = rooms > 0,                                                                   # Liczba pokoi większa niż 0
-  "Rooms<= 15" = rooms <= 15,                                                              # Liczba pokoi nie większa niż 15
-  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")     # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
+  "Floor > Floor Count" = floor <= floor_count,                                              # Piętro nie większe niż liczba kondygnacji
+  "Build Year <= 2024" = build_year <= 2024,                                                 # Rok budowy nie większy niż rok bieżący
+  "Build Year > 1600" = build_year > 1600,                                                   # Rok budowy późniejszy niż 1600
+  "Floor >= 0" = floor >= 0,                                                                 # Piętro nie może być ujemne
+  "Floor Count >= 0" = floor_count >= 0,                                                     # Liczba kondygnacji nie może być ujemna
+  "Rooms > 0" = rooms > 0,                                                                   # Liczba pokoi większa niż 0
+  "Rooms <= 15" = rooms <= 15,                                                               # Liczba pokoi nie większa niż 15
+  "Elevator in a building with 0 floors" = !(floor_count == 0 & has_elevator == "yes")       # Sprawdzenie, czy budynek z 0 kondygnacjami ma windę
 )
 
 out2 <- confront(dane, rules)
 addwwfw <- as.data.frame(summary(out2))
-addwwfw$expression <- c("Floor>floor_count", "build_year<=2024","build_year>1600","Floor>=0", "floor_count>= 0", "Rooms>0", "Rooms<= 15", "Elevator in a building with 0 floors")
+addwwfw$expression <- c("Floor > Floor Count", "Build Year <= 2024","Build Year > 1600","Floor >= 0", "Floor Count >= 0", "Rooms > 0", "Rooms <= 15", "Elevator in a building with 0 floors")
 
 
 ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
@@ -1979,26 +1992,23 @@ p5 <- ggplot(dane_filtr, aes(x = has_storage_room, y = price)) +
 grid.arrange(p3, p4, p5, nrow = 2)
 ```
 
-#### Interpretacja wyników analizy wpływu obecności balkonu na cenę mieszkań:
+#### Wpływ balkonu na cenę mieszkań
 
-W analizie porównaliśmy ceny mieszkań w dwóch grupach: z balkonem oraz
-bez balkonu. Obserwacje z wykresów pudełkowych wskazują, że poziomy
-mediany w obu grupach są podobne, co sugeruje, że obecność balkonu nie
-ma znaczącego wpływu na centralną tendencję ceny mieszkań.
+Balkon jest jednym z kluczowych elementów wpływających na wartość mieszkania, zwłaszcza w dużych miastach.
 
-Jednakże mediana w grupie mieszkań z balkonem jest nieco wyższa niż w
-grupie bez balkonu, co może wskazywać na minimalną przewagę cenową
-mieszkań wyposażonych w to udogodnienie (szczególnie w dużych miastach, 
-takich jak Warszawa i Kraków, gdzie dostęp do prywatnej przestrzeni zewnętrznej 
-może być bardziej ceniony przez kupujących). Dodatkowo pudełko w tej grupie
-(symbolizujące zakres między dolnym a górnym kwartylem) jest węższe,
-co oznacza mniejsze zróżnicowanie cen wśród mieszkań z balkonem.
+- W **Warszawie** i **Krakowie**, mieszkania z balkonem mają wyraźnie wyższe mediany cen w porównaniu do mieszkań bez tego udogodnienia. Może to wynikać z zapotrzebowania na przestrzeń zewnętrzną w dużych aglomeracjach, gdzie dostęp do terenów zielonych bywa ograniczony.
+- W miastach takich jak **Radom**, **Rzeszów** i **Częstochowa**, różnice w medianach cen są mniej wyraźne, co wskazuje, że balkon w tych lokalizacjach jest czynnikiem mniej istotnym.
+- Warto zauważyć, że rozrzut cen w grupie mieszkań z balkonem jest mniejszy, co może świadczyć o większej standaryzacji tej grupy mieszkań pod względem ceny.
 
-Z kolei grupa mieszkań bez balkonu charakteryzuje się szerszym
-pudełkiem, co sugeruje większą zmienność cen. Może to wynikać z
-różnorodności innych czynników wpływających na cenę, które w tej grupie mają większe znaczenie.
 
-rzut cen (długość pudełek) jest większy dla mieszkań bez parkingu, co sugeruje większą zmienność cen w tej grupie.
+#### Wpływ windy na cenę mieszkań
+
+Obecność windy ma istotne znaczenie dla wartości mieszkań, szczególnie w nowoczesnych budynkach i wyższych kondygnacjach.
+
+- **Warszawa**, **Kraków** i **Rzeszów** charakteryzują się znaczącą różnicą w medianach cen mieszkań z i bez windy, co wskazuje na preferencje kupujących związane z wygodą użytkowania. Winda może być szczególnie istotna w budynkach wielopiętrowych.
+- W mniejszych miastach, takich jak **Radom** i **Częstochowa**, różnice w medianach są mniej zauważalne, co może sugerować, że winda nie jest tam równie cenionym udogodnieniem.
+- Rozrzut cen mieszkań bez windy jest większy, co może świadczyć o różnorodności oferty mieszkań w tej grupie.
+
 
 #### Wpływ parkingu na cenę mieszkań
 
@@ -2028,164 +2038,13 @@ Komórka lokatorska stanowi ważny element funkcjonalności nieruchomości, szcz
 - Rozrzut cen mieszkań bez komórki lokatorskiej jest większy, co może sugerować większą różnorodność w tej grupie pod względem lokalizacji i standardu nieruchomości.
 
 
-#### Wpływ balkonu na cenę mieszkań
-
-Balkon jest jednym z kluczowych elementów wpływających na wartość mieszkania, zwłaszcza w dużych miastach.
-
-- W **Warszawie** i **Krakowie**, mieszkania z balkonem mają wyraźnie wyższe mediany cen w porównaniu do mieszkań bez tego udogodnienia. Może to wynikać z zapotrzebowania na przestrzeń zewnętrzną w dużych aglomeracjach, gdzie dostęp do terenów zielonych bywa ograniczony.
-- W miastach takich jak **Radom**, **Rzeszów** i **Częstochowa**, różnice w medianach cen są mniej wyraźne, co wskazuje, że balkon w tych lokalizacjach jest czynnikiem mniej istotnym.
-- Warto zauważyć, że rozrzut cen w grupie mieszkań z balkonem jest mniejszy, co może świadczyć o większej standaryzacji tej grupy mieszkań pod względem ceny.
-
-
-#### Wpływ windy na cenę mieszkań
-
-Obecność windy ma istotne znaczenie dla wartości mieszkań, szczególnie w nowoczesnych budynkach i wyższych kondygnacjach.
-
-- **Warszawa**, **Kraków** i **Rzeszów** charakteryzują się znaczącą różnicą w medianach cen mieszkań z i bez windy, co wskazuje na preferencje kupujących związane z wygodą użytkowania. Winda może być szczególnie istotna w budynkach wielopiętrowych.
-- W mniejszych miastach, takich jak **Radom** i **Częstochowa**, różnice w medianach są mniej zauważalne, co może sugerować, że winda nie jest tam równie cenionym udogodnieniem.
-- Rozrzut cen mieszkań bez windy jest większy, co może świadczyć o różnorodności oferty mieszkań w tej grupie.
-
-
 #### Podsumowanie
 
-1. **Parking:** Kluczowy czynnik w dużych miastach, zwłaszcza w Warszawie, gdzie dostępność miejsc parkingowych jest ograniczona.
-2. **Ochrona:** Wysoko cenione w dużych aglomeracjach, szczególnie tam, gdzie bezpieczeństwo jest priorytetem.
-3. **Komórka lokatorska:** Ważna w miastach o wysokim zagęszczeniu, gdzie przestrzeń przechowywania ma istotne znaczenie.
-4. **Balkon:** Istotny czynnik w Warszawie i Krakowie, gdzie dostęp do przestrzeni zewnętrznej jest ograniczony.
-5. **Winda:** Znaczący wpływ na wartość mieszkań, szczególnie w dużych miastach z nowoczesną zabudową.
-
-Obecność balkonu może być szczególnie istotna w miastach o wyższej gęstości zabudowy 
-(np. Warszawa, Kraków), gdzie dostęp do przestrzeni zewnętrznej, nawet w formie 
-niewielkiego balkonu, jest bardziej ceniony. 
-
-
-#### Interpretacja wyników analizy wpływu obecności windy na cenę mieszkań: 
-
-W analizie porównaliśmy ceny mieszkań w dwóch grupach: z windą i bez windy. 
-Obserwacje z wykresów pudełkowych wskazują, że mediana cen w obu grupach jest 
-do siebie zbliżona, co sugeruje, że obecność windy nie ma znaczącego wpływu 
-na główną tendencję cenową mieszkań. W większości przypadków różnice są minimalne, 
-ale mogą występować subtelne różnice w zależności od lokalizacji, 
-co może wynikać z dodatkowych czynników wpływających na wartość nieruchomości.
-
-Jednakże mediana w grupie mieszkań z windą jest nieco wyższa w miastach takich 
-jak Kraków i Warszawa, co może wskazywać na minimalną przewagę cenową mieszkań 
-wyposażonych w to udogodnienie, szczególnie w większych miastach, gdzie dostęp do wygody, 
-jaką daje winda, jest bardziej ceniony przez kupujących. Dodatkowo pudełko w tej grupie 
-(symbolizujące zakres między dolnym a górnym kwartylem) jest węższe, co oznacza mniejsze
-zróżnicowanie cen wśród mieszkań z windą.
-
-Z kolei grupa mieszkań bez windy charakteryzuje się szerszym pudełkiem,
-co sugeruje większą zmienność cen. Może to wynikać z różnorodności innych czynników
-wpływających na cenę, które w tej grupie mają większe znaczenie. W miastach takich jak Białystok,
-Radom czy Rzeszów, gdzie różnice cenowe są subtelne, zmienność cen jest porównywalna w obu grupach, 
-co wskazuje na inne czynniki, które mają wpływ na cenę mieszkań.
-
-Obecność windy może być szczególnie istotna w miastach o wyższej gęstości zabudowy, 
-jak Warszawa i Kraków, gdzie łatwiejszy dostęp do wyższych pięter, szczególnie 
-w blokach mieszkalnych, może wpływać na postrzeganą wartość nieruchomości.
-
-
-#### Interpretacja wyników analizy wpływu obecności parkingu na cenę mieszkań: 
-
-W analizie porównaliśmy ceny mieszkań w dwóch grupach: z parkingiem i bez parkingu. 
-Obserwacje z wykresów pudełkowych wskazują, że wpływ obecności parkingu na ceny mieszkań 
-różni się w zależności od lokalizacji. W miastach takich jak Częstochowa i Radom mediana 
-cen mieszkań z parkingiem jest wyraźnie wyższa niż w grupie mieszkań bez parkingu. 
-Wskazuje to, że w tych lokalizacjach parking jest kluczowym udogodnieniem, które 
-znacznie podnosi wartość nieruchomości. 
-
-Z kolei w miastach takich jak Warszawa, Kraków i Rzeszów różnice między medianami 
-w obu grupach są niewielkie. Sugeruje to, że obecność parkingu w tych lokalizacjach 
-jest standardowym udogodnieniem i ma mniejsze znaczenie w kształtowaniu cen nieruchomości. 
-W szczególności w Warszawie i Krakowie, gdzie ceny mieszkań są ogólnie wyższe, większe 
-znaczenie mogą mieć inne czynniki, takie jak lokalizacja czy standard wykończenia. 
-
-Dodatkowo, w miastach takich jak Radom i Częstochowa grupa mieszkań „z parkingiem” 
-charakteryzuje się węższym pudełkiem (mniejszą zmiennością cen), co sugeruje 
-bardziej jednolite ceny w tej grupie. W miastach o niższych medianach (jak Radom) 
-obecność parkingu może być cechą premium, szczególnie cenioną przez kupujących.
-
-W miastach takich jak Białystok różnice między medianami są subtelne, 
-co wskazuje, że w tych lokalizacjach parking nie jest głównym czynnikiem 
-wpływającym na cenę nieruchomości. Jednakże zauważalna przewaga mediany w grupie mieszkań 
-z parkingiem może świadczyć o tym, że w wyższych segmentach cenowych obecność parkingu jest dodatkowym atutem.
-
-Obecność parkingu ma szczególnie istotne znaczenie w miastach takich jak Radom i Częstochowa,
-gdzie różnice cen między grupami są wyraźne. W dużych aglomeracjach, takich jak Warszawa czy Kraków, 
-wpływ parkingu na ceny jest mniej widoczny, co może wynikać z większego znaczenia 
-innych czynników wpływających na wartość nieruchomości. 
-
-
-#### Interpretacja wyników analizy wpływu obecności ochrony na cenę mieszkań: 
-
-W analizie porównaliśmy ceny mieszkań w dwóch grupach: z ochroną i bez ochrony.
-Obserwacje z wykresów pudełkowych wskazują, że wpływ obecności ochrony na ceny mieszkań 
-jest różnorodny w zależności od lokalizacji. W miastach takich jak Warszawa i Kraków
-mediana cen mieszkań z ochroną jest wyraźnie wyższa niż w grupie mieszkań bez ochrony.
-Sugeruje to, że w tych dużych aglomeracjach ochrona jest postrzegana jako 
-istotne udogodnienie, które wpływa na postrzeganą wartość nieruchomości. 
-
-W miastach takich jak Radom czy Częstochowa różnice między medianami w obu grupach są subtelne. 
-Wskazuje to, że obecność ochrony nie odgrywa kluczowej roli w kształtowaniu cen nieruchomości 
-w tych lokalizacjach.W Radomiu dodatkowo można zauważyć, że pudełka w obu grupach są podobne 
-pod względem szerokości, co oznacza zbliżoną zmienność cen niezależnie od obecności ochrony.
-
-W Rzeszowie różnica median jest zauważalna – mieszkania z ochroną są droższe niż te bez ochrony.
-Może to wynikać z faktu, że ochrona jest bardziej pożądanym udogodnieniem w nowoczesnych osiedlach,
-które mogą być dominujące w ofercie mieszkań w tej lokalizacji. Jednocześnie pudełko w grupie 
-mieszkań „z ochroną” jest nieco szersze, co świadczy o większej zmienności cen w tej grupie.
-
-W miastach takich jak Białystok różnice w medianach są minimalne, co może oznaczać, 
-że ochrona nie jest postrzegana jako istotny czynnik wpływający na wartość mieszkania. 
-W tych lokalizacjach inne czynniki, takie jak dostępność komunikacyjna czy standard 
-wykończenia, mogą odgrywać większą rolę w kształtowaniu cen.
-
-Ochrona ma największy wpływ na ceny mieszkań w miastach takich jak:
-Warszawa, Kraków i Rzeszów, gdzie mediana cen w grupie mieszkań z ochroną jest wyraźnie wyższa. 
-W mniejszych miastach, takich jak Radom, Częstochowa czy Białystok, różnice w medianach są mniejsze, 
-co wskazuje, że obecność ochrony nie jest kluczowym czynnikiem determinującym cenę nieruchomości.
-W dużych miastach, gdzie bezpieczeństwo jest istotnym aspektem dla kupujących, 
-ochrona wydaje się być bardziej cenionym udogodnieniem.
-
-W dużych miastach, takich jak Warszawa, Kraków i Rzeszów, grupa mieszkań „z ochroną” 
-charakteryzuje się większą liczbą wartości odstających (outliers). 
-Wskazuje to, że ochrona jest często obecna w droższych i bardziej luksusowych nieruchomościach,
-co podnosi górne granice cen.
-
-Z kolei w mniejszych miastach, takich jak Radom, Częstochowa i Białystok,
-liczba outliers jest niewielka w obu grupach. Świadczy to o bardziej jednorodnym rynku mieszkań,
-gdzie obecność ochrony nie prowadzi do ekstremalnie wysokich cen
-
-
-#### Interpretacja wyników analizy wpływu obecności komórki lokatorskiej na cenę mieszkań: 
-
-W analizie porównaliśmy ceny mieszkań w dwóch grupach: z komórką lokatorską i bez komórki lokatorskiej.
-Obserwacje z wykresów pudełkowych wskazują, że obecność komórki lokatorskiej ma zauważalny, 
-ale nie zawsze decydujący wpływ na ceny mieszkań, a różnice w medianach cen są zależne od lokalizacji.
-
-W miastach takich jak Warszawa i Kraków, gdzie ceny mieszkań są najwyższe, 
-posiadanie komórki lokatorskiej wiąże się z nieco wyższymi medianami cen.
-Sugeruje to, że w tych dużych aglomeracjach dodatkowe przestrzenie, takie jak komórki lokatorskie,
-są postrzegane jako istotne udogodnienie, które podnosi wartość nieruchomości.
-W tych miastach wyższe ceny mogą wynikać z większego popytu na mieszkania, 
-gdzie dodatkowa przestrzeń magazynowa jest uznawana za istotny atut.
-
-W miastach takich jak Rzeszów czy Radom wpływ posiadania komórki lokatorskiej 
-na ceny mieszkań jest minimalny. Różnice między medianami cen w obu grupach są nieznaczne, 
-co wskazuje, że w tych lokalizacjach komórka lokatorska nie odgrywa kluczowej roli 
-w kształtowaniu wartości nieruchomości. W tych miastach inne czynniki,
-takie jak standard mieszkania czy jego lokalizacja, mogą mieć większe znaczenie dla ceny.
-
-Z kolei w miastach takich jak Białystok różnice między medianami cen są również niewielkie,
-co może sugerować, że komórka lokatorska nie jest postrzegana jako ważne udogodnienie,
-a inne czynniki mogą mieć dominujący wpływ na ceny mieszkań. 
-
-Obecność komórki lokatorskiej w mieszkaniach ma zauważalny wpływ na ceny, 
-ale jego znaczenie różni się w zależności od miasta. W większych miastach, 
-takich jak Warszawa i Kraków, komórka lokatorska przyczynia się do wyższych cen, 
-natomiast w miastach średniej wielkości, takich jak Rzeszów czy Radom, jej wpływ na ceny jest minimalny.
-
+1.**Balkon:** Istotny czynnik w Warszawie i Krakowie, gdzie dostęp do przestrzeni zewnętrznej jest ograniczony.<br>
+2.**Winda:** Znaczący wpływ na wartość mieszkań, szczególnie w dużych miastach z nowoczesną zabudową.<br>
+3.**Parking:** Kluczowy czynnik w dużych miastach, zwłaszcza w Warszawie, gdzie dostępność miejsc parkingowych jest ograniczona.<br>
+4.**Ochrona:** Wysoko cenione w dużych aglomeracjach, szczególnie tam, gdzie bezpieczeństwo jest priorytetem.<br>
+5.**Komórka lokatorska:** Ważna w miastach o wysokim zagęszczeniu, gdzie przestrzeń przechowywania ma istotne znaczenie.<br>
 
 
 ### **Sylwetka Gdańska**
