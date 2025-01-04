@@ -2419,7 +2419,7 @@ czynniki mogą dominować w kształtowaniu wartości nieruchomości.
 korelacje_cena_odl <- dane_filtr %>%
   group_by(city) %>% 
   summarise(
-    korelacja = cor(centre_distance, price) 
+    korelacja = cor(centre_distance, price, method = "pearson") 
   )
 knitr::kable(korelacje_cena_odl, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od centrum miasta a ceną mieszkań")
 ```
@@ -2838,3 +2838,30 @@ ggplot(dane_filtr, aes(x = pharmacy_distance, y = price)) +
   ) +
   theme_minimal()
 ```
+
+## Podsumowanie
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+
+# tabela_podsumowanie_cor <- data.frame(
+#   Zmienne <- c("centre_distance", "school_distance", "clinic_distance", "post_office_distance", "kindergarten_distance", "restaurant_distance", "college_distance", "pharmacy_distance"),
+#   
+#   "Warszawa" <- c("Słaba, ujemna", "Słaba, ujemna", "Słaba, ujemna", "Słaba, ujemna", "Słaba, dodatnia", "Słaba, ujemna", ),
+#   "Kraków" <- c("Silna, ujemna", "Silna, ujemna", "Słaba, ujemna", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, ujemna", ),
+#   "Białystok" <- c("Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", ),
+#   "Rzeszów" <- c("Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", ),
+#   "Częstochowa" <- c("Słaba, dodatnia", "Słaba, ujemna", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, ujemna", ),
+#   "Radom" <- c("Słaba, ujemna", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", )
+#   
+# )
+
+#SKONCZONE NA RESTAURACJACH
+
+```
+
+
+
+
+
+
+
