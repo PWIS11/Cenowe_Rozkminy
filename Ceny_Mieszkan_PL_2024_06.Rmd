@@ -36,6 +36,8 @@ if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
 if (!requireNamespace("validate", quietly = TRUE)) install.packages("validate")
 if (!requireNamespace("plotly", quietly = TRUE)) install.packages("plotly")
 if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")
+if (!requireNamespace("nortest", quietly = TRUE)) install.packages("nortest")
+
 
 ```
 
@@ -58,6 +60,7 @@ library(dlookr)
 library(validate)
 library(plotly)
 library(knitr)
+library(nortest)
 ```
 
 # **Cel projektu**
@@ -438,25 +441,27 @@ dane$building_material <- case_when(
 
 ```
 
-
 # **Walidacja danych**
 
 <p style="text-align: justify;">
 
-Walidacja danych to kluczowy etap przygotowania zbioru, który następuje 
-po wstępnym oczyszczeniu danych. Jej celem jest sprawdzenie zgodności danych 
-z określonymi regułami logicznymi i jakościowymi, aby upewnić się, że dane 
-są kompletne, spójne <br>i gotowe do dalszej analizy oraz modelowania.
+Walidacja danych to kluczowy etap przygotowania zbioru, który następuje
+po wstępnym oczyszczeniu danych. Jej celem jest sprawdzenie zgodności
+danych z określonymi regułami logicznymi i jakościowymi, aby upewnić
+się, że dane są kompletne, spójne <br>i gotowe do dalszej analizy oraz
+modelowania.
 
-Proces ten polega na weryfikacji, czy dane spełniają określone kryteria, 
-zapewniając ich poprawność, spójność oraz integralność. Szczególną uwagę 
-zwraca się na typy danych i analizę unikalnych wartości w poszczególnych kolumnach. 
-Każda kolumna powinna mieć odpowiedni typ danych (np. numeryczny, tekstowy, całkowity),
-a liczba unikalnych wartości powinna być zgodna <br> z oczekiwaniami.
+Proces ten polega na weryfikacji, czy dane spełniają określone kryteria,
+zapewniając ich poprawność, spójność oraz integralność. Szczególną uwagę
+zwraca się na typy danych i analizę unikalnych wartości w poszczególnych
+kolumnach. Każda kolumna powinna mieć odpowiedni typ danych (np.
+numeryczny, tekstowy, całkowity), a liczba unikalnych wartości powinna
+być zgodna <br> z oczekiwaniami.
 
-Dzięki takiej analizie można wykryć potencjalne błędy w strukturze danych, 
-takie jak niewłaściwe przypisanie typu do kolumny czy nieoczekiwane wartości. 
-Zapewnia to odpowiednie przygotowanie danych do dalszych etapów analizy i modelowania.
+Dzięki takiej analizie można wykryć potencjalne błędy w strukturze
+danych, takie jak niewłaściwe przypisanie typu do kolumny czy
+nieoczekiwane wartości. Zapewnia to odpowiednie przygotowanie danych do
+dalszych etapów analizy i modelowania.
 
 </p>
 
@@ -501,24 +506,25 @@ knitr::kable(data_types, caption = "Typy Danych")
 
 Zbiór danych składa się z **28 kolumn**, które charakteryzują się
 następującymi typami: **18 zmiennych numerycznych (typ numeric)**, **6
-zmiennych tekstowych (typ character)**, **3 zmiennymi kategorycznymi (typ
-factor)**, **2 zmiennymi całkowitymi (typ integer)** oraz **brakiem zmiennych
-logicznych.**
+zmiennych tekstowych (typ character)**, **3 zmiennymi kategorycznymi
+(typ factor)**, **2 zmiennymi całkowitymi (typ integer)** oraz **brakiem
+zmiennych logicznych.**
 
 </p>
 
 <p style="text-align: justify;">
 
-- Zmienne **numeryczne**, takie jak `square_meters`, `price` czy `centre_distance`,
-mają dużą liczbę unikalnych wartości, <br> co sugeruje, że są to dane ciągłe,
-które będą odpowiednie do analizy regresyjnej. 
+-   Zmienne **numeryczne**, takie jak `square_meters`, `price` czy
+    `centre_distance`, mają dużą liczbę unikalnych wartości, <br> co
+    sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy
+    regresyjnej.
 
-- Zmienne **kategoryczne**, takie jak `building_type`, `ownership` czy `building_material`, 
-mogą być traktowane jako zmienne typu factor i wykorzystane w analizach
-klasyfikacyjnych. 
+-   Zmienne **kategoryczne**, takie jak `building_type`, `ownership` czy
+    `building_material`, mogą być traktowane jako zmienne typu factor i
+    wykorzystane w analizach klasyfikacyjnych.
 
-- Kolumny z typem **integer**, jak np. `price` mogą być również używane 
-w analizach numerycznych.
+-   Kolumny z typem **integer**, jak np. `price` mogą być również
+    używane w analizach numerycznych.
 
 </p>
 
@@ -528,35 +534,37 @@ Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej
 analizy i modelowania. Zmienne numeryczne będą wykorzystywane w
 analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a
 zmienne character mogą wymagać kodowania na typ factor, aby mogły być
-wykorzystane w dalszej analizie. 
+wykorzystane w dalszej analizie.
 
-Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, 
-dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych,
-normalizację zmiennych numerycznych czy tworzenie nowych zmiennych, 
-<br>w zależności od typu danych i celu analizy.
+Na podstawie tej analizy możemy przejść do przygotowania danych do
+modelowania, dobierając odpowiednie metody przetwarzania, takie jak
+kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych
+czy tworzenie nowych zmiennych, <br>w zależności od typu danych i celu
+analizy.
 
 </p>
 
-
 ## Walidacja wstępna danych i określenie reguł logicznych
 
-Kolejnym krokiem w procesie walidacji jest zastosowanie określonych reguł 
-logicznych, które zapewniają spójność danych. 
-<br>
-<br>**W projekcie zastosowano następujące reguły walidacyjne**:
+Kolejnym krokiem w procesie walidacji jest zastosowanie określonych
+reguł logicznych, które zapewniają spójność danych. <br> <br>**W
+projekcie zastosowano następujące reguły walidacyjne**:
 
-1. Piętro (`Floor`) nie może być większe niż liczba kondygnacji (`FloorCount`).
-2. Rok budowy (`Build Year`) nie może być późniejszy niż bieżący rok (2024).
-3. Rok budowy (`Build Year`) musi być późniejszy niż 1600.
-4. Piętro (`Floor`) i liczba kondygnacji (`Floor Count`) muszą być większe lub równe 0.
-5. Liczba pokoi (`Rooms`) musi być większa niż 0 i nie może przekraczać 15.
-6. Jeżeli liczba kondygnacji (`Floor Count`) wynosi 0, to w takim budynku nie 
-powinno być windy (`Has Elevator`).
+1.  Piętro (`Floor`) nie może być większe niż liczba kondygnacji
+    (`FloorCount`).
+2.  Rok budowy (`Build Year`) nie może być późniejszy niż bieżący rok
+    (2024).
+3.  Rok budowy (`Build Year`) musi być późniejszy niż 1600.
+4.  Piętro (`Floor`) i liczba kondygnacji (`Floor Count`) muszą być
+    większe lub równe 0.
+5.  Liczba pokoi (`Rooms`) musi być większa niż 0 i nie może przekraczać
+    15.
+6.  Jeżeli liczba kondygnacji (`Floor Count`) wynosi 0, to w takim
+    budynku nie powinno być windy (`Has Elevator`).
 
-Dzięki weryfikacji typów danych oraz zastosowaniu reguł walidacyjnych, 
-upewniamy się, że dane są zgodne z określonymi kryteriami logicznymi 
-i są gotowe do dalszej analizy.
-
+Dzięki weryfikacji typów danych oraz zastosowaniu reguł walidacyjnych,
+upewniamy się, że dane są zgodne z określonymi kryteriami logicznymi i
+są gotowe do dalszej analizy.
 
 ```{r walidacja_wstępna_danych, echo=FALSE}
 
@@ -638,14 +646,15 @@ print(na_plot)
 })
 ```
 
-W wyniku przeprowadzonej walidacji zauważono, że w zbiorze danych występuje znaczna
-liczba **wartości brakujących (NA)**, <br> w niektórych kolumnach.
+W wyniku przeprowadzonej walidacji zauważono, że w zbiorze danych
+występuje znaczna liczba **wartości brakujących (NA)**, <br> w
+niektórych kolumnach.
 
 W dalszej części analizy planuje się ich imputację, przy czym wartości
-te zostaną zastąpione: 
+te zostaną zastąpione:
 
--  **medianą** dla zmiennych o **charakterze numerycznym**,
--  **modą** dla zmiennych o **charakterze kategorycznym**. 
+-   **medianą** dla zmiennych o **charakterze numerycznym**,
+-   **modą** dla zmiennych o **charakterze kategorycznym**.
 
 # **Data wrangling**
 
@@ -1397,6 +1406,93 @@ Wyniki te potwierdzają specyfikę rynku nieruchomości, gdzie typowe
 wartości są skoncentrowane w określonych zakresach, a odstępstwa
 wskazują na szczególne przypadki, które mogą być analizowane osobno.
 
+### Test Andersona-Darlinga
+
+Test Andersona-Darlinga jest statystycznym testem zgodności, który
+ocenia, jak dobrze dane pasują do określonego rozkładu teoretycznego.
+Zwykle stosuje się go do sprawdzenia zgodności z rozkładem normalnym.
+Jest modyfikacją testu Craméra-von Misesa dokonaną w celu poprawy jego
+czułości w „ogonach" testowanego rozkładu.
+
+#### **Hipotezy**
+
+Test Andersona-Darlinga przeprowadza się w celu sprawdzenia hipotez:
+
+-   **Hipoteza zerowa (**$H_0$): Dane pochodzą z określonego rozkładu
+    (np. normalnego, wykładniczego).
+
+-   **Hipoteza alternatywna (**$H_1$): Dane nie pochodzą z tego
+    rozkładu.
+
+#### **Funkcja testowa**
+
+Test Andersona-Darlinga oblicza statystykę testową $A^2$, która jest
+zdefiniowana jako:
+
+$$
+A^2 = -n - \sum_{i=1}^n \frac{2i - 1}{n} \left[ \ln(F(X_i)) + \ln(1 - F(X_{n+1-i})) \right]
+$$
+
+gdzie: - $n$ -- liczba obserwacji w próbie, - $F(x)$ - dystrybuanta
+rozkładu wzorcowego, - $X_{(i)}$ - i-ta zaobserwowana wartość w próbie
+uporządkowanej rosnąco
+
+Test Anderson-Darling przyjmuje zasadę, że jeżeli wartość p jest bardzo
+niska, niższa niż 0,05, wtedy przyjmuje się, że rozkład danych nie jest
+zgodny z rozkładem normalnym. Przyjmuje się takie założenie, jeżeli
+został przyjęty poziom istotności 0,05.
+
+```{r, echo=FALSE}
+normalnosc_price <- ad.test(dane$price)
+normalnosc_square_meters <- ad.test(dane$square_meters)
+normalnosc_centre_distance <- ad.test(dane$centre_distance)
+normalnosc_floor <- ad.test(dane$floor)
+normalnosc_floor_count <- ad.test(dane$floor_count)
+normalnosc_poi <- ad.test(dane$poi_count)
+normalnosc_school <- ad.test(dane$school_distance)
+normalnosc_kinder <- ad.test(dane$kindergarten_distance)
+normalnosc_clinic <- ad.test(dane$clinic_distance)
+normalnosc_post <- ad.test(dane$post_office_distance)
+normalnosc_restaurant <- ad.test(dane$restaurant_distance)
+normalnosc_college <- ad.test(dane$college_distance)
+normalnosc_pharmacy <- ad.test(dane$pharmacy_distance)
+normalnosc_age <- ad.test(dane$building_age)
+```
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+wyniki_normalnosci <- data.frame(
+  Zmienne = c("price", "square_meters", "centre_distance", "floor", "floor_count", "poi_count", "school_distance", 
+              "kindergarten_distance", "clinic_distance", "post_office_distance", "restaurant_distance", 
+              "college_distance", "pharmacy_distance", "building_age"),
+  Wartości_p_value = c(
+    format(normalnosc_price$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_square_meters$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_centre_distance$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_floor$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_floor_count$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_poi$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_school$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_kinder$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_clinic$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_post$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_restaurant$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_college$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_pharmacy$p.value, scientific = TRUE, digits = 4),
+    format(normalnosc_age$p.value, scientific = TRUE, digits = 4)
+  )
+)
+
+knitr::kable(wyniki_normalnosci, caption = "Wyniki testu Andersona-Darlinga")
+```
+
+Wyniki testu Andersona-Darlinga wskazują na ekstremalnie małe wartości
+$p$-value ($3.7 \times 10^{-24}$) dla wszystkich analizowanych
+zmiennych, co oznacza, że należy odrzucić hipotezę zerową zakładającą
+normalność rozkładu. Dane dla zmiennych takich jak
+`price, square_meters, centre_distance` i pozostałych znacząco odbiegają
+od rozkładu normalnego, co jest również widoczne na powyższych
+histogamach.
+
 ### Z-score
 
 ```{r z-score, echo = FALSE}
@@ -1475,7 +1571,6 @@ curve(dnorm(x, mean = mean(na.omit(dane$price)),
       col = "indianred2", 
       lwd = 2, 
       add = TRUE)
-
 ```
 
 ```{r transformacja_price_per_square_meter, echo = FALSE, fig.height=4, fig.width=8}
@@ -1611,15 +1706,36 @@ rzeczywistości i kontekstu analizy.
 # **Ponowna Walidacja Danych**
 
 <p style="text-align: justify;">
-Po przeprowadzeniu **pierwszej, wstępnej walidacji**, która ujawniła **znaczną liczbę brakujących danych (NA)** w zbiorze, zdecydowano się na przeprowadzenie **kolejnej, bardziej szczegółowej analizy**, aby upewnić się, że dokonana **imputacja** została prawidłowo wykonana, a dane są spójne i gotowe do dalszej obróbki. **Celem ponownej walidacji** jest weryfikacja skuteczności uzupełniania brakujących wartości oraz sprawdzenie, czy po tej operacji dane są spójne z przyjętymi regułami. 
+
+Po przeprowadzeniu **pierwszej, wstępnej walidacji**, która ujawniła
+**znaczną liczbę brakujących danych (NA)** w zbiorze, zdecydowano się na
+przeprowadzenie **kolejnej, bardziej szczegółowej analizy**, aby upewnić
+się, że dokonana **imputacja** została prawidłowo wykonana, a dane są
+spójne i gotowe do dalszej obróbki. **Celem ponownej walidacji** jest
+weryfikacja skuteczności uzupełniania brakujących wartości oraz
+sprawdzenie, czy po tej operacji dane są spójne z przyjętymi regułami.
+
 </p>
 
 <p style="text-align: justify;">
-W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych numerycznych i kategorycznych **(mediana i moda)** zostały odpowiednio dobrane, a także czy nie wprowadziły nowych niezgodności w danych. Ponadto zweryfikowano, czy po przeprowadzonej imputacji i innych korektach, dane są logicznie spójne, a reguły dotyczące relacji między zmiennymi, takie jak zgodność zmiennych `floor` i `floor_count`, zostały właściwie zastosowane.
+
+W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych
+numerycznych i kategorycznych **(mediana i moda)** zostały odpowiednio
+dobrane, a także czy nie wprowadziły nowych niezgodności w danych.
+Ponadto zweryfikowano, czy po przeprowadzonej imputacji i innych
+korektach, dane są logicznie spójne, a reguły dotyczące relacji między
+zmiennymi, takie jak zgodność zmiennych `floor` i `floor_count`, zostały
+właściwie zastosowane.
+
 </p>
 
 <p style="text-align: justify;">
-**Druga walidacja** ma na celu zapewnienie, że dane są w pełni spójne i zgodne z wymaganiami, eliminując ryzyko wystąpienia problemów, które mogłyby wpływać na jakość dalszej analizy. Dzięki tym czynnościom dane będą gotowe do kolejnych etapów analizy i przetwarzania.
+
+**Druga walidacja** ma na celu zapewnienie, że dane są w pełni spójne i
+zgodne z wymaganiami, eliminując ryzyko wystąpienia problemów, które
+mogłyby wpływać na jakość dalszej analizy. Dzięki tym czynnościom dane
+będą gotowe do kolejnych etapów analizy i przetwarzania.
+
 </p>
 
 ```{r walidacja_kontrolna_danych, echo=FALSE}
@@ -1662,11 +1778,12 @@ ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
 
 W procesie walidacji danych większość reguł została spełniona, jednak w
 przypadku jednej reguły, dotyczącej zgodności zmiennych `floor` i
-`floor_count`, wykryto **545 nieprawidłowych obserwacji**, które wymagają
-dalszej analizy i korekty. Zgodnie z regułą, wartości `floor` nie powinny
-przekraczać wartości `floor_count`, co jest kluczowe dla spójności danych.
-Pozostałe reguły zostały prawidłowo zastosowane i **nie wykryto żadnych
-innych istotnych problemów** w analizowanych danych.
+`floor_count`, wykryto **545 nieprawidłowych obserwacji**, które
+wymagają dalszej analizy i korekty. Zgodnie z regułą, wartości `floor`
+nie powinny przekraczać wartości `floor_count`, co jest kluczowe dla
+spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i
+**nie wykryto żadnych innych istotnych problemów** w analizowanych
+danych.
 
 </p>
 
@@ -1681,15 +1798,15 @@ umożliwiającym dalsze etapy weryfikacji danych.
 
 <p style="text-align: justify;">
 
-Błędy w danych `floor` i `floor_count` mogą wynikać z błędnie uzupełnionych
-wartości lub **nieaktualnych danych** (budynki mogły zmienić liczbę
-kondygnacji po modernizacji). Aby poprawić te błędy, przyjęto zasadę, że
-w takich sytuacjach wartość liczby kondygnacji (`floor_count`) zostanie
-ustawiona na wartość piętra (`floor`). Jeśli wartość liczby kondygnacji
-była równa lub większa od wartości piętra, dane pozostały niezmienione.
-Taka korekta zapewnia **spójność danych** i eliminuje przypadki, w których
-piętro przewyższa liczbę kondygnacji w budynku.**Nie znaleziono duplikatów
-wierszy w danych**.
+Błędy w danych `floor` i `floor_count` mogą wynikać z błędnie
+uzupełnionych wartości lub **nieaktualnych danych** (budynki mogły
+zmienić liczbę kondygnacji po modernizacji). Aby poprawić te błędy,
+przyjęto zasadę, że w takich sytuacjach wartość liczby kondygnacji
+(`floor_count`) zostanie ustawiona na wartość piętra (`floor`). Jeśli
+wartość liczby kondygnacji była równa lub większa od wartości piętra,
+dane pozostały niezmienione. Taka korekta zapewnia **spójność danych** i
+eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w
+budynku.**Nie znaleziono duplikatów wierszy w danych**.
 
 </p>
 
@@ -1994,58 +2111,100 @@ grid.arrange(p3, p4, p5, nrow = 2)
 
 #### Wpływ balkonu na cenę mieszkań
 
-Balkon jest jednym z kluczowych elementów wpływających na wartość mieszkania, zwłaszcza w dużych miastach.
+Balkon jest jednym z kluczowych elementów wpływających na wartość
+mieszkania, zwłaszcza w dużych miastach.
 
-- W **Warszawie** i **Krakowie**, mieszkania z balkonem mają wyraźnie wyższe mediany cen w porównaniu do mieszkań bez tego udogodnienia. Może to wynikać z zapotrzebowania na przestrzeń zewnętrzną w dużych aglomeracjach, gdzie dostęp do terenów zielonych bywa ograniczony.
-- W miastach takich jak **Radom**, **Rzeszów** i **Częstochowa**, różnice w medianach cen są mniej wyraźne, co wskazuje, że balkon w tych lokalizacjach jest czynnikiem mniej istotnym.
-- Warto zauważyć, że rozrzut cen w grupie mieszkań z balkonem jest mniejszy, co może świadczyć o większej standaryzacji tej grupy mieszkań pod względem ceny.
-
+-   W **Warszawie** i **Krakowie**, mieszkania z balkonem mają wyraźnie
+    wyższe mediany cen w porównaniu do mieszkań bez tego udogodnienia.
+    Może to wynikać z zapotrzebowania na przestrzeń zewnętrzną w dużych
+    aglomeracjach, gdzie dostęp do terenów zielonych bywa ograniczony.
+-   W miastach takich jak **Radom**, **Rzeszów** i **Częstochowa**,
+    różnice w medianach cen są mniej wyraźne, co wskazuje, że balkon w
+    tych lokalizacjach jest czynnikiem mniej istotnym.
+-   Warto zauważyć, że rozrzut cen w grupie mieszkań z balkonem jest
+    mniejszy, co może świadczyć o większej standaryzacji tej grupy
+    mieszkań pod względem ceny.
 
 #### Wpływ windy na cenę mieszkań
 
-Obecność windy ma istotne znaczenie dla wartości mieszkań, szczególnie w nowoczesnych budynkach i wyższych kondygnacjach.
+Obecność windy ma istotne znaczenie dla wartości mieszkań, szczególnie w
+nowoczesnych budynkach i wyższych kondygnacjach.
 
-- **Warszawa**, **Kraków** i **Rzeszów** charakteryzują się znaczącą różnicą w medianach cen mieszkań z i bez windy, co wskazuje na preferencje kupujących związane z wygodą użytkowania. Winda może być szczególnie istotna w budynkach wielopiętrowych.
-- W mniejszych miastach, takich jak **Radom** i **Częstochowa**, różnice w medianach są mniej zauważalne, co może sugerować, że winda nie jest tam równie cenionym udogodnieniem.
-- Rozrzut cen mieszkań bez windy jest większy, co może świadczyć o różnorodności oferty mieszkań w tej grupie.
-
+-   **Warszawa**, **Kraków** i **Rzeszów** charakteryzują się znaczącą
+    różnicą w medianach cen mieszkań z i bez windy, co wskazuje na
+    preferencje kupujących związane z wygodą użytkowania. Winda może być
+    szczególnie istotna w budynkach wielopiętrowych.
+-   W mniejszych miastach, takich jak **Radom** i **Częstochowa**,
+    różnice w medianach są mniej zauważalne, co może sugerować, że winda
+    nie jest tam równie cenionym udogodnieniem.
+-   Rozrzut cen mieszkań bez windy jest większy, co może świadczyć o
+    różnorodności oferty mieszkań w tej grupie.
 
 #### Wpływ parkingu na cenę mieszkań
 
-Analiza wskazuje, że obecność parkingu jest istotnym czynnikiem wpływającym na medianę cen mieszkań, szczególnie w większych aglomeracjach. 
+Analiza wskazuje, że obecność parkingu jest istotnym czynnikiem
+wpływającym na medianę cen mieszkań, szczególnie w większych
+aglomeracjach.
 
-- **Warszawa** wykazuje najwyższą medianę cen dla mieszkań z parkingiem, co może sugerować, że dostępność parkingu w stolicy jest szczególnie pożądana przez nabywców. 
-- W miastach takich jak **Kraków** i **Rzeszów**, różnica między cenami mieszkań z parkingiem i bez jest również wyraźna, choć nie tak wysoka jak w Warszawie. Może to wynikać z urbanistycznych potrzeb mieszkańców.
-- **Częstochowa** i **Radom** charakteryzują się stosunkowo niewielką różnicą w medianach cen, co wskazuje na mniejsze znaczenie parkingu jako czynnika wpływającego na decyzje zakupowe.
-- Rozrzut cen (odchylenie) w grupie mieszkań bez parkingu jest większy, co może wskazywać na większą różnorodność mieszkań w tej grupie pod względem lokalizacji, standardu i powierzchni.
-
+-   **Warszawa** wykazuje najwyższą medianę cen dla mieszkań z
+    parkingiem, co może sugerować, że dostępność parkingu w stolicy jest
+    szczególnie pożądana przez nabywców.
+-   W miastach takich jak **Kraków** i **Rzeszów**, różnica między
+    cenami mieszkań z parkingiem i bez jest również wyraźna, choć nie
+    tak wysoka jak w Warszawie. Może to wynikać z urbanistycznych
+    potrzeb mieszkańców.
+-   **Częstochowa** i **Radom** charakteryzują się stosunkowo niewielką
+    różnicą w medianach cen, co wskazuje na mniejsze znaczenie parkingu
+    jako czynnika wpływającego na decyzje zakupowe.
+-   Rozrzut cen (odchylenie) w grupie mieszkań bez parkingu jest
+    większy, co może wskazywać na większą różnorodność mieszkań w tej
+    grupie pod względem lokalizacji, standardu i powierzchni.
 
 #### Wpływ ochrony na cenę mieszkań
 
-Obecność ochrony na terenie nieruchomości jest silnym czynnikiem zwiększającym wartość mieszkań w dużych i dynamicznie rozwijających się miastach.
+Obecność ochrony na terenie nieruchomości jest silnym czynnikiem
+zwiększającym wartość mieszkań w dużych i dynamicznie rozwijających się
+miastach.
 
-- W takich lokalizacjach jak **Warszawa** i **Kraków**, mieszkania z ochroną osiągają zauważalnie wyższe ceny, co świadczy o znaczeniu bezpieczeństwa w decyzjach zakupowych. 
-- **Radom** i **Częstochowa** wykazują niewielkie różnice w medianach cen mieszkań z i bez ochrony, co sugeruje, że w mniejszych miastach czynniki takie jak lokalizacja i stan techniczny nieruchomości mogą być ważniejsze niż bezpieczeństwo.
-- Analiza rozrzutu cen pokazuje, że mieszkania z ochroną charakteryzują się mniejszym odchyleniem standardowym, co oznacza większą stabilność cenową w tej grupie.
-
+-   W takich lokalizacjach jak **Warszawa** i **Kraków**, mieszkania z
+    ochroną osiągają zauważalnie wyższe ceny, co świadczy o znaczeniu
+    bezpieczeństwa w decyzjach zakupowych.
+-   **Radom** i **Częstochowa** wykazują niewielkie różnice w medianach
+    cen mieszkań z i bez ochrony, co sugeruje, że w mniejszych miastach
+    czynniki takie jak lokalizacja i stan techniczny nieruchomości mogą
+    być ważniejsze niż bezpieczeństwo.
+-   Analiza rozrzutu cen pokazuje, że mieszkania z ochroną
+    charakteryzują się mniejszym odchyleniem standardowym, co oznacza
+    większą stabilność cenową w tej grupie.
 
 #### Wpływ komórki lokatorskiej na cenę mieszkań
 
-Komórka lokatorska stanowi ważny element funkcjonalności nieruchomości, szczególnie w bardziej zatłoczonych miastach, gdzie przestrzeń dodatkowa ma istotne znaczenie.
+Komórka lokatorska stanowi ważny element funkcjonalności nieruchomości,
+szczególnie w bardziej zatłoczonych miastach, gdzie przestrzeń dodatkowa
+ma istotne znaczenie.
 
-- **Warszawa**, **Kraków** i **Rzeszów** wykazują wyraźne różnice w medianach cen mieszkań z i bez komórki lokatorskiej. W tych miastach komórka lokatorska może być postrzegana jako istotne udogodnienie, które podnosi wartość użytkową mieszkania.
-- W miastach takich jak **Radom** i **Częstochowa**, różnice w medianach są mniej wyraźne, co sugeruje, że lokalne preferencje zakupowe mogą nie uwzględniać tego udogodnienia jako kluczowego.
-- Rozrzut cen mieszkań bez komórki lokatorskiej jest większy, co może sugerować większą różnorodność w tej grupie pod względem lokalizacji i standardu nieruchomości.
-
+-   **Warszawa**, **Kraków** i **Rzeszów** wykazują wyraźne różnice w
+    medianach cen mieszkań z i bez komórki lokatorskiej. W tych miastach
+    komórka lokatorska może być postrzegana jako istotne udogodnienie,
+    które podnosi wartość użytkową mieszkania.
+-   W miastach takich jak **Radom** i **Częstochowa**, różnice w
+    medianach są mniej wyraźne, co sugeruje, że lokalne preferencje
+    zakupowe mogą nie uwzględniać tego udogodnienia jako kluczowego.
+-   Rozrzut cen mieszkań bez komórki lokatorskiej jest większy, co może
+    sugerować większą różnorodność w tej grupie pod względem lokalizacji
+    i standardu nieruchomości.
 
 #### Podsumowanie
 
-1.**Balkon:** Istotny czynnik w Warszawie i Krakowie, gdzie dostęp do przestrzeni zewnętrznej jest ograniczony.<br>
-2.**Winda:** Znaczący wpływ na wartość mieszkań, szczególnie w dużych miastach z nowoczesną zabudową.<br>
-3.**Parking:** Kluczowy czynnik w dużych miastach, zwłaszcza w Warszawie, gdzie dostępność miejsc parkingowych jest ograniczona.<br>
-4.**Ochrona:** Wysoko cenione w dużych aglomeracjach, szczególnie tam, gdzie bezpieczeństwo jest priorytetem.<br>
-5.**Komórka lokatorska:** Ważna w miastach o wysokim zagęszczeniu, gdzie przestrzeń przechowywania ma istotne znaczenie.<br>
-
+1.**Balkon:** Istotny czynnik w Warszawie i Krakowie, gdzie dostęp do
+przestrzeni zewnętrznej jest ograniczony.<br> 2.**Winda:** Znaczący
+wpływ na wartość mieszkań, szczególnie w dużych miastach z nowoczesną
+zabudową.<br> 3.**Parking:** Kluczowy czynnik w dużych miastach,
+zwłaszcza w Warszawie, gdzie dostępność miejsc parkingowych jest
+ograniczona.<br> 4.**Ochrona:** Wysoko cenione w dużych aglomeracjach,
+szczególnie tam, gdzie bezpieczeństwo jest priorytetem.<br> 5.**Komórka
+lokatorska:** Ważna w miastach o wysokim zagęszczeniu, gdzie przestrzeń
+przechowywania ma istotne znaczenie.<br>
 
 ### **Sylwetka Gdańska**
 
@@ -2202,7 +2361,9 @@ infrastruktury.
 
 </p>
 
-```{r, echo=FALSE, comment=FALSE, warning=FALSE}
+# **Analiza czynników geogaficznych wpływających na ceny mieszkań**
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
 
 ggplot(dane_filtr, aes(x = centre_distance, y = price)) +
   geom_point(alpha = 0.5, color = "plum") +
@@ -2257,6 +2418,8 @@ korelacje_cena_odl <- dane_filtr %>%
     korelacja = cor(centre_distance, price) 
   )
 knitr::kable(korelacje_cena_odl, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od centrum miasta a ceną mieszkań")
+
+oj <- dane_filtr$price
 ```
 
 Tabela przedstawia współczynniki korelacji między odległością od centrum
