@@ -2363,6 +2363,8 @@ infrastruktury.
 
 # **Analiza czynników geogaficznych wpływających na ceny mieszkań**
 
+## Odległość od centrum
+
 ```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
 
 ggplot(dane_filtr, aes(x = centre_distance, y = price)) +
@@ -2411,6 +2413,8 @@ są wyższe. W mniejszych miastach, takich jak Radom czy Białystok,
 odległość od centrum nie ma tak dużego wpływu na ceny mieszkań, a inne
 czynniki mogą dominować w kształtowaniu wartości nieruchomości.
 
+---
+
 ```{r, echo=FALSE, results='asis', eval=TRUE}
 korelacje_cena_odl <- dane_filtr %>%
   group_by(city) %>% 
@@ -2418,8 +2422,6 @@ korelacje_cena_odl <- dane_filtr %>%
     korelacja = cor(centre_distance, price) 
   )
 knitr::kable(korelacje_cena_odl, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od centrum miasta a ceną mieszkań")
-
-oj <- dane_filtr$price
 ```
 
 Tabela przedstawia współczynniki korelacji między odległością od centrum
@@ -2450,3 +2452,389 @@ dodatnia), gdzie wartość 0 oznacza brak korelacji.
 6.  **Radom**:
     -   Praktycznie brak korelacji. Oznacza to, że w Radomiu odległość
         od centrum nie ma znaczącego wpływu na ceny mieszkań.
+        
+---
+        
+## Odległość od szkoły
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
+ggplot(dane_filtr, aes(x = school_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "navyblue") +
+  geom_smooth(method = "lm", color = "peachpuff", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od szkół na ceny mieszkań",
+    x = "Odległość od szkół (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+```
+
+#### Ogólne wnioski:
+
+1.  **Warszawa i Kraków**:
+    -   W KRakowie możemy zauważyć, że linia jest lekko nachylona w dół co sugeruje nam, że lokalizacja
+        bliżej szkół jest kluczowym czynnikiem wpływającym na cenę.
+        W przypadku Warszawy linia jest nachylona w górę co może świadczyć
+        że wraz ze wzrostem odległości od szkół, ceny mieszkań rosną.
+2.  **Częstochowa, Radom, Białystok, Rzeszów**:
+    -   W mniejszych miastach, takich jak Radom, Rzeszów czy 
+    Częstochowa, linie regresji są nachylone w górę, co sugeruje 
+    zależność – ceny mieszkań mogą nieco rosnąć wraz z 
+    odległością od szkół. To może wynikać z preferencji mieszkańców, 
+    którzy wolą spokojniejsze rejony z dala od szkół.
+
+3.  **Rozrzut danych**:
+    - Warszawa i Kraków charakteryzują się większym rozproszeniem
+    cen mieszkań w stosunku do odległości od szkół, co może wskazywać
+    na różnorodność lokalnych czynników wpływających na ceny. W mniejszych
+    miastach rozrzut jest mniejszy, a ceny są bardziej przewidywalne.
+
+#### Interpretacja:
+
+Bliskość szkół wydaje się wpływać na wyższe ceny mieszkań w Warszawie i Krakowie, co sugeruje, że dla mieszkańców tych miast istotna jest łatwość dostępu do placówek edukacyjnych, zwłaszcza dla rodzin z dziećmi. W mniejszych miastach, takich jak Radom, Rzeszów czy Białystok, wpływ odległości od szkół na ceny mieszkań jest mniej wyraźny lub odwrotny. W tych lokalizacjach mieszkańcy mogą preferować spokojniejsze rejony z dala od szkół, co może sugerować lekkie wzrosty cen wraz z oddaleniem od placówek edukacyjnych.
+
+---
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_odl_school <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(school_distance, price) 
+  )
+knitr::kable(korelacje_cena_odl, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od szkół a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od szkół
+a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+
+1. **Białystok**  
+    - Słaba, ale pozytywna korelacja oznacza, że wraz ze wzrostem odległości od uczelni ceny mieszkań **nieznacznie rosną**. Preferencja dla spokojniejszych lokalizacji oddalonych od uczelni, choć efekt jest minimalny.
+
+2. **Częstochowa**  
+    - Umiarkowanie pozytywna korelacja wskazuje, że mieszkania dalej od uczelni są wyraźnie droższe. Cichsze lokalizacje są bardziej pożądane niż te blisko uczelni.
+
+3. **Kraków**  
+    - Korelacja jest **negatywna i bliska zeru**, co oznacza, że mieszkania bliżej uczelni są **nieco droższe**. W mieście akademickim, jak Kraków, bliskość uczelni jest ważnym atutem.
+
+4. **Radom**  
+    - Słaba pozytywna korelacja wskazuje, że ceny mieszkań **lekko rosną z odległością od uczelni**. Bliskość uczelni nie jest kluczowym czynnikiem wpływającym na ceny.
+
+5. **Rzeszów**  
+    - Słaba pozytywna korelacja oznacza, że ceny mieszkań **lekko rosną z odległością od uczelni**. Preferencje mogą skłaniać się ku lokalizacjom oddalonym od uczelni, choć różnice są niewielkie.
+  
+6. **Warszawa**  
+    - Korelacja jest **bliska zeru**, co oznacza, że odległość od uczelni praktycznie **nie wpływa na ceny mieszkań**. W dużym rynku warszawskim ważniejsze są inne czynniki, np. lokalizacja dzielnicy czy standard mieszkania.
+
+---
+
+## Odległość od kliniki
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
+ggplot(dane_filtr, aes(x = clinic_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "tomato") +
+  geom_smooth(method = "lm", color = "lightgreen", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od klinik na ceny mieszkań",
+    x = "Odległość od klinik (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+```
+
+#### Ogólne wnioski:  
+
+1. **Warszawa i Kraków**:  
+   - W tych dużych miastach widoczny jest wyraźny spadek cen mieszkań wraz ze wzrostem odległości od klinik (nachylenie linii regresji jest ujemne). Może to sugerować, że w Warszawie i Krakowie bliskość do placówek medycznych jest ważnym czynnikiem podnoszącym wartość mieszkań.
+
+2. **Częstochowa, Radom, Białystok i Rzeszów**:  
+   - W mniejszych miastach (np. Radom, Rzeszów, Częstochowa) linie regresji są lekko nachylone w górę, co oznacza, że w tych lokalizacjach ceny mieszkań mogą wzrastać wraz z odległością od klinik. Warto jednak zauważyć, że wpływ ten jest minimalny, co może wskazywać na brak wyraźnej zależności.
+
+3. **Rozrzut danych**:  
+   - W większych miastach (np. Warszawa, Kraków) dane są bardziej rozproszone, co świadczy o większej różnorodności cen mieszkań w zależności od odległości. W mniejszych miastach punkty są bardziej skupione, co oznacza mniej zróżnicowane ceny mieszkań.
+
+
+#### Interpretacja:
+
+W dużych miastach, takich jak Warszawa i Kraków, odległość od klinik ma wyraźny wpływ na ceny mieszkań – im bliżej klinik, tym wyższe ceny. Wskazuje to na duże znaczenie bliskości do placówek medycznych w kształtowaniu wartości nieruchomości w tych aglomeracjach. W mniejszych miastach, takich jak Radom, Częstochowa czy Białystok, ta zależność jest mniej widoczna lub wręcz odwrotna. Ceny mieszkań mogą tam wzrastać wraz z odległością od klinik, choć wpływ ten jest słaby. Może to wynikać z mniejszego nacisku na dostępność medyczną w tych lokalizacjach.
+
+---
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_clinic <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(clinic_distance, price) 
+  )
+knitr::kable(korelacje_cena_clinic, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od klinik a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od klinik
+a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+1. **Białystok**  
+    - Bardzo słaba pozytywna korelacja. Odległość od klinik praktycznie **nie wpływa na ceny mieszkań**. Może to wynikać z równej dostępności usług medycznych w całym mieście.
+
+2. **Częstochowa**  
+    - Umiarkowana pozytywna korelacja. Mieszkania w większej odległości od klinik są droższe, co może sugerować, że mieszkańcy preferują lokalizacje w cichszych i spokojniejszych rejonach miasta, z dala od klinik.
+
+3. **Kraków**  
+    - Słaba negatywna korelacja. Wraz ze wzrostem odległości od klinik ceny mieszkań **spadają**, co może wskazywać, że bliskość do placówek medycznych jest ceniona przez mieszkańców Krakowa. 
+
+4. **Radom**  
+    - Słaba pozytywna korelacja.Mieszkania w większej odległości od klinik są nieco droższe. Podobnie jak w przypadku Częstochowy, może to wynikać z preferencji dla spokojniejszych rejonów.
+
+5. **Rzeszów**  
+    - Umiarkowana pozytywna korelacja. Ceny mieszkań **rosną wraz z odległością od klinik**, co sugeruje, że bliskość do klinik nie jest kluczowym czynnikiem wpływającym na wartość mieszkań w Rzeszowie.
+
+6. **Warszawa**  
+    - Bardzo słaba negatywna korelacja. Mieszkania bliżej klinik są nieco droższe, co może wskazywać na większą wartość lokalizacji z łatwym dostępem do opieki medycznej, ale efekt ten jest minimalny.
+  
+---
+
+## Odległość od poczty
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
+ggplot(dane_filtr, aes(x = post_office_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "darkolivegreen3") +
+  geom_smooth(method = "lm", color = "dodgerblue1", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od poczty na ceny mieszkań",
+    x = "Odległość od poczty (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+```
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_post <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(post_office_distance, price) 
+  )
+knitr::kable(korelacje_cena_post, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od poczty a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od poczty
+a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+1. **Białystok**  
+    - Słaba pozytywna korelacja.Mieszkania w większej odległości od poczty są nieco droższe. Może to wynikać z faktu, że poczty znajdują się głównie w centralnych, tańszych rejonach miasta.
+
+2. **Częstochowa**  
+    - Słaba, ale wyraźniejsza pozytywna korelacja. Ceny mieszkań wzrastają wraz z odległością od poczty. Może to oznaczać, że bardziej prestiżowe lokalizacje znajdują się poza obszarami intensywnie zabudowanymi, gdzie zlokalizowane są poczty.
+
+3. **Kraków**  
+    - Bardzo słaba pozytywna korelacja. Odległość od poczty ma praktycznie **żaden wpływ na ceny mieszkań**. Dostępność tej infrastruktury jest prawdopodobnie wyrównana w całym mieście.
+
+4. **Radom**  
+    - Słaba pozytywna korelacja. Mieszkania w dalszej odległości od poczty są nieznacznie droższe, ale wpływ odległości na cenę mieszkań jest bardzo niewielki.
+
+5. **Rzeszów**  
+    - Umiarkowana pozytywna korelacja. Ceny mieszkań rosną wraz z odległością od poczty. Może to świadczyć o większej atrakcyjności osiedli oddalonych od gęsto zabudowanych obszarów z infrastrukturą miejską.
+
+6. **Warszawa**  
+    - Bardzo słaba negatywna korelacja. Odległość od poczty **praktycznie nie wpływa** na ceny mieszkań, choć mieszkania bliżej poczty mogą być nieznacznie droższe. W dużym mieście, jak Warszawa, bliskość poczty jest mało istotnym czynnikiem.
+
+---
+
+## Odległość od przedszkoli
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
+ggplot(dane_filtr, aes(x = kindergarten_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "thistle") +
+  geom_smooth(method = "lm", color = "violetred4", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od przedszkoli na ceny mieszkań",
+    x = "Odległość od przedszkoli (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+```
+
+#### Ogólne wnioski:
+
+1.  **Warszawa i Kraków**:
+    -   W obu miastach widać, że linia regresji jest nachylona w górę, jednak w przypadku Krakowa
+    nachylenie to jest zdecydowanie większę niż w Warszawie. Sugeruje to, że wraz ze
+        wzrostem odległości od przedszkoli ceny mieszkań delikatnie rosną,
+        choć zależność nie jest silna.
+2.  **Częstochowa, Radom**:
+    -   W tych miastach linie regresji są prawie płaskie lub lekko
+        nachylone w górę, co sugeruje brak wyraźnej zależności między
+        odległością od centrum a ceną. Może to wskazywać, że w
+        mniejszych miastach czynniki takie jak standard mieszkania lub
+        lokalne preferencje mogą odgrywać większą rolę niż sama
+        odległość od centrum.
+3.  **Białystok, Rzeszów**:
+    -   W przypadku Rzeszowa widzimy, że linia jest nachylona w górę,
+        oznacza to, że wraz ze wzrostem odległości od przedszkoli,
+        ceny mieszkań rosną. Białystok również cechuje się linią
+        praktycznie poziomą co oznacza, że nie jest to kluczowy 
+        czynnik wpływający na cenę mieszkań. 
+4.  **Rozrzut danych**:
+    - Dane są gęsto skupione blisko początku osi X (odległość do 0,5–2 km). 
+    To sugeruje, że większość mieszkań znajduje się blisko przedszkoli. W miastach 
+    takich jak Kraków i Warszawa dane są bardziej rozproszone w porównaniu z 
+    mniejszymi miastami.
+
+---
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_przed <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(kindergarten_distance, price) 
+  )
+knitr::kable(korelacje_cena_przed, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od przedszkoli a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od przedszkoli
+a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+1. **Białystok**  
+    - Bardzo słaba pozytywna korelacja. Odległość od przedszkoli **praktycznie nie wpływa** na ceny mieszkań. Dostępność przedszkoli wydaje się być równomierna w różnych rejonach miasta.
+
+2. **Częstochowa**  
+    - Bardzo słaba pozytywna korelacja. Odległość od przedszkoli **ma minimalny wpływ** na ceny mieszkań. Bliskość przedszkoli nie jest istotnym czynnikiem w tym mieście.
+
+3. **Kraków**  
+    - Słaba pozytywna korelacja. Mieszkania w większej odległości od przedszkoli są nieco droższe, ale wpływ ten jest niewielki. Może to wynikać z tego, że bardziej prestiżowe lokalizacje są dalej od typowych osiedli z przedszkolami.
+
+4. **Radom**  
+    - Słaba pozytywna korelacja. Ceny mieszkań rosną wraz z odległością od przedszkoli, choć wpływ jest niewielki. Może to oznaczać, że mieszkańcy cenią spokój i wolą lokalizacje oddalone od instytucji dla dzieci.
+
+5. **Rzeszów**  
+    - Słaba, ale wyraźniejsza pozytywna korelacja. Mieszkania w większej odległości od przedszkoli są droższe. Może to sugerować, że droższe dzielnice są mniej gęsto zabudowane i znajdują się dalej od takich instytucji.
+
+6. **Warszawa**  
+    - Bardzo słaba pozytywna korelacja. Odległość od przedszkoli ma **praktycznie żaden wpływ** na ceny mieszkań. W Warszawie bliskość przedszkoli nie jest kluczowym czynnikiem dla wartości nieruchomości.
+
+---
+
+## Odległość od restauracji
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
+ggplot(dane_filtr, aes(x = restaurant_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "cornflowerblue") +
+  geom_smooth(method = "lm", color = "yellow", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od restauracji na ceny mieszkań",
+    x = "Odległość od restauracji (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+
+```
+
+
+#### Ogólne wnioski:
+
+1. **Warszawa i Kraków**
+    - W **Warszawie** i **Krakowie** zauważalne jest, że odległość od restauracji ma delikatnie **ujemny wpływ na ceny mieszkań** – im dalej restauracji, tym ceny mieszkań są niższe To może sugerować, że bliskość restauracji jest postrzegana jako atut przez mieszkańców i inwestorów. W obu miastach skupisko punktów w bliskiej odległości od restauracji sugeruje dużą gęstość ofert mieszkań w pobliżu gastronomii.
+
+2. **Rzeszów i Białystok**
+    - W obu miastach wpływ odległości od restauracji na ceny mieszkań jest **praktycznie neutralny** (linia trendu jest lekko nachylona). To sugeruje, że bliskość gastronomii nie jest istotnym czynnikiem wpływającym na ceny. Widać skupisko punktów w okolicach niewielkich odległości od restauracji, co może wynikać z niewielkich odległości w tych miastach.
+
+3. **Częstochowa i Radom**
+    - Radom cechuje się linią nachyloną ku górze co świadczy o tym, że wraz ze wzrostem odległości od restauracji. W Częstochowie linia jet niemalże pozioma. To sugeruje, że bliskość gastronomii nie jest istotnym czynnikiem wpływającym na ceny.
+  
+4.  **Rozrzut danych**:
+    - W miastach takich jak Warszawa, Rzeszów, Częstochowa, Kraków widać większy rozrzut cen (punkty są bardziej rozproszone), co oznacza, że mieszkania w tych miastach mają znacznie większe zróżnicowanie cen.
+
+---
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_restau <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(restaurant_distance, price) 
+  )
+knitr::kable(korelacje_cena_restau, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od restauracji a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od restauracji
+a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+1. **Białystok**  
+      - Bardzo słaba pozytywna korelacja. Odległość od restauracji ma **minimalny wpływ** na ceny mieszkań, sugerując, że dostępność restauracji nie jest istotnym czynnikiem przy wycenie nieruchomości w tym mieście.
+
+2. **Częstochowa**  
+      - Bardzo słaba negatywna korelacja. W praktyce odległość od restauracji **nie wpływa** na ceny mieszkań. Może to wynikać z równomiernego rozmieszczenia restauracji w całym mieście.
+
+3. **Kraków**  
+      - Słaba negatywna korelacja. Mieszkania bliżej restauracji są nieco droższe. Może to oznaczać, że lokale gastronomiczne znajdują się głównie w centralnych, droższych dzielnicach miasta, co wpływa na wartość nieruchomości.
+
+4. **Radom**  
+      - Słaba pozytywna korelacja. Mieszkania oddalone od restauracji są nieco droższe, co może sugerować, że bardziej prestiżowe lub spokojne lokalizacje znajdują się dalej od stref z gastronomią.
+
+5. **Rzeszów**  
+      - Bardzo słaba pozytywna korelacja. Odległość od restauracji **ma niewielki wpływ** na ceny mieszkań. Może to wynikać z preferencji mieszkańców lub rozmieszczenia restauracji w mieście.
+
+6. **Warszawa**  
+      - Słaba negatywna korelacja. Mieszkania bliżej restauracji są nieco droższe. Może to oznaczać, że restauracje są zlokalizowane głównie w bardziej atrakcyjnych dzielnicach, co podnosi wartość nieruchomości w ich pobliżu.
+
+
+---
+
+## Odległość od uczelni
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
+ggplot(dane_filtr, aes(x = college_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "indianred1") +
+  geom_smooth(method = "lm", color = "darkgrey", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od uczelni na ceny mieszkań",
+    x = "Odległość od uczelni (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+```
+
+
+#### Ogólne wnioski:
+
+1. **Warszawa i Kraków**
+      - W obu miastach (szczególnie w **Warszawie**) odległość od uczelni również wykazuje lekki **ujemny wpływ** – mieszkania bliżej uczelni są droższe. W **Krakowie** efekt jest bardziej widoczny, co może wynikać z charakteru miasta akademickiego, gdzie bliskość uczelni jest silnym czynnikiem wpływającym na rynek nieruchomości.
+
+2. **Rzeszów i Białystok**
+      - W przypadku obu miast odległość od uczelni również nie ma wyraźnego wpływu na ceny mieszkań (trend jest lekko skierowany ku górze). Oznacza to, że w tych miastach bliskość uczelni nie jest kluczowym czynnikiem. Możliwe, że mniejsza liczba studentów lub rozłożenie uczelni na różne obszary powoduje brak zauważalnego trendu.
+
+3. **Częstochowa i Radom**
+      - Zarówno w **Częstochowie**, jak i w **Radomiu**, linia trendu sugeruje **nieznaczny pozytywny wpływ**. Możliwe, że bliskość uczelni w tych miastach nie jest atutem, a bardziej liczą się spokojniejsze lokalizacje.
+
+4.  **Rozrzut danych**:
+      - W miastach takich jak Warszawa czy Kraków widać większy rozrzut cen (punkty są bardziej rozproszone), co oznacza, że mieszkania w tych miastach mają znacznie większe zróżnicowanie cen.
+
+
+
+## Odległość od aptek
+
+```{r, echo=FALSE, comment=FALSE, warning=FALSE, message=FALSE}
+ggplot(dane_filtr, aes(x = pharmacy_distance, y = price)) +
+  geom_point(alpha = 0.5, color = "forestgreen") +
+  geom_smooth(method = "lm", color = "tan1", se = FALSE) +
+  facet_wrap(~ city) + 
+  labs(
+    title = "Wpływ odległości od aptek na ceny mieszkań",
+    x = "Odległość od aptek (km)",
+    y = "Cena mieszkania (PLN)"
+  ) +
+  theme_minimal()
+```
