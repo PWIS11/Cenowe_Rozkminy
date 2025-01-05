@@ -759,6 +759,58 @@ suppressMessages({
 })
 ```
 
+```{r Podsumowanie braków w tabeli, echo=FALSE}
+
+missing_summary <- missing_summary %>%
+  rename(
+    Zmienna = variable,
+    "Liczba braków" = n_miss,
+    "Procent braków" = pct_miss
+  ) %>%
+  mutate(
+    "Procent braków" = as.numeric(`Procent braków`) / 100,
+    "Procent braków" = percent(`Procent braków`, accuracy = 0.1)
+  )
+
+# Podzielenie tabeli na dwie części
+num_rows <- nrow(missing_summary)
+split_index <- ceiling(num_rows / 2)
+
+# Przygotowanie kolumn dla drugiej połowy tabeli
+Zmienna_2 <- missing_summary$Zmienna[(split_index + 1):num_rows]
+Liczba_brakow_2 <- missing_summary$`Liczba braków`[(split_index + 1):num_rows]
+Procent_brakow_2 <- missing_summary$`Procent braków`[(split_index + 1):num_rows]
+
+# Wyrównanie długości i uzupełnienie brakujących wartości pustymi znakami
+Zmienna_2 <- c(Zmienna_2, rep("", split_index - length(Zmienna_2)))
+Liczba_brakow_2 <- c(Liczba_brakow_2, rep("", split_index - length(Liczba_brakow_2)))
+Procent_brakow_2 <- c(Procent_brakow_2, rep("", split_index - length(Procent_brakow_2)))
+
+# Stworzenie kompaktowej tabeli
+missing_summary_compact <- tibble(
+  Zmienna_1 = missing_summary$Zmienna[1:split_index],
+  `Liczba braków 1` = missing_summary$`Liczba braków`[1:split_index],
+  `Procent braków 1` = missing_summary$`Procent braków`[1:split_index],
+  Zmienna_2 = Zmienna_2,
+  `Liczba braków 2` = Liczba_brakow_2,
+  `Procent braków 2` = Procent_brakow_2
+)
+
+# Wyświetlenie tabeli w nowym formacie
+kable(
+  missing_summary_compact,
+  col.names = c("Zmienna", "Liczba braków", "Procent braków", 
+                "Zmienna", "Liczba braków", "Procent braków"),
+  caption = "Podsumowanie brakujących danych"
+) %>%
+  kable_styling(
+    full_width = FALSE,
+    bootstrap_options = c("striped", "hover", "condensed")
+  )
+
+```
+
+
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można
 podzielić na kilka grup pod względem liczby braków:
 
@@ -783,23 +835,6 @@ podzielić na kilka grup pod względem liczby braków:
 -   **Kolumny bez braków:** Pozostałe zmienne, takie jak price,
     square_meters czy rooms, są kompletne i nie wymagają dodatkowych
     działań.
-
-```{r wzorce_brakow, echo=FALSE, warning=FALSE, message=FALSE}
-# Zwiększenie rozmiaru wykresu
-options(repr.plot.width = 14, repr.plot.height = 10)
-
-# Tworzenie wykresu z jeszcze mniejszymi czcionkami
-aggr(dane, 
-     col = c("lightyellow", "orchid3"), 
-     numbers = TRUE, 
-     sortVars = TRUE,
-     labels = names(dane), 
-     cex.axis = 0.4, # Zmniejszenie czcionki osi
-     gap = 1.5,      # Zmniejszenie odstępów między elementami
-     ylab = c("Procent braków", "Wzorce braków"))
-```
-
-#### usunałbym w tym miejscu ten message który generuje R w postaci tabeli. wykres wzorca braków umieściłbym zaraz pod vismiss, a pod nimi dał ten opis o analizie
 
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością, echo = FALSE}
 
