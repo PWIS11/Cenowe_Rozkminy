@@ -162,36 +162,25 @@ Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
 
 ## **Dane dodatkowe**
 
-<p style="text-align: justify;">
-
-W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się
-wzbogacić nasz zbiór o **granice administracyjne województw**. Dane te
-zostały pobrane z pliku **`ms_A01_Granice_wojewodztw`** i umożliwiły
-przypisanie każdego miasta do odpowiedniego województwa.
-
-</p>
+<p style="text-align: justify;"> W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się
+wzbogacić nasz zbiór o **granice administracyjne województw** oraz dane dotyczące **wynagrodzeń**. Dane te zostały pobrane z pliku 
+`ms_A01_Granice_wojewodztw` oraz `wynagrodzenia_pl_2024` - na podstawie bazy danych lokalnych GUS, co umożliwiło przypisanie każdego miasta do odpowiedniego województwa oraz analizę wpływu średniej pensji na ceny nieruchomości. Dzięki temu możliwe jest badanie, czy wysokość wynagrodzeń ma związek z cenami nieruchomości 
+w poszczególnych regionach Polski.</p>
 
 ### **Cel dodania danych:**
 
 -   **Przypisanie lokalizacji mieszkań do województw**,\
--   **Przeprowadzenie analiz regionalnych**, aby lepiej zrozumieć
-    różnice w cenach i cechach mieszkań w różnych częściach Polski.
+-   **Przeprowadzenie analiz regionalnych**, aby lepiej zrozumieć różnice w cenach i cechach mieszkań w różnych częściach Polski,\
+-   **Analiza zależności między średnimi wynagrodzeniami a cenami nieruchomości**, aby sprawdzić, czy wyższe wynagrodzenia są powiązane z wyższymi cenami mieszkań.
 
-Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku
-nieruchomości na poziomie miast, ale także **porównanie wyników w
-kontekście regionalnym**.
+<p style="text-align: justify;"> Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku nieruchomości na poziomie miast, ale także **porównanie wyników w
+kontekście regionalnym** oraz uwzględnienie czynników ekonomicznych, takich jak wynagrodzenia, które mogą wpływać na ceny mieszkań. </p>
 
 ## **Znaczenie projektu**
 
-<p style="text-align: justify;">
-
-Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników,
-takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość
-kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć
-mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia
-wspomagające decyzje zakupowe i inwestycyjne.
-
-</p>
+<p style="text-align: justify;"> Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników,
+takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć
+mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia wspomagające decyzje zakupowe i inwestycyjne.</p>
 
 # **Brudne dane i ich znaczenie w analizie**
 
@@ -443,27 +432,12 @@ dane$building_material <- case_when(
 
 # **Walidacja danych**
 
-<p style="text-align: justify;">
+<p style="text-align: justify;"> Walidacja danych to kluczowy etap przygotowania zbioru, który następuje po wstępnym oczyszczeniu danych. Jej celem jest sprawdzenie **zgodności danych** z określonymi **regułami logicznymi** i **jakościowymi**, aby upewnić się, że dane są **kompletne**, **spójne** i gotowe do dalszej analizy oraz modelowania.</p>
 
-Walidacja danych to kluczowy etap przygotowania zbioru, który następuje
-po wstępnym oczyszczeniu danych. Jej celem jest sprawdzenie zgodności
-danych z określonymi regułami logicznymi i jakościowymi, aby upewnić
-się, że dane są kompletne, spójne <br>i gotowe do dalszej analizy oraz
-modelowania.
+<p style="text-align: justify;"> Proces ten polega na weryfikacji, czy dane spełniają określone **kryteria**, zapewniając ich **poprawność**, **spójność** oraz **integralność**. Szczególną uwagę zwraca się na **typy danych** i **analizę unikalnych wartości** w poszczególnych kolumnach. Każda kolumna powinna mieć odpowiedni **typ danych** (np.**numeryczny**, **tekstowy**, **całkowity**), a liczba unikalnych wartości powinna być zgodna z oczekiwaniami.</p>
 
-Proces ten polega na weryfikacji, czy dane spełniają określone kryteria,
-zapewniając ich poprawność, spójność oraz integralność. Szczególną uwagę
-zwraca się na typy danych i analizę unikalnych wartości w poszczególnych
-kolumnach. Każda kolumna powinna mieć odpowiedni typ danych (np.
-numeryczny, tekstowy, całkowity), a liczba unikalnych wartości powinna
-być zgodna <br> z oczekiwaniami.
+<p style="text-align: justify;"> Dzięki takiej analizie można wykryć potencjalne błędy w **strukturze danych**, takie jak niewłaściwe przypisanie typu do kolumny czy nieoczekiwane wartości. Zapewnia to odpowiednie przygotowanie danych do dalszych etapów analizy i modelowania.</p>
 
-Dzięki takiej analizie można wykryć potencjalne błędy w strukturze
-danych, takie jak niewłaściwe przypisanie typu do kolumny czy
-nieoczekiwane wartości. Zapewnia to odpowiednie przygotowanie danych do
-dalszych etapów analizy i modelowania.
-
-</p>
 
 ### Typy danych oraz ich charakterystyka
 
@@ -502,47 +476,19 @@ knitr::kable(data_types, caption = "Typy Danych")
 
 ```
 
-<p style="text-align: justify;">
+<p style="text-align: justify;"> Zbiór danych składa się z **28 kolumn**, które charakteryzują się następującymi typami: **18 zmiennych numerycznych (typ numeric)**, **6zmiennych tekstowych (typ character)**, **3 zmiennymi kategorycznymi (typ factor)**, **2 zmiennymi całkowitymi (typ integer)** oraz **brakiem zmiennych logicznych.** </p>
 
-Zbiór danych składa się z **28 kolumn**, które charakteryzują się
-następującymi typami: **18 zmiennych numerycznych (typ numeric)**, **6
-zmiennych tekstowych (typ character)**, **3 zmiennymi kategorycznymi
-(typ factor)**, **2 zmiennymi całkowitymi (typ integer)** oraz **brakiem
-zmiennych logicznych.**
+-   Zmienne **numeryczne**, takie jak `square_meters`, `price` czy `centre_distance`, mają dużą liczbę unikalnych wartości, co
+    sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy regresyjnej.
 
-</p>
-
-<p style="text-align: justify;">
-
--   Zmienne **numeryczne**, takie jak `square_meters`, `price` czy
-    `centre_distance`, mają dużą liczbę unikalnych wartości, <br> co
-    sugeruje, że są to dane ciągłe, które będą odpowiednie do analizy
-    regresyjnej.
-
--   Zmienne **kategoryczne**, takie jak `building_type`, `ownership` czy
-    `building_material`, mogą być traktowane jako zmienne typu factor i
+-   Zmienne **kategoryczne**, takie jak `building_type`, `ownership` czy `building_material`, mogą być traktowane jako zmienne typu factor i
     wykorzystane w analizach klasyfikacyjnych.
 
--   Kolumny z typem **integer**, jak np. `price` mogą być również
-    używane w analizach numerycznych.
+-   Kolumny z typem **integer**, jak np. `price` mogą być również używane w analizach numerycznych.
 
-</p>
+<p style="text-align: justify;"> Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej analizy i modelowania. Zmienne numeryczne będą wykorzystywane w analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a zmienne character mogą wymagać kodowania na typ factor, aby mogły być wykorzystane w dalszej analizie.</p>
 
-<p style="text-align: justify;">
-
-Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej
-analizy i modelowania. Zmienne numeryczne będą wykorzystywane w
-analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a
-zmienne character mogą wymagać kodowania na typ factor, aby mogły być
-wykorzystane w dalszej analizie.
-
-Na podstawie tej analizy możemy przejść do przygotowania danych do
-modelowania, dobierając odpowiednie metody przetwarzania, takie jak
-kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych
-czy tworzenie nowych zmiennych, <br>w zależności od typu danych i celu
-analizy.
-
-</p>
+<p style="text-align: justify;">Na podstawie tej analizy możemy przejść do przygotowania danych do modelowania, dobierając odpowiednie metody przetwarzania, takie jak kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych czy tworzenie nowych zmiennych,w zależności od typu danych i celu analizy.</p>
 
 ## Walidacja wstępna danych i określenie reguł logicznych
 
@@ -658,53 +604,26 @@ te zostaną zastąpione:
 
 # **Data wrangling**
 
-<p style="text-align: justify;">
+<p style="text-align: justify;"> Proces **data wrangling** umożliwia przekształcenie surowego zbioru
+danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach:
+analizie wartości brakujących oraz obserwacji odstających.</p>
 
-Proces **data wrangling** umożliwia przekształcenie surowego zbioru
-danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W
-ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach:
-analizie wartości brakujących oraz obserwacji odstających.
+<p style="text-align: justify;">W tej części projektu podjęliśmy działania mające na celu: - zrozumienie
+i klasyfikację braków danych (MCAR, MAR, MNAR), - wybór odpowiednich strategii imputacji brakujących wartości, - wykrycie i obsługę
+obserwacji odstających, które mogą zaburzać statystyczne wnioski.</p>
 
-</p>
+<p style="text-align: justify;"> Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów
+pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score) możliwe było zarówno dokładne zrozumienie problemów związanych z danymi,
+jak i zaplanowanie działań korygujących. Tak przygotowany zbiór danych stanowi podstawę do przeprowadzenia dalszych analiz i modelowania. </p>
 
-W tej części projektu podjęliśmy działania mające na celu: - zrozumienie
-i klasyfikację braków danych (MCAR, MAR, MNAR), - wybór odpowiednich
-strategii imputacji brakujących wartości, - wykrycie i obsługę
-obserwacji odstających, które mogą zaburzać statystyczne wnioski.
-
-<p style="text-align: justify;">
-
-Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów
-pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score)
-możliwe było zarówno dokładne zrozumienie problemów związanych z danymi,
-jak i zaplanowanie działań korygujących. Tak przygotowany zbiór danych
-stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.
-
-</p>
-
-<p style="text-align: justify;">
-
-W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w
-ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji
-wartości odstających, a także opis zastosowanych metod ich obsługi.
-
-</p>
+<p style="text-align: justify;"> W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji wartości odstających, a także opis zastosowanych metod ich obsługi. </p>
 
 ## **Obserwacje brakujące**
 
-<p style="text-align: justify;">
-
-Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno
-wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny
-braków w zbiorze danych. Wizualizacje, takie jak **wykresy słupkowe**
-prezentujące procent brakujących wartości w poszczególnych zmiennych
-oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie
-zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących
-danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę
-współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe
-zależności w danych.
-
-</p>
+<p style="text-align: justify;"> Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny braków w zbiorze danych. Wizualizacje, takie jak **wykresy słupkowe** prezentujące procent brakujących wartości w poszczególnych zmiennych
+oraz graficzne przedstawienie wzorców braków, umożliwiają szybkie zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących
+danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe
+zależności w danych.</p>
 
 Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej
 zrozumieć przyczyny ich występowania.
