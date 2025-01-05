@@ -2502,7 +2502,7 @@ korelacje_cena_odl_school <- dane_filtr %>%
   summarise(
     korelacja = cor(school_distance, price) 
   )
-knitr::kable(korelacje_cena_odl, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od szkół a ceną mieszkań")
+knitr::kable(korelacje_cena_odl_school, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od szkół a ceną mieszkań")
 ```
 
 Tabela przedstawia współczynniki korelacji między odległością od szkół
@@ -2612,6 +2612,8 @@ ggplot(dane_filtr, aes(x = post_office_distance, y = price)) +
   ) +
   theme_minimal()
 ```
+
+DODAC OGOLNE WNIOSKI
 
 ```{r, echo=FALSE, results='asis', eval=TRUE}
 korelacje_cena_post <- dane_filtr %>%
@@ -2822,7 +2824,41 @@ ggplot(dane_filtr, aes(x = college_distance, y = price)) +
 4.  **Rozrzut danych**:
       - W miastach takich jak Warszawa czy Kraków widać większy rozrzut cen (punkty są bardziej rozproszone), co oznacza, że mieszkania w tych miastach mają znacznie większe zróżnicowanie cen.
 
+---
 
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_studia <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(college_distance, price) 
+  )
+knitr::kable(korelacje_cena_studia, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od uczelni a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od uczelni
+a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+1. **Białystok**  
+    - Bardzo słaba pozytywna korelacja. Ceny mieszkań nieznacznie rosną wraz z odległością od uczelni, co może wskazywać, że bliżej uczelni znajdują się tańsze mieszkania, być może skierowane do studentów.
+
+2. **Częstochowa**  
+    - Umiarkowana pozytywna korelacja. Mieszkania dalej od uczelni są wyraźnie droższe. Może to sugerować, że bardziej prestiżowe lub rodzinne lokalizacje są zlokalizowane poza strefami akademickimi.
+
+3. **Kraków**  
+    - Umiarkowana negatywna korelacja. Ceny mieszkań spadają wraz ze wzrostem odległości od uczelni. Bliskość uczelni jest ważnym czynnikiem wpływającym na ceny, co może wynikać z dużego popytu na mieszkania wśród studentów i pracowników akademickich.
+
+4. **Radom**  
+    - Bardzo słaba pozytywna korelacja. Odległość od uczelni ma minimalny wpływ na ceny mieszkań, co może świadczyć o tym, że uczelnie w Radomiu są równomiernie rozmieszczone lub mniej istotne dla rynku nieruchomości.
+
+5. **Rzeszów**  
+    - Słaba pozytywna korelacja. Mieszkania w większej odległości od uczelni są nieco droższe, co sugeruje, że strefy mieszkalne o wyższej wartości mogą znajdować się poza rejonami akademickimi.
+
+6. **Warszawa**  
+    - Bardzo słaba negatywna korelacja. Mieszkania bliżej uczelni są nieznacznie droższe, ale wpływ ten jest słaby. Wysoka liczba uczelni i różnorodność dzielnic zmniejsza znaczenie tego czynnika w skali całego miasta.
+
+---
 
 ## Odległość od aptek
 
@@ -2839,29 +2875,124 @@ ggplot(dane_filtr, aes(x = pharmacy_distance, y = price)) +
   theme_minimal()
 ```
 
+
+DODAĆ OGÓLNE WNIOSKI
+
+---
+
+```{r, echo=FALSE, results='asis', eval=TRUE}
+korelacje_cena_apt <- dane_filtr %>%
+  group_by(city) %>% 
+  summarise(
+    korelacja = cor(pharmacy_distance, price) 
+  )
+knitr::kable(korelacje_cena_apt, col.names = c("Miasto", "Wynik korelacji"), caption = "Współczynniki korelacji między odległością od aptek a ceną mieszkań")
+```
+
+Tabela przedstawia współczynniki korelacji między odległością od aptek
+a ceną mieszkań dla sześciu miast. Współczynnik korelacji
+przyjmuje wartości od -1 (pełna korelacja ujemna) do 1 (pełna korelacja
+dodatnia), gdzie wartość 0 oznacza brak korelacji.
+
+1. **Białystok**  
+    - Słaba pozytywna korelacja. Ceny mieszkań rosną nieznacznie wraz z odległością od aptek. Może to oznaczać, że apteki znajdują się głównie w bardziej dostępnych, ale mniej prestiżowych lokalizacjach.
+
+2. **Częstochowa**  
+    - Umiarkowana pozytywna korelacja. Mieszkania w większej odległości od aptek są wyraźnie droższe, co może sugerować, że apteki są zlokalizowane w bardziej gęsto zabudowanych obszarach, które mogą być mniej prestiżowe.
+    
+3. **Kraków**  
+    - Bardzo słaba negatywna korelacja. W praktyce odległość od aptek nie wpływa na ceny mieszkań. Apteki mogą być równomiernie rozmieszczone w mieście, a ich bliskość nie jest istotnym czynnikiem dla wyceny nieruchomości.
+
+4. **Radom**  
+    - Bardzo słaba pozytywna korelacja. Odległość od aptek ma niewielki wpływ na ceny mieszkań. Wartość nieruchomości w Radomiu jest prawdopodobnie bardziej uzależniona od innych czynników niż dostępność aptek. 
+
+5. **Rzeszów**  
+    - Słaba pozytywna korelacja. Mieszkania oddalone od aptek są nieco droższe. Może to oznaczać, że apteki znajdują się w gęściej zabudowanych, mniej prestiżowych dzielnicach miasta.
+
+6. **Warszawa**  
+    - Bardzo słaba negatywna korelacja. W praktyce odległość od aptek nie wpływa znacząco na ceny mieszkań, choć mieszkania bliżej aptek mogą być minimalnie droższe. Wynika to prawdopodobnie z ich dostępności w bardziej prestiżowych dzielnicach.
+
+---
+
 ## Podsumowanie
 
 ```{r, echo=FALSE, results='asis', eval=TRUE}
+library(kableExtra)
 
-# tabela_podsumowanie_cor <- data.frame(
-#   Zmienne <- c("centre_distance", "school_distance", "clinic_distance", "post_office_distance", "kindergarten_distance", "restaurant_distance", "college_distance", "pharmacy_distance"),
-#   
-#   "Warszawa" <- c("Słaba, ujemna", "Słaba, ujemna", "Słaba, ujemna", "Słaba, ujemna", "Słaba, dodatnia", "Słaba, ujemna", ),
-#   "Kraków" <- c("Silna, ujemna", "Silna, ujemna", "Słaba, ujemna", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, ujemna", ),
-#   "Białystok" <- c("Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", ),
-#   "Rzeszów" <- c("Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", ),
-#   "Częstochowa" <- c("Słaba, dodatnia", "Słaba, ujemna", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, ujemna", ),
-#   "Radom" <- c("Słaba, ujemna", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", "Słaba, dodatnia", )
-#   
-# )
+tabela_podsumowanie_cor <- data.frame(
+  Zmienne = c("centre_distance", "school_distance", "clinic_distance", "post_office_distance", "kindergarten_distance", "restaurant_distance", "college_distance", "pharmacy_distance"),
 
-#SKONCZONE NA RESTAURACJACH
+  "Warszawa" = c("Słaba, ujemna: -0.1410103", "Słaba, dodatnia: 0.0344552", "Słaba, ujemna: -0.0971739", "Słaba, ujemna: -0.0311410", "Słaba, dodatnia: 0.0214355", "Słaba, ujemna: -0.1372778","Słaba, ujemna: -0.0838757" ,"Słaba, ujemna: -0.0382882"),
+  
+  "Kraków" = c("Silna, ujemna: -0.4516062", "Słaba, ujemna: -0.0694751", "Umiarkowana, ujemna: -0.2014158", "Słaba, dodatnia: 0.0304596", "Słaba, dodatnia: 0.1154202", "Słaba, ujemna: -0.1538666","Umiarkowana, ujemna: -0.2231753" ,"Słaba, ujemna: -0.0040424"),
+  
+  "Białystok" = c("Słaba, dodatnia: 0.1812080", "Słaba, dodatnia: 0.1512009", "Słaba, dodatnia: 0.0498567", "Słaba, dodatnia: 0.1352474", "Słaba, dodatnia: 0.0523985", "Słaba, dodatnia: 0.0624702", "Słaba, dodatnia: 0.1503009", "Słaba, dodatnia: 0.1048127"),
+  
+  "Rzeszów" = c("Umiarkowana, dodatnia: 0.2788925", "Słaba, dodatnia: 0.1485620", "Umiarkowana, dodatnia: 0.2764591", "Umiarkowana, dodatnia: 0.2357461", "Słaba, dodatnia: 0.1689304", "Słaba, dodatnia: 0.0920299", "Słaba, dodatnia: 0.1730937","Słaba, dodatnia: 0.1538395"),
+  
+  "Częstochowa" = c("Słaba, dodatnia: 0.1052754", "Silna, dodatnia: 0.4381307", "Umiarkowana, dodatnia: 0.3834959", "Umiarkowana, dodatnia: 0.2135046", "Słaba, dodatnia: 0.0642097", "Słaba, ujemna: -0.0173048","Umiarkowana, dodatnia: 0.2328164" ,"Umiarkowana, dodatnia: 0.2912980"),
+  
+  "Radom" = c("Słaba, ujemna: -0.0102774", "Słaba, dodatnia: 0.1257768", "Słaba, dodatnia: 0.2207426", "Słaba, dodatnia: 0.0990788", "Słaba, dodatnia: 0.1347670", "Słaba, dodatnia: 0.1339995", "Słaba, dodatnia: 0.0476282","Słaba, dodatnia: 0.0746363")
+
+)
+
+
+tabela_podsumowanie_cor$Kategoria <- c("Usługi", "Edukacja", "Zdrowie", "Usługi", 
+                                       "Edukacja", "Rozrywka", "Edukacja", "Zdrowie")
+
+tabela_podsumowanie_cor_sorted <- tabela_podsumowanie_cor %>%
+  arrange(Kategoria)
+
+# Funkcja określająca kolor na podstawie opisu
+get_color <- function(value) {
+  case_when(
+    grepl("słaba, ujemna", value, ignore.case = TRUE) ~ "#FFCCCC",  # jasnoczerwony
+    grepl("słaba, dodatnia", value, ignore.case = TRUE) ~ "#CCFFCC",  # jasnozielony
+    grepl("umiarkowana, dodatnia", value, ignore.case = TRUE) ~ "#99FF99",  # ciemnozielony
+    grepl("umiarkowana, ujemna", value, ignore.case = TRUE) ~ "#FF9999",  # ciemnoczerwony
+    grepl("Silna, ujemna", value, ignore.case = TRUE) ~ "#e37171",  # bardzo jasny czerwony
+    grepl("Silna, dodatnia", value, ignore.case = TRUE) ~ "#68ed68",  # bardzo jasny zielony
+    TRUE ~ "#FFFFFF"  # domyślnie biały
+  )
+}
+
+# Przetwarzanie tabeli z formatowaniem warunkowym
+tabela_podsumowanie_cor_sorted %>%
+  kbl(caption = "NIE MAM POMYSLU NA TYTUL") %>%
+  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed")) %>%
+  row_spec(0, bold = TRUE) %>%
+  column_spec(2, background = sapply(tabela_podsumowanie_cor_sorted$Warszawa, get_color)) %>%
+  column_spec(3, background = sapply(tabela_podsumowanie_cor_sorted$Kraków, get_color)) %>%
+  column_spec(4, background = sapply(tabela_podsumowanie_cor_sorted$Białystok, get_color)) %>%
+  column_spec(5, background = sapply(tabela_podsumowanie_cor_sorted$Rzeszów, get_color)) %>%
+  column_spec(6, background = sapply(tabela_podsumowanie_cor_sorted$Częstochowa, get_color)) %>%
+  column_spec(7, background = sapply(tabela_podsumowanie_cor_sorted$Radom, get_color))
+
+
 
 ```
 
+W analizie wpływu odległości do różnych instytucji na ceny nieruchomości w polskich miastach, zauważamy pewne ogólne tendencje.
+
+1. W **Warszawie**, wpływ odległości na ceny jest stosunkowo niewielki. Jedynie większa odległość od centrum oraz resatauracji może prowadzić do minimalnego spadku cen nieruchomości. Warto jednak zauważyć, że zmienne takie jak odległość do szkół, przedszkoli czy aptek mają bardzo mały wpływ na ceny.
+
+2. W **Krakowie** zauważamy silniejszy wpływ odległości, szczególnie w przypadku centrum miasta, gdzie silna ujemna korelacja (-0.451) wskazuje, że większa odległość od centrum wyraźnie obniża ceny nieruchomości. Ponadto, większa odległość od uczelni i klinik również obniża ceny. W Krakowie więc odległość od kluczowych punktów, jak centrum czy uczelnie, ma istotny wpływ na ceny.
+
+3. W **Białymstoku** natomiast widoczna jest tendencja, w której większa odległość do instytucji takich jak szkoły, uczelnie czy centrum, w niewielkim stopniu podnosi ceny nieruchomości. Chociaż wpływ tych zmiennych jest stosunkowo mały, są to czynniki, które warto wziąć pod uwagę w dalszej analizie.
+
+4. W **Rzeszowie**, podobnie jak w Białymstoku, zauważamy pozytywny wpływ większej odległości od centrum, poczty i kliniki na ceny nieruchomości. 
+
+5. W **Częstochowie** natomiast, odległość od szkoły ma wyraźny wpływ na ceny, z silną dodatnią korelacją (0.438). Zwiększenie odległości do szkoły może więc prowadzić do wyższych cen nieruchomości. Dodatkowo, podobny wpływ mają odległość od kliniki i uczelni, które także mogą podnieść ceny.
+
+6. W **Radomiu** wpływ odległości na ceny jest ogólnie niewielki. Tylko w przypadku odległości do szkół, poczty i kliniki zauważamy mały pozytywny wpływ na ceny. Jednak ogólnie rzecz biorąc, zmienne związane z odległością mają w Radomiu raczej marginalny wpływ na ceny nieruchomości.
 
 
+Warto skupić się na kilku kluczowych zmiennych z poszczególnych miast, które wykazują silniejsze zależności z cenami nieruchomości. Zmienne te mogą dać cenne informacje o dynamice rynku i kierunkach, w których ceny mogą się rozwijać. Oto, które zmienne warto dalej analizować:
 
+- **Analiza odległości do centrum, szkół i uczelni** powinna być kontynuowana, szczególnie w miastach takich jak **Kraków** czy **Częstochowa**, gdzie te czynniki mają silny wpływ na ceny.
+- **Kliniki i opieka zdrowotna** to również istotny aspekt, który warto badać, zwłaszcza w miastach o rosnącej liczbie osób starszych, jak **Rzeszów** czy **Częstochowa**.
+- **Poczta i usługi publiczne**, choć mają mniejszy wpływ na ceny z wyjątkiem **Częstochowy** i **Rzeszowa**, nadal mogą pomóc zrozumieć preferencje mieszkańców.
 
+Warto także podkreślić, że ceny nieruchomości mogą różnić się w zależności od typu budynku (mieszkania, domy) oraz jego lokalizacji. Warto podzielić dane na różne kategorie nieruchomości i sprawdzić, czy zależności między odległością a ceną różnią się w zależności od rodzaju nieruchomości.
 
 
