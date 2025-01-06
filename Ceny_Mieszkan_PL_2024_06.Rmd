@@ -39,6 +39,7 @@ if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")
 if (!requireNamespace("nortest", quietly = TRUE)) install.packages("nortest")
 if (!requireNamespace("kableExtra", quietly = TRUE)) install.packages("kableExtra")
 if (!requireNamespace("tibble", quietly = TRUE)) install.packages("tibble")
+if (!requireNamespace("reshape2", quietly = TRUE)) install.packages("reshape2")
 ```
 
 ```{r libraries, include=FALSE}
@@ -63,6 +64,7 @@ library(knitr)
 library(nortest)
 library(kableExtra)
 library(tibble)
+library(reshape2)
 ```
 
 # **Cel projektu**
@@ -3242,6 +3244,254 @@ zależności od typu budynku (mieszkania, domy) oraz jego lokalizacji.
 Warto podzielić dane na różne kategorie nieruchomości i sprawdzić, czy
 zależności między odległością a ceną różnią się w zależności od rodzaju
 nieruchomości.
+
+### **Porównanie średnich wynagrodzeń z cenami mieszkań**
+
+Aby lepiej zrozumieć dostępność mieszkaniową w Polsce, przeanalizowano
+średnie wynagrodzenia i ceny mieszkań w sześciu wybranych miastach:
+Gdańsku, Warszawie, Krakowie, Częstochowie, Rzeszowie oraz Białymstoku.
+Analiza obejmuje wyliczenie liczby metrów kwadratowych mieszkania, jakie
+można zakupić za średnie miesięczne wynagrodzenie w każdym z tych miast.
+Porównanie uwzględnia średnie ceny za metr kwadratowy oraz specyfikę
+lokalnych rynków nieruchomości.
+
+```{r wynagrodzenia_vs_ceny, echo=FALSE, warning=FALSE, message=FALSE}
+# Dane średnich wynagrodzeń
+wynagrodzenia <- data.frame(
+  Miasto = c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok"),
+  Wynagrodzenie = c(10017.25, 9673.42, 10173.41, 8380.28, 7187.74, 6806.05)
+)
+
+# Wyliczenie średnich cen mieszkań za m² z danych
+srednie_ceny <- dane %>%
+  group_by(city) %>%
+  summarise(
+    Cena_m2 = round(mean(price_per_square_meter, na.rm = TRUE), 2)
+  ) %>%
+  filter(city %in% c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok")) %>%
+  rename(Miasto = city)
+
+# Łączenie danych
+wynagrodzenia_vs_ceny <- merge(wynagrodzenia, srednie_ceny, by = "Miasto")
+
+# Wyliczenie liczby m², które można kupić za średnie wynagrodzenie
+wynagrodzenia_vs_ceny$Metry_kwadratowe <- round(wynagrodzenia_vs_ceny$Wynagrodzenie / wynagrodzenia_vs_ceny$Cena_m2, 2)
+
+# Wyliczenie wskaźnika dostępności (liczba miesięcznych pensji potrzebnych na zakup 1 m² mieszkania)
+wynagrodzenia_vs_ceny$Wskaznik_dostepnosci <- round(wynagrodzenia_vs_ceny$Cena_m2 / wynagrodzenia_vs_ceny$Wynagrodzenie, 2)
+
+# Poprawienie nazw kolumn do odpowiedniej długości
+colnames(wynagrodzenia_vs_ceny) <- c("Miasto", "Średnie wynagrodzenie (PLN)", "Cena za m² (PLN)", "Liczba m² za wynagrodzenie", "Wskaźnik dostępności")
+
+# Wyświetlenie wyników
+knitr::kable(wynagrodzenia_vs_ceny, caption = "Porównanie wynagrodzeń z cenami mieszkań w 6 miastach")
+```
+
+```{r interaktywna_wizualizacja, echo=FALSE, warning=FALSE, message=FALSE}
+# Normalizacja liczby m² do kolorów (gradacja: czerwony -> zielony)
+kolo_grad <- colorRamp(c("red", "green"))
+kolory <- kolo_grad((wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie` - min(wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie`)) /
+                    (max(wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie`) - min(wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie`)))
+kolory <- apply(kolory, 1, function(x) rgb(x[1]/255, x[2]/255, x[3]/255))
+
+# Tworzenie wykresu
+plot_ly(wynagrodzenia_vs_ceny, 
+        x = ~Miasto, 
+        y = ~`Liczba m² za wynagrodzenie`, 
+        type = "bar", 
+        text = ~paste("Średnie wynagrodzenie: ", round(`Średnie wynagrodzenie (PLN)`, 2), "PLN", 
+                      "<br>Cena za m²: ", round(`Cena za m² (PLN)`, 2), "PLN"),
+        hoverinfo = "text",
+        marker = list(color = kolory)) %>%
+  layout(
+    title = "Liczba m² mieszkania za średnie wynagrodzenie",
+    xaxis = list(title = "Miasto"),
+    yaxis = list(title = "Liczba m²")
+  )
+
+```
+
+#### **Interpretacja wyników wykresu**
+
+1.  **Najlepsza dostępność mieszkań: Częstochowa**
+
+    -   **Liczba m² za średnie wynagrodzenie**: Najwyższa spośród
+        wszystkich miast (ponad 1 m²).
+
+    -   **Cena za m²**: Najniższa (ok. 7,345 PLN), co w połączeniu z
+        umiarkowanymi wynagrodzeniami (ok. 8,380 PLN) czyni mieszkania w
+        Częstochowie najbardziej przystępnymi.
+
+2.  **Najniższa dostępność mieszkań: Warszawa**
+
+    -   **Liczba m² za średnie wynagrodzenie**: Najniższa (ok. 0.4 m²).
+
+    -   **Cena za m²**: Najwyższa (ok. 15,695 PLN), co przy
+        wynagrodzeniach na poziomie ok. 9,673 PLN skutkuje
+        najtrudniejszym dostępem do mieszkań.
+
+    -   Warszawa reprezentuje rynek o wysokich kosztach życia i
+        mieszkania.
+
+3.  **Średnia dostępność: Gdańsk i Kraków**
+
+    -   **Liczba m² za średnie wynagrodzenie**: Na poziomie zbliżonym do
+        siebie (ok. 0.6 m²).
+
+    -   **Ceny za m²**: Wysokie (ok. 15,402 PLN w Gdańsku i 17,134 PLN w
+        Krakowie).
+
+    -   Wynagrodzenia w tych miastach są wysokie, co łagodzi wpływ
+        drogich nieruchomości.
+
+4.  **Regiony o niższych wynagrodzeniach: Rzeszów i Białystok**
+
+    -   **Liczba m² za średnie wynagrodzenie**: Ograniczona (poniżej 0.5
+        m²).
+
+    -   **Cena za m²**: Niższa niż w największych miastach, ale
+        wynagrodzenia w Rzeszowie (7,187 PLN) i Białymstoku (6,806 PLN)
+        są zbyt niskie, by znacząco poprawić dostępność mieszkań.
+
+#### **Wnioski z wizualizacji**
+
+1.  **Dominacja Częstochowy**:
+
+    -   Częstochowa wyróżnia się wyjątkowo korzystną kombinacją
+        wynagrodzeń i cen mieszkań. Warto zwrócić uwagę na potencjalne
+        możliwości inwestycyjne w tym mieście.
+
+2.  **Konkurencja największych miast**:
+
+    -   Gdańsk i Kraków, choć drogie, zapewniają umiarkowaną dostępność
+        dzięki wysokim wynagrodzeniom. Warszawa pozostaje poza
+        konkurencją jako najdroższe miasto.
+
+3.  **Wyzwania w mniejszych miastach**:
+
+    -   W Rzeszowie i Białymstoku sytuacja wymaga poprawy wynagrodzeń
+        lub wsparcia w dostępności mieszkań, aby regiony te mogły
+        konkurować z większymi ośrodkami.
+
+```{r wynagrodzenia_vs_mieszkania, echo=FALSE, warning=FALSE, message=FALSE}
+# Dane średnich wynagrodzeń
+wynagrodzenia <- data.frame(
+  Miasto = c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok"),
+  Wynagrodzenie = c(10017.25, 9673.42, 10173.41, 8380.28, 7187.74, 6806.05)
+)
+
+# Odwrócenie transformacji logarytmicznej dla cen mieszkań
+ceny_mieszkan <- dane %>%
+  mutate(price = exp(price)) %>%  # Odwracanie logarytmu naturalnego
+  group_by(city) %>%
+  summarise(
+    Min_cena = round(min(price, na.rm = TRUE), 0),
+    Srednia_cena = round(mean(price, na.rm = TRUE), 0),
+    Max_cena = round(max(price, na.rm = TRUE), 0)
+  ) %>%
+  filter(city %in% c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok")) %>%
+  rename(Miasto = city)
+
+# Łączenie danych
+wynagrodzenia_vs_mieszkania <- merge(wynagrodzenia, ceny_mieszkan, by = "Miasto")
+
+# Wyliczenie czasu potrzebnego na zakup mieszkania (miesiące)
+wynagrodzenia_vs_mieszkania$Czas_na_min <- round(wynagrodzenia_vs_mieszkania$Min_cena / wynagrodzenia_vs_mieszkania$Wynagrodzenie, 0)
+wynagrodzenia_vs_mieszkania$Czas_na_srednia <- round(wynagrodzenia_vs_mieszkania$Srednia_cena / wynagrodzenia_vs_mieszkania$Wynagrodzenie, 0)
+wynagrodzenia_vs_mieszkania$Czas_na_max <- round(wynagrodzenia_vs_mieszkania$Max_cena / wynagrodzenia_vs_mieszkania$Wynagrodzenie, 0)
+
+# Przekształcenie danych do formatu długiego
+wynagrodzenia_long <- melt(wynagrodzenia_vs_mieszkania, 
+                           id.vars = "Miasto", 
+                           measure.vars = c("Czas_na_min", "Czas_na_srednia", "Czas_na_max"),
+                           variable.name = "Cena_typ", 
+                           value.name = "Czas_miesiace")
+
+# Tworzenie wykresu punktowego
+ggplot(wynagrodzenia_long, aes(x = Miasto, y = Czas_miesiace, color = Cena_typ)) +
+  geom_point(size = 3) +
+  labs(title = "Czas potrzebny na zakup mieszkania w miastach",
+       x = "Miasto", y = "Czas (miesiące)",
+       color = "Typ ceny") +
+  theme_minimal()
+
+```
+
+#### **Interpretacja wykresu**
+
+Wykres punktowy przedstawia czas (w miesiącach) potrzebny na zakup
+mieszkania w sześciu miastach Polski przy uwzględnieniu cen minimalnych,
+średnich i maksymalnych. Oto kluczowe obserwacje:
+
+**1. Różnice między miastami**
+
+-   **Najkrótszy czas zakupu (Częstochowa)**:
+
+    -   Czas zakupu mieszkania przy minimalnej cenie to mniej niż 50
+        miesięcy.
+
+    -   Nawet przy maksymalnej cenie mieszkania czas nie przekracza 150
+        miesięcy.
+
+    -   To świadczy o relatywnie przystępnych cenach mieszkań w stosunku
+        do wynagrodzeń w Częstochowie.
+
+-   **Najdłuższy czas zakupu (Warszawa)**:
+
+    -   Czas zakupu mieszkania w maksymalnej cenie wynosi ponad 300
+        miesięcy (25 lat), co wskazuje na wysokie ceny mieszkań w
+        stolicy.
+
+    -   Nawet przy minimalnej cenie mieszkania czas zakupu wynosi
+        powyżej 100 miesięcy.
+
+**2. Rozkład czasu w ramach miast**
+
+-   **Stosunkowo stabilne wartości w Częstochowie i Białymstoku**:
+
+    -   W obu miastach różnice między czasem dla minimalnej, średniej i
+        maksymalnej ceny są najmniejsze. Sugeruje to bardziej jednorodne
+        ceny mieszkań.
+
+-   **Duże różnice w Warszawie, Gdańsku i Krakowie**:
+
+    -   W miastach o wysokich cenach mieszkań różnice między czasem
+        zakupu w zależności od przedziału cenowego są znaczące. Wskazuje
+        to na dużą rozpiętość cenową na rynku nieruchomości.
+
+**3. Trendy regionalne**
+
+-   **Miasta północne i południowe**:
+
+    -   Gdańsk i Kraków mają podobne trendy do Warszawy, choć ich czas
+        zakupu w maksymalnych cenach jest nieco krótszy.
+
+-   **Miasta mniejsze**:
+
+    -   Rzeszów i Białystok oferują większą dostępność mieszkań, ale
+        wciąż wymagają relatywnie długiego czasu na zakup w maksymalnych
+        cenach (ok. 200 miesięcy).
+
+#### **Wnioski**
+
+1.  **Warszawa**:
+
+    -   Najmniej przystępny rynek mieszkań. Wysoka rozpiętość między
+        czasem dla minimalnej i maksymalnej ceny wskazuje na wyzwania
+        dla nabywców mieszkań.
+
+2.  **Częstochowa**:
+
+    -   Najbardziej przystępny rynek mieszkań. Możliwość zakupu mieszkań
+        w krótkim czasie, nawet przy niższych wynagrodzeniach.
+
+3.  **Potencjalne działania**:
+
+    -   W miastach takich jak Warszawa i Kraków warto rozważyć programy
+        wsparcia dla nabywców mieszkań.
+
+    -   Częstochowa i Białystok mogą być atrakcyjnymi lokalizacjami dla
+        inwestorów ze względu na przystępne ceny mieszkań.
 
 ### **Analiza cen mieszkań per dzielnica na przykładzie Gdańska**
 
