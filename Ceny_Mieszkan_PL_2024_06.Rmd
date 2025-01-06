@@ -40,6 +40,7 @@ if (!requireNamespace("nortest", quietly = TRUE)) install.packages("nortest")
 if (!requireNamespace("kableExtra", quietly = TRUE)) install.packages("kableExtra")
 if (!requireNamespace("tibble", quietly = TRUE)) install.packages("tibble")
 if (!requireNamespace("reshape2", quietly = TRUE)) install.packages("reshape2")
+if (!requireNamespace("car", quietly = TRUE)) install.packages("car")
 ```
 
 ```{r libraries, include=FALSE}
@@ -65,6 +66,7 @@ library(nortest)
 library(kableExtra)
 library(tibble)
 library(reshape2)
+library(car)
 ```
 
 # **Cel projektu**
@@ -1666,7 +1668,6 @@ curve(dnorm(x, mean = mean(dane$poi_count),
       add = TRUE)
 
 ```
-
 #### Transformacja zmiennej price oraz poi_count
 
 ##### Powody przeprowadzenia transformacji logarytmicznej:
@@ -1766,6 +1767,62 @@ Transformacje stosujemy wyłącznie w sytuacjach, gdy poprawiają one
 analizę, bez utraty interpretowalności. W przypadku tych zmiennych,
 zachowanie ich w pierwotnej formie pozwala na lepsze oddanie
 rzeczywistości i kontekstu analizy.
+
+### Test t-Studenta
+
+Test t-Studenta jest statystycznym testem hipotezy, który służy do porównania średnich wartości dwóch grup. Jest szeroko stosowany w sytuacjach, gdy dane mają rozkład normalny, a celem jest sprawdzenie, czy istnieje istotna różnica między średnimi tych grup.
+
+#### Rodzaje testów t-Studenta
+
+Test t-Studenta można podzielić na dwa główne typy:
+1. **Test dla zmiennych zależnych**: Używany, gdy te same jednostki są mierzone w dwóch warunkach (np. przed i po interwencji).
+2. **Test dla zmiennych niezależnych**: Używany, gdy porównuje się średnie dwóch niezależnych grup (np. grupy eksperymentalnej i kontrolnej).
+
+#### Hipotezy
+
+Test t-Studenta przeprowadza się w celu sprawdzenia hipotez:
+
+- **Hipoteza zerowa ($H_0$)**: Średnie w obu grupach są równe.
+- **Hipoteza alternatywna ($H_1$)**: Średnie w obu grupach nie są równe (w teście dwustronnym) lub jedna średnia jest większa/mniejsza od drugiej (w teście jednostronnym).
+
+#### Funkcja testowa
+
+Funkcja testowa dla testu t-Studenta opiera się na statystyce $t$:
+$$
+t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+$$
+
+Gdzie:
+- $\bar{X}_1$ i $\bar{X}_2$ to średnie grup,
+- $s_1^2$ i $s_2^2$ to wariancje w grupach,
+- $n_1$ i $n_2$ to liczności próbek.
+
+#### Założenia testu t-Studenta
+
+Aby poprawnie zastosować test t-Studenta, należy spełnić następujące założenia:
+1. **Rozkład normalny**: Dane w obu grupach powinny pochodzić z rozkładu normalnego.
+2. **Jednorodność wariancji**: Wariancje w obu grupach powinny być podobne (sprawdzane np. testem Levene’a).
+3. **Niezależność obserwacji**: Dane w grupach powinny być od siebie niezależne.
+
+#### Warianty testu
+
+- **Test dwustronny**: Sprawdza, czy średnie w grupach są różne.
+- **Test jednostronny**: Sprawdza, czy średnia jednej grupy jest większa/mniejsza od średniej drugiej grupy.
+
+#### Interpretacja wyników
+
+Wynik testu t-Studenta przedstawiany jest jako wartość statystyki $t$ oraz wartość p (p-value):
+- Jeśli wartość p < $\alpha$ (np. 0.05), odrzucamy hipotezę zerową na rzecz hipotezy alternatywnej.
+- Jeśli wartość p $\geq \alpha$, brak podstaw do odrzucenia hipotezy zerowej.
+
+#### Zastosowania
+
+Test t-Studenta znajduje zastosowanie w wielu dziedzinach, takich jak:
+- Porównanie wyników testów przed i po szkoleniu,
+- Analiza skuteczności terapii między grupą eksperymentalną a kontrolną,
+- Porównanie cen nieruchomości w różnych lokalizacjach.
+
+#DODAĆ tutaj test T-Studenta
 
 # **Ponowna Walidacja Danych**
 
