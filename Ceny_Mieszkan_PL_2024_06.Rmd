@@ -1769,70 +1769,6 @@ analizę, bez utraty interpretowalności. W przypadku tych zmiennych,
 zachowanie ich w pierwotnej formie pozwala na lepsze oddanie
 rzeczywistości i kontekstu analizy.
 
-### Test t-Studenta
-
-Test t-Studenta jest statystycznym testem hipotezy, który służy do
-porównania średnich wartości dwóch grup. Jest szeroko stosowany w
-sytuacjach, gdy dane mają rozkład normalny, a celem jest sprawdzenie,
-czy istnieje istotna różnica między średnimi tych grup.
-
-#### Rodzaje testów t-Studenta
-
-Test t-Studenta można podzielić na dwa główne typy: 1. **Test dla
-zmiennych zależnych**: Używany, gdy te same jednostki są mierzone w
-dwóch warunkach (np. przed i po interwencji). 2. **Test dla zmiennych
-niezależnych**: Używany, gdy porównuje się średnie dwóch niezależnych
-grup (np. grupy eksperymentalnej i kontrolnej).
-
-#### Hipotezy
-
-Test t-Studenta przeprowadza się w celu sprawdzenia hipotez:
-
--   **Hipoteza zerowa (**$H_0$): Średnie w obu grupach są równe.
--   **Hipoteza alternatywna (**$H_1$): Średnie w obu grupach nie są
-    równe (w teście dwustronnym) lub jedna średnia jest większa/mniejsza
-    od drugiej (w teście jednostronnym).
-
-#### Funkcja testowa
-
-Funkcja testowa dla testu t-Studenta opiera się na statystyce $t$: $$
-t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
-$$
-
-Gdzie: - $\bar{X}_1$ i $\bar{X}_2$ to średnie grup, - $s_1^2$ i $s_2^2$
-to wariancje w grupach, - $n_1$ i $n_2$ to liczności próbek.
-
-#### Założenia testu t-Studenta
-
-Aby poprawnie zastosować test t-Studenta, należy spełnić następujące
-założenia: 1. **Rozkład normalny**: Dane w obu grupach powinny pochodzić
-z rozkładu normalnego. 2. **Jednorodność wariancji**: Wariancje w obu
-grupach powinny być podobne (sprawdzane np. testem Levene’a). 3.
-**Niezależność obserwacji**: Dane w grupach powinny być od siebie
-niezależne.
-
-#### Warianty testu
-
--   **Test dwustronny**: Sprawdza, czy średnie w grupach są różne.
--   **Test jednostronny**: Sprawdza, czy średnia jednej grupy jest
-    większa/mniejsza od średniej drugiej grupy.
-
-#### Interpretacja wyników
-
-Wynik testu t-Studenta przedstawiany jest jako wartość statystyki $t$
-oraz wartość p (p-value): - Jeśli wartość p \< $\alpha$ (np. 0.05),
-odrzucamy hipotezę zerową na rzecz hipotezy alternatywnej. - Jeśli
-wartość p $\geq \alpha$, brak podstaw do odrzucenia hipotezy zerowej.
-
-#### Zastosowania
-
-Test t-Studenta znajduje zastosowanie w wielu dziedzinach, takich jak: -
-Porównanie wyników testów przed i po szkoleniu, - Analiza skuteczności
-terapii między grupą eksperymentalną a kontrolną, - Porównanie cen
-nieruchomości w różnych lokalizacjach.
-
-#DODAĆ tutaj test T-Studenta
-
 # **Ponowna Walidacja Danych**
 
 <p style="text-align: justify;">
@@ -2335,6 +2271,322 @@ ograniczona.<br> 4.**Ochrona:** Wysoko cenione w dużych aglomeracjach,
 szczególnie tam, gdzie bezpieczeństwo jest priorytetem.<br> 5.**Komórka
 lokatorska:** Ważna w miastach o wysokim zagęszczeniu, gdzie przestrzeń
 przechowywania ma istotne znaczenie.<br>
+
+### Test t-Studenta
+
+Dla naszych zmiennych kategorycznych zdecydowaliśmy się przeprowadzić
+test T-Studenta. Jego opis znajduje się poniżej, obliczenia wykonane
+zostaną dla każdej z analizownych na wykresie typu box-plot zmiennych
+
+Test t-Studenta jest statystycznym testem hipotezy, który służy do
+porównania średnich wartości dwóch grup. Jest szeroko stosowany w
+sytuacjach, gdy dane mają rozkład normalny, a celem jest sprawdzenie,
+czy istnieje istotna różnica między średnimi tych grup.
+
+#### Rodzaje testów t-Studenta
+
+Test t-Studenta można podzielić na dwa główne typy: 1. **Test dla
+zmiennych zależnych**: Używany, gdy te same jednostki są mierzone w
+dwóch warunkach (np. przed i po interwencji). 2. **Test dla zmiennych
+niezależnych**: Używany, gdy porównuje się średnie dwóch niezależnych
+grup (np. grupy eksperymentalnej i kontrolnej).
+
+#### Hipotezy
+
+Test t-Studenta przeprowadza się w celu sprawdzenia hipotez:
+
+-   **Hipoteza zerowa (**$H_0$): Średnie w obu grupach są równe.
+-   **Hipoteza alternatywna (**$H_1$): Średnie w obu grupach nie są
+    równe (w teście dwustronnym) lub jedna średnia jest większa/mniejsza
+    od drugiej (w teście jednostronnym).
+
+#### Funkcja testowa
+
+Funkcja testowa dla testu t-Studenta opiera się na statystyce $t$: $$
+t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+$$
+
+Gdzie: - $\bar{X}_1$ i $\bar{X}_2$ to średnie grup, - $s_1^2$ i $s_2^2$
+to wariancje w grupach, - $n_1$ i $n_2$ to liczności próbek.
+
+#### Założenia testu t-Studenta
+
+Aby poprawnie zastosować test t-Studenta, należy spełnić następujące
+założenia: 1. **Rozkład normalny**: Dane w obu grupach powinny pochodzić
+z rozkładu normalnego. 2. **Jednorodność wariancji**: Wariancje w obu
+grupach powinny być podobne (sprawdzane np. testem Levene’a). 3.
+**Niezależność obserwacji**: Dane w grupach powinny być od siebie
+niezależne.
+
+#### Warianty testu
+
+-   **Test dwustronny**: Sprawdza, czy średnie w grupach są różne.
+-   **Test jednostronny**: Sprawdza, czy średnia jednej grupy jest
+    większa/mniejsza od średniej drugiej grupy.
+
+#### Interpretacja wyników
+
+Wynik testu t-Studenta przedstawiany jest jako wartość statystyki $t$
+oraz wartość p (p-value): - Jeśli wartość p \< $\alpha$ (np. 0.05),
+odrzucamy hipotezę zerową na rzecz hipotezy alternatywnej. - Jeśli
+wartość p $\geq \alpha$, brak podstaw do odrzucenia hipotezy zerowej.
+
+#### Zastosowania
+
+Test t-Studenta znajduje zastosowanie w wielu dziedzinach, takich jak: -
+Porównanie wyników testów przed i po szkoleniu, - Analiza skuteczności
+terapii między grupą eksperymentalną a kontrolną, - Porównanie cen
+nieruchomości w różnych lokalizacjach.
+
+```{r shapiro levene, echo=FALSE}
+
+# Lista zmiennych kategorycznych
+categorical_vars <- c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room")
+
+# Wyniki testów
+results <- data.frame(
+  Variable = character(),
+  Shapiro_Yes_P = numeric(),
+  Shapiro_No_P = numeric(),
+  Levene_P = numeric()
+)
+
+# Pętla przez zmienne kategoryczne
+for (var in categorical_vars) {
+  group_yes <- dane$price[dane[[var]] == "yes"]
+  group_no <- dane$price[dane[[var]] == "no"]
+  
+  # Test Shapiro-Wilka dla normalności rozkładu
+  shapiro_yes <- shapiro.test(sample(group_yes, min(length(group_yes), 5000), replace = FALSE))
+  shapiro_no <- shapiro.test(sample(group_no, min(length(group_no), 5000), replace = FALSE))
+  
+  # Test Levene'a dla homogeniczności wariancji
+  levene <- car::leveneTest(price ~ as.factor(group), data = data.frame(price = c(group_yes, group_no), 
+                                                                         group = c(rep("yes", length(group_yes)), rep("no", length(group_no)))))
+  
+  # Dodanie wyników do tabeli
+  results <- rbind(results, data.frame(
+    Variable = var,
+    Shapiro_Yes_P = shapiro_yes$p.value,
+    Shapiro_No_P = shapiro_no$p.value,
+    Levene_P = levene[1, "Pr(>F)"]
+  ))
+}
+
+# Formatowanie P-Value w notacji wykładniczej
+results$Shapiro_Yes_P <- formatC(results$Shapiro_Yes_P, format = "e", digits = 2)
+results$Shapiro_No_P <- formatC(results$Shapiro_No_P, format = "e", digits = 2)
+results$Levene_P <- formatC(results$Levene_P, format = "e", digits = 2)
+
+# Generowanie tabeli
+kable(results, format = "markdown", col.names = c(
+  "Zmienna",
+  "Shapiro-Wilk (Yes, p-value)",
+  "Shapiro-Wilk (No, p-value)",
+  "Levene (p-value)"
+), caption = "Wyniki testów założeń dla zmiennych kategorycznych.")
+
+```
+
+#### **Interpretacja wyników założeń**
+
+1\. **Normalność rozkładu (Shapiro-Wilk):**
+
+-   Kolumny `Shapiro_Yes_P` i `Shapiro_No_P` przedstawiają wartości p z
+    testu Shapiro-Wilka dla grup `yes` i `no`.
+
+-   Jeśli p\<0.05, to odrzucamy hipotezę zerową o normalności rozkładu.
+
+Wyniki:
+
+-   Dla **każdej zmiennej** (np. `has_parking`, `has_balcony`, itp.)
+    wartości p są znacznie poniżej 0.05, co oznacza, że **rozkłady w obu
+    grupach (`yes` i `no`) nie są normalne**.
+
+2\. **Homogeniczność wariancji (Levene):**
+
+-   Kolumna `Levene_P` przedstawia wartości p z testu Levene’a.
+
+-   Jeśli p\<0.05, to odrzucamy hipotezę zerową o równości wariancji
+    między grupami.
+
+Wyniki:
+
+-   Dla zmiennych:
+
+    -   `has_parking`: p=0.875, brak podstaw do odrzucenia hipotezy o
+        równości wariancji.
+
+    -   `has_balcony`: p=1.17×10−11, wariancje nie są równe.
+
+    -   `has_elevator`: p=0.0069, wariancje nie są równe.
+
+    -   `has_security`: p=0.317, brak podstaw do odrzucenia hipotezy o
+        równości wariancji.
+
+    -   `has_storage_room`: p=3.01×10−7, wariancje nie są równe.
+
+#### **Co oznacza to dla testu t-Studenta?**
+
+1.  **Normalność rozkładu**:
+
+    -   Test t-Studenta zakłada normalność rozkładu, ale nasze dane tego
+        nie spełniają. W takim przypadku zamiast testu t-Studenta
+        zastosujemy **test nieparametryczny**:
+
+        -   **Test U Manna-Whitneya** (dla dwóch grup).
+
+2.  **Homogeniczność wariancji**:
+
+    -   Dla zmiennych, gdzie wariancje nie są równe (np. `has_balcony`,
+        `has_elevator`, `has_storage_room`), zastosujemy **wariant testu
+        t-Studenta Welch’a**, który nie zakłada równości wariancji.
+
+```{r t-Student Mann-Whithney, echo=FALSE}
+# Na podstawie wynikow wczesniejszych testow
+assumptions_results <- data.frame(
+  Variable = c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room"),
+  Shapiro_Yes_P = c(1.525437e-12, 8.210305e-15, 1.157110e-14, 5.516213e-06, 2.176813e-17),
+  Shapiro_No_P = c(4.105684e-15, 9.330980e-12, 8.095053e-16, 9.715156e-15, 1.181808e-12),
+  Levene_P = c(8.754317e-01, 1.172182e-11, 6.895807e-03, 3.173127e-01, 3.011244e-07)
+)
+
+# Wyniki testów
+results <- data.frame(
+  Variable = character(),
+  Test_Type = character(),
+  Mean_Yes = numeric(),
+  Mean_No = numeric(),
+  Statistic = numeric(),
+  P_Value = numeric()
+)
+
+# Pętla przez zmienne kategoryczne
+for (i in 1:nrow(assumptions_results)) {
+  var <- assumptions_results$Variable[i]
+  
+  group_yes <- dane$price[dane[[var]] == "yes"]
+  group_no <- dane$price[dane[[var]] == "no"]
+  
+  # Decyzja na podstawie wyników wcześniejszych testów
+  shapiro_yes_p <- assumptions_results$Shapiro_Yes_P[i]
+  shapiro_no_p <- assumptions_results$Shapiro_No_P[i]
+  levene_p <- assumptions_results$Levene_P[i]
+  
+  if (shapiro_yes_p >= 0.05 && shapiro_no_p >= 0.05) {
+    # Normalny rozkład w obu grupach
+    if (levene_p >= 0.05) {
+      test <- t.test(group_yes, group_no, var.equal = TRUE)
+      test_type <- "T-Test (Equal Variance)"
+    } else {
+      test <- t.test(group_yes, group_no, var.equal = FALSE)
+      test_type <- "T-Test (Welch)"
+    }
+  } else {
+    # Nienormalny rozkład w którejkolwiek grupie
+    test <- wilcox.test(group_yes, group_no)
+    test_type <- "Mann-Whitney"
+  }
+  
+  # Dodanie wyników do tabeli
+  results <- rbind(results, data.frame(
+    Variable = var,
+    Test_Type = test_type,
+    Mean_Yes = mean(group_yes),
+    Mean_No = mean(group_no),
+    Statistic = test$statistic,
+    P_Value = test$p.value
+  ))
+}
+
+# Formatowanie P-Value w notacji wykładniczej
+results$P_Value <- formatC(results$P_Value, format = "e", digits = 2)
+
+# Generowanie tabeli
+kable(results, format = "markdown", col.names = c(
+  "Zmienna",
+  "Rodzaj Testu",
+  "Średnia (Yes)",
+  "Średnia (No)",
+  "Statystyka",
+  "P-Value"
+), caption = "Wyniki testów statystycznych dla cech mieszkań.")
+
+```
+
+#### **Interpretacja wyników**
+
+Przeprowadziliśmy testy **Manna-Whitneya** - wszystkie zmienne zostały
+ocenione testem Manna-Whitneya z uwagi na brak normalności rozkładów.
+
+#### **Wyniki dla każdej zmiennej**
+
+1\. **`has_parking`**
+
+-   **Średnia `yes`:** 13.62384
+
+-   **Średnia `no`:** 13.46188
+
+-   **Wartość p:** 7.32×10−118 (statystycznie istotne).
+
+-   **Wniosek:** Mieszkania z parkingiem mają istotnie wyższą cenę niż
+    mieszkania bez parkingu.
+
+2\. **`has_balcony`**
+
+-   **Średnia `yes`:** 13.54517
+
+-   **Średnia `no`:** 13.45257
+
+-   **Wartość p:** 2.05×10−44 (statystycznie istotne).
+
+-   **Wniosek:** Mieszkania z balkonem mają istotnie wyższą cenę niż
+    mieszkania bez balkonu.
+
+3\. **`has_elevator`**
+
+-   **Średnia `yes`:** 13.60090
+
+-   **Średnia `no`:** 13.39807
+
+-   **Wartość p:** 1.48×10−219 (statystycznie istotne).
+
+-   **Wniosek:** Mieszkania z windą mają istotnie wyższą cenę niż
+    mieszkania bez windy.
+
+4\. **`has_security`**
+
+-   **Średnia `yes`:** 13.68124
+
+-   **Średnia `no`:** 13.48217
+
+-   **Wartość p:** 2.00×10−100 (statystycznie istotne).
+
+-   **Wniosek:** Mieszkania z ochroną mają istotnie wyższą cenę niż
+    mieszkania bez ochrony.
+
+5\. **`has_storage_room`**
+
+-   **Średnia `yes`:** 13.41440
+
+-   **Średnia `no`:** 13.57811
+
+-   **Wartość p:** 9.00×10−146 (statystycznie istotne, ale w drugą
+    stronę).
+
+-   **Wniosek:** Mieszkania z komórką lokatorską mają istotnie niższą
+    cenę niż mieszkania bez komórki lokatorskiej.
+
+#### **Ogólne wnioski**
+
+-   Wszystkie zmienne mają statystycznie istotny wpływ na cenę mieszkań
+    (p\<0.05).
+
+-   Obecność **parkingu, balkonu, windy i ochrony** wiąże się z
+    **wyższymi cenami mieszkań**.
+
+-   Obecność **komórki lokatorskiej** wiąże się z **niższymi cenami
+    mieszkań**.
 
 # **Analiza czynników geogaficznych wpływających na ceny mieszkań**
 
