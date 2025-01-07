@@ -1668,6 +1668,7 @@ curve(dnorm(x, mean = mean(dane$poi_count),
       add = TRUE)
 
 ```
+
 #### Transformacja zmiennej price oraz poi_count
 
 ##### Powody przeprowadzenia transformacji logarytmicznej:
@@ -1770,57 +1771,65 @@ rzeczywistości i kontekstu analizy.
 
 ### Test t-Studenta
 
-Test t-Studenta jest statystycznym testem hipotezy, który służy do porównania średnich wartości dwóch grup. Jest szeroko stosowany w sytuacjach, gdy dane mają rozkład normalny, a celem jest sprawdzenie, czy istnieje istotna różnica między średnimi tych grup.
+Test t-Studenta jest statystycznym testem hipotezy, który służy do
+porównania średnich wartości dwóch grup. Jest szeroko stosowany w
+sytuacjach, gdy dane mają rozkład normalny, a celem jest sprawdzenie,
+czy istnieje istotna różnica między średnimi tych grup.
 
 #### Rodzaje testów t-Studenta
 
-Test t-Studenta można podzielić na dwa główne typy:
-1. **Test dla zmiennych zależnych**: Używany, gdy te same jednostki są mierzone w dwóch warunkach (np. przed i po interwencji).
-2. **Test dla zmiennych niezależnych**: Używany, gdy porównuje się średnie dwóch niezależnych grup (np. grupy eksperymentalnej i kontrolnej).
+Test t-Studenta można podzielić na dwa główne typy: 1. **Test dla
+zmiennych zależnych**: Używany, gdy te same jednostki są mierzone w
+dwóch warunkach (np. przed i po interwencji). 2. **Test dla zmiennych
+niezależnych**: Używany, gdy porównuje się średnie dwóch niezależnych
+grup (np. grupy eksperymentalnej i kontrolnej).
 
 #### Hipotezy
 
 Test t-Studenta przeprowadza się w celu sprawdzenia hipotez:
 
-- **Hipoteza zerowa ($H_0$)**: Średnie w obu grupach są równe.
-- **Hipoteza alternatywna ($H_1$)**: Średnie w obu grupach nie są równe (w teście dwustronnym) lub jedna średnia jest większa/mniejsza od drugiej (w teście jednostronnym).
+-   **Hipoteza zerowa (**$H_0$): Średnie w obu grupach są równe.
+-   **Hipoteza alternatywna (**$H_1$): Średnie w obu grupach nie są
+    równe (w teście dwustronnym) lub jedna średnia jest większa/mniejsza
+    od drugiej (w teście jednostronnym).
 
 #### Funkcja testowa
 
-Funkcja testowa dla testu t-Studenta opiera się na statystyce $t$:
-$$
+Funkcja testowa dla testu t-Studenta opiera się na statystyce $t$: $$
 t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
 $$
 
-Gdzie:
-- $\bar{X}_1$ i $\bar{X}_2$ to średnie grup,
-- $s_1^2$ i $s_2^2$ to wariancje w grupach,
-- $n_1$ i $n_2$ to liczności próbek.
+Gdzie: - $\bar{X}_1$ i $\bar{X}_2$ to średnie grup, - $s_1^2$ i $s_2^2$
+to wariancje w grupach, - $n_1$ i $n_2$ to liczności próbek.
 
 #### Założenia testu t-Studenta
 
-Aby poprawnie zastosować test t-Studenta, należy spełnić następujące założenia:
-1. **Rozkład normalny**: Dane w obu grupach powinny pochodzić z rozkładu normalnego.
-2. **Jednorodność wariancji**: Wariancje w obu grupach powinny być podobne (sprawdzane np. testem Levene’a).
-3. **Niezależność obserwacji**: Dane w grupach powinny być od siebie niezależne.
+Aby poprawnie zastosować test t-Studenta, należy spełnić następujące
+założenia: 1. **Rozkład normalny**: Dane w obu grupach powinny pochodzić
+z rozkładu normalnego. 2. **Jednorodność wariancji**: Wariancje w obu
+grupach powinny być podobne (sprawdzane np. testem Levene’a). 3.
+**Niezależność obserwacji**: Dane w grupach powinny być od siebie
+niezależne.
 
 #### Warianty testu
 
-- **Test dwustronny**: Sprawdza, czy średnie w grupach są różne.
-- **Test jednostronny**: Sprawdza, czy średnia jednej grupy jest większa/mniejsza od średniej drugiej grupy.
+-   **Test dwustronny**: Sprawdza, czy średnie w grupach są różne.
+-   **Test jednostronny**: Sprawdza, czy średnia jednej grupy jest
+    większa/mniejsza od średniej drugiej grupy.
 
 #### Interpretacja wyników
 
-Wynik testu t-Studenta przedstawiany jest jako wartość statystyki $t$ oraz wartość p (p-value):
-- Jeśli wartość p < $\alpha$ (np. 0.05), odrzucamy hipotezę zerową na rzecz hipotezy alternatywnej.
-- Jeśli wartość p $\geq \alpha$, brak podstaw do odrzucenia hipotezy zerowej.
+Wynik testu t-Studenta przedstawiany jest jako wartość statystyki $t$
+oraz wartość p (p-value): - Jeśli wartość p \< $\alpha$ (np. 0.05),
+odrzucamy hipotezę zerową na rzecz hipotezy alternatywnej. - Jeśli
+wartość p $\geq \alpha$, brak podstaw do odrzucenia hipotezy zerowej.
 
 #### Zastosowania
 
-Test t-Studenta znajduje zastosowanie w wielu dziedzinach, takich jak:
-- Porównanie wyników testów przed i po szkoleniu,
-- Analiza skuteczności terapii między grupą eksperymentalną a kontrolną,
-- Porównanie cen nieruchomości w różnych lokalizacjach.
+Test t-Studenta znajduje zastosowanie w wielu dziedzinach, takich jak: -
+Porównanie wyników testów przed i po szkoleniu, - Analiza skuteczności
+terapii między grupą eksperymentalną a kontrolną, - Porównanie cen
+nieruchomości w różnych lokalizacjach.
 
 #DODAĆ tutaj test T-Studenta
 
@@ -3315,8 +3324,8 @@ lokalnych rynków nieruchomości.
 ```{r wynagrodzenia_vs_ceny, echo=FALSE, warning=FALSE, message=FALSE}
 # Dane średnich wynagrodzeń
 wynagrodzenia <- data.frame(
-  Miasto = c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok"),
-  Wynagrodzenie = c(10017.25, 9673.42, 10173.41, 8380.28, 7187.74, 6806.05)
+  Miasto = c("Radom", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok"),
+  Wynagrodzenie = c(7368.00, 9673.42, 10173.41, 8380.28, 7187.74, 6806.05)
 )
 
 # Wyliczenie średnich cen mieszkań za m² z danych
@@ -3325,7 +3334,7 @@ srednie_ceny <- dane %>%
   summarise(
     Cena_m2 = round(mean(price_per_square_meter, na.rm = TRUE), 2)
   ) %>%
-  filter(city %in% c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok")) %>%
+  filter(city %in% c("Radom", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok")) %>%
   rename(Miasto = city)
 
 # Łączenie danych
@@ -3346,7 +3355,7 @@ knitr::kable(wynagrodzenia_vs_ceny, caption = "Porównanie wynagrodzeń z cenami
 
 ```{r interaktywna_wizualizacja, echo=FALSE, warning=FALSE, message=FALSE}
 # Normalizacja liczby m² do kolorów (gradacja: czerwony -> zielony)
-kolo_grad <- colorRamp(c("red", "green"))
+kolo_grad <- colorRamp(c("orchid", "lightyellow"))
 kolory <- kolo_grad((wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie` - min(wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie`)) /
                     (max(wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie`) - min(wynagrodzenia_vs_ceny$`Liczba m² za wynagrodzenie`)))
 kolory <- apply(kolory, 1, function(x) rgb(x[1]/255, x[2]/255, x[3]/255))
@@ -3368,73 +3377,71 @@ plot_ly(wynagrodzenia_vs_ceny,
 
 ```
 
-#### **Interpretacja wyników wykresu**
+#### Interpretacja
 
-1.  **Najlepsza dostępność mieszkań: Częstochowa**
+1.  **Średnie wynagrodzenie a cena mieszkań**:
 
-    -   **Liczba m² za średnie wynagrodzenie**: Najwyższa spośród
-        wszystkich miast (ponad 1 m²).
+    -   Najwyższe średnie wynagrodzenie jest w Krakowie (10 173,41 PLN),
+        a najniższe w Białymstoku (6 806,05 PLN).
 
-    -   **Cena za m²**: Najniższa (ok. 7,345 PLN), co w połączeniu z
-        umiarkowanymi wynagrodzeniami (ok. 8,380 PLN) czyni mieszkania w
-        Częstochowie najbardziej przystępnymi.
+    -   Najdroższy m² mieszkania znajduje się w Warszawie (18 503,96
+        PLN), natomiast najtańszy w Radomiu (6 929,92 PLN).
 
-2.  **Najniższa dostępność mieszkań: Warszawa**
+2.  **Liczba m² możliwa do zakupu za średnie wynagrodzenie**:
 
-    -   **Liczba m² za średnie wynagrodzenie**: Najniższa (ok. 0.4 m²).
+    -   Najwięcej m² można kupić w Częstochowie (1,19 m²), gdzie
+        stosunek wynagrodzenia do ceny za m² jest najkorzystniejszy.
 
-    -   **Cena za m²**: Najwyższa (ok. 15,695 PLN), co przy
-        wynagrodzeniach na poziomie ok. 9,673 PLN skutkuje
-        najtrudniejszym dostępem do mieszkań.
+    -   Najmniej m² można kupić w Warszawie (0,52 m²) i Krakowie (0,59
+        m²), co wskazuje na wysokie ceny mieszkań w tych miastach.
 
-    -   Warszawa reprezentuje rynek o wysokich kosztach życia i
+3.  **Wskaźnik dostępności (liczba miesięcy pracy na zakup 1 m²)**:
+
+    -   Wskaźnik pokazuje, ile miesięcy pracy potrzeba, aby kupić 1 m²
         mieszkania.
 
-3.  **Średnia dostępność: Gdańsk i Kraków**
+        -   **Najlepszy wskaźnik dostępności** (najmniej miesięcy
+            pracy): Częstochowa (0.84) i Radom (0.94), co oznacza, że 1
+            m² można kupić po około 1 miesiąca pracy.
 
-    -   **Liczba m² za średnie wynagrodzenie**: Na poziomie zbliżonym do
-        siebie (ok. 0.6 m²).
+        -   **Najgorszy wskaźnik dostępności** (najwięcej miesięcy
+            pracy): Warszawa (1,91) i Kraków (1,68), co wskazuje, że
+            zakup 1 m² mieszkania wymaga prawie 2 miesięcy
+            wynagrodzenia.
 
-    -   **Ceny za m²**: Wysokie (ok. 15,402 PLN w Gdańsku i 17,134 PLN w
-        Krakowie).
+#### Wnioski
 
-    -   Wynagrodzenia w tych miastach są wysokie, co łagodzi wpływ
-        drogich nieruchomości.
+1.  **Warszawa i Kraków jako najmniej dostępne rynki mieszkaniowe**:
 
-4.  **Regiony o niższych wynagrodzeniach: Rzeszów i Białystok**
+    -   Wysokie ceny mieszkań oraz wysoki wskaźnik dostępności (1,91 dla
+        Warszawy i 1,68 dla Krakowa) oznaczają, że zakup mieszkania w
+        tych miastach wymaga największego wysiłku finansowego.
 
-    -   **Liczba m² za średnie wynagrodzenie**: Ograniczona (poniżej 0.5
-        m²).
+2.  **Białystok i Rzeszów jako bardziej dostępne rynki**:
 
-    -   **Cena za m²**: Niższa niż w największych miastach, ale
-        wynagrodzenia w Rzeszowie (7,187 PLN) i Białymstoku (6,806 PLN)
-        są zbyt niskie, by znacząco poprawić dostępność mieszkań.
+    -   Relatywnie niski wskaźnik dostępności (1,48 dla Białegostoku i
+        1,50 dla Rzeszowa) sprawia, że zakup mieszkania w tych miastach
+        wymaga krótszego czasu pracy w porównaniu z innymi
+        lokalizacjami.
 
-#### **Wnioski z wizualizacji**
+3.  **Częstochowa i Radom – dobre kompromisy**:
 
-1.  **Dominacja Częstochowy**:
+    -   Wysoka liczba m² za średnie wynagrodzenie (1,19 dla Częstochowy
+        i 1,06 dla Radomia) oraz umiarkowane wskaźniki dostępności (0,84
+        dla Częstochowy i 0,94 dla Radomia) wskazują na stosunkowo
+        przystępne rynki.
 
-    -   Częstochowa wyróżnia się wyjątkowo korzystną kombinacją
-        wynagrodzeń i cen mieszkań. Warto zwrócić uwagę na potencjalne
-        możliwości inwestycyjne w tym mieście.
+4.  **Znaczenie wskaźnika dostępności dla planowania zakupu**:
 
-2.  **Konkurencja największych miast**:
-
-    -   Gdańsk i Kraków, choć drogie, zapewniają umiarkowaną dostępność
-        dzięki wysokim wynagrodzeniom. Warszawa pozostaje poza
-        konkurencją jako najdroższe miasto.
-
-3.  **Wyzwania w mniejszych miastach**:
-
-    -   W Rzeszowie i Białymstoku sytuacja wymaga poprawy wynagrodzeń
-        lub wsparcia w dostępności mieszkań, aby regiony te mogły
-        konkurować z większymi ośrodkami.
+    -   Osoby planujące zakup mieszkania powinny brać pod uwagę nie
+        tylko cenę za m², ale także wskaźnik dostępności. Im niższy
+        wskaźnik, tym szybciej można sfinansować zakup mieszkania.
 
 ```{r wynagrodzenia_vs_mieszkania, echo=FALSE, warning=FALSE, message=FALSE}
 # Dane średnich wynagrodzeń
 wynagrodzenia <- data.frame(
-  Miasto = c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok"),
-  Wynagrodzenie = c(10017.25, 9673.42, 10173.41, 8380.28, 7187.74, 6806.05)
+  Miasto = c("Radom", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok"),
+  Wynagrodzenie = c(7368.00, 9673.42, 10173.41, 8380.28, 7187.74, 6806.05)
 )
 
 # Odwrócenie transformacji logarytmicznej dla cen mieszkań
@@ -3446,7 +3453,7 @@ ceny_mieszkan <- dane %>%
     Srednia_cena = round(mean(price, na.rm = TRUE), 0),
     Max_cena = round(max(price, na.rm = TRUE), 0)
   ) %>%
-  filter(city %in% c("Gdańsk", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok")) %>%
+  filter(city %in% c("Radom", "Warszawa", "Kraków", "Częstochowa", "Rzeszów", "Białystok")) %>%
   rename(Miasto = city)
 
 # Łączenie danych
@@ -3484,8 +3491,10 @@ mieszkania w sześciu miastach Polski przy uwzględnieniu cen minimalnych,
 
 -   **Najkrótszy czas zakupu (Częstochowa)**:
 
-    -   Czas zakupu mieszkania przy minimalnej cenie to mniej niż 50
+    -   Czas zakupu mieszkania przy minimalnej cenie wynosi mniej niż 50
         miesięcy.
+
+    <!-- -->
 
     -   Nawet przy maksymalnej cenie mieszkania czas nie przekracza 150
         miesięcy.
@@ -3496,38 +3505,52 @@ mieszkania w sześciu miastach Polski przy uwzględnieniu cen minimalnych,
 -   **Najdłuższy czas zakupu (Warszawa)**:
 
     -   Czas zakupu mieszkania w maksymalnej cenie wynosi ponad 300
-        miesięcy (25 lat), co wskazuje na wysokie ceny mieszkań w
-        stolicy.
+        miesięcy (ponad 25 lat), co wskazuje na bardzo wysokie ceny
+        mieszkań w stolicy.
+
+    <!-- -->
 
     -   Nawet przy minimalnej cenie mieszkania czas zakupu wynosi
         powyżej 100 miesięcy.
 
+    -   To sprawia, że Warszawa jest najmniej przystępnym miastem pod
+        względem zakupu nieruchomości.
+
 **2. Rozkład czasu w ramach miast**
 
--   **Stosunkowo stabilne wartości w Częstochowie i Białymstoku**:
+**Stosunkowo stabilne wartości w Częstochowie i Białymstoku:**
 
-    -   W obu miastach różnice między czasem dla minimalnej, średniej i
-        maksymalnej ceny są najmniejsze. Sugeruje to bardziej jednorodne
-        ceny mieszkań.
+-   W obu miastach różnice między czasem dla minimalnej, średniej i
+    maksymalnej ceny są najmniejsze.
 
--   **Duże różnice w Warszawie, Gdańsku i Krakowie**:
+-   Sugeruje to bardziej jednorodne ceny mieszkań oraz niższe ryzyko
+    związane z wahaniami rynku.
 
-    -   W miastach o wysokich cenach mieszkań różnice między czasem
-        zakupu w zależności od przedziału cenowego są znaczące. Wskazuje
-        to na dużą rozpiętość cenową na rynku nieruchomości.
+**Duże różnice w Warszawie i Krakowie:**
+
+-   W miastach o wysokich cenach mieszkań różnice między czasem zakupu w
+    zależności od przedziału cenowego są znaczące.
+
+-   Wskazuje to na dużą rozpiętość cenową na rynku nieruchomości,
+    szczególnie w segmencie luksusowym.
 
 **3. Trendy regionalne**
 
--   **Miasta północne i południowe**:
+**Miasta centralne i południowe (Warszawa, Kraków):**
 
-    -   Gdańsk i Kraków mają podobne trendy do Warszawy, choć ich czas
-        zakupu w maksymalnych cenach jest nieco krótszy.
+-   Miasta te cechują się najwyższymi wskaźnikami czasu zakupu,
+    szczególnie w przypadku maksymalnych cen mieszkań.
 
--   **Miasta mniejsze**:
+-   Kraków oferuje nieco większą dostępność niż Warszawa, ale nadal
+    wymaga znacznego wysiłku finansowego.
 
-    -   Rzeszów i Białystok oferują większą dostępność mieszkań, ale
-        wciąż wymagają relatywnie długiego czasu na zakup w maksymalnych
-        cenach (ok. 200 miesięcy).
+**Miasta mniejsze (Radom, Rzeszów, Białystok):**
+
+-   Oferują większą dostępność mieszkań, szczególnie w przypadku cen
+    minimalnych i średnich.
+
+-   Przy maksymalnych cenach czas zakupu oscyluje wokół 200 miesięcy, co
+    jest wartością umiarkowaną w porównaniu z miastami centralnymi.
 
 #### **Wnioski**
 
