@@ -2470,6 +2470,357 @@ zależności zaobserwowano w przypadku: - `has_elevator` vs
 Zależności te mogą wynikać z projektowania mieszkań w określonych
 standardach lub preferencji rynkowych.
 
+### Testowanie normalności i wybór odpowiedniego testu statystycznego
+
+#### Wprowadzenie
+
+Celem analizy jest sprawdzenie, czy istnieją istotne różnice w średnich
+wartości zmiennej `price` pomiędzy grupami (`yes` i `no`) dla wybranych
+zmiennych kategorycznych (`has_balcony`, `has_parking`, `has_elevator`,
+`has_security`, `has_storage_room`). Aby dobrać odpowiednią metodę
+testowania, najpierw musimy ocenić, czy dane spełniają założenia testu
+t-Studenta, w tym normalność rozkładu w grupach.
+
+#### Ograniczenia testu Shapiro-Wilka
+
+Test Shapiro-Wilka, mimo swojej skuteczności w badaniu normalności, ma
+ograniczenia:
+
+1.  **Minimalna liczba obserwacji:** Wymaga co najmniej 3 obserwacji w
+    każdej grupie.
+
+2.  **Maksymalna liczba obserwacji:** Nie może być stosowany dla prób
+    większych niż 5000 obserwacji.
+
+W przypadku dużych prób (więcej niż 5000 obserwacji w grupie) konieczne
+było zastosowanie losowego próbkowania, aby dostosować dane do wymagań
+testu.
+
+#### Zastosowanie losowego próbkowania
+
+Dla grup zawierających więcej niż 5000 obserwacji wylosowano dokładnie
+5000 elementów. Dzięki temu test Shapiro-Wilka mógł być przeprowadzony
+na reprezentatywnych próbkach:
+
+-   **Zastosowanie próbkowania losowego:** Zapewnia, że wyniki są zgodne
+    z charakterystyką całej grupy.
+
+-   **Powtarzalność wyników:** Użyto funkcji `set.seed(123)` w celu
+    zapewnienia powtarzalności losowania.
+
+#### Wyniki analizy
+
+Wyniki testu Shapiro-Wilka zostały zapisane w tabeli, która zawiera
+następujące informacje:
+
+-   **Zmienna (`Variable`):** Nazwa zmiennej kategorycznej.
+
+-   **Grupa (`Group`):** Grupa `yes` lub `no`.
+
+-   **Statystyka testu (`Shapiro_Statistic`):** Wartość statystyki
+    Shapiro-Wilka.
+
+-   **P-value (`P_Value`):** Wartość p, wskazująca istotność
+    statystyczną.
+
+-   **Liczba obserwacji (`Observations`):** Liczba obserwacji użytych do
+    testu (po próbkowaniu, jeśli zastosowano).
+
+```{r Shapiro-Wilk, echo=FALSE, message=FALSE}
+# Lista zmiennych kategorycznych do analizy
+categorical_vars <- c("has_balcony", "has_parking", "has_elevator", "has_security", "has_storage_room")
+
+# Tworzymy pustą ramkę danych na wyniki testu Shapiro-Wilka
+shapiro_results <- data.frame(
+  Group = character(),
+  Variable = character(),
+  Shapiro_Statistic = numeric(),
+  P_Value = numeric(),
+  Observations = integer(),
+  stringsAsFactors = FALSE
+)
+
+# Maksymalna liczba obserwacji dla testu Shapiro-Wilka
+max_obs <- 5000
+
+# Iteracja po zmiennych kategorycznych
+for (var in categorical_vars) {
+  for (group in c("yes", "no")) { # Grupy to "yes" i "no"
+    group_data <- dane$price[dane[[var]] == group]  # Pobieramy dane dla grupy
+    
+    # Liczba obserwacji w grupie
+    n_obs <- length(group_data)
+    
+    # Jeżeli liczba obserwacji przekracza 5000, losujemy próbkę
+    if (n_obs > max_obs) {
+      set.seed(123)  # Dla powtarzalności wyników
+      group_data <- sample(group_data, max_obs)
+      n_obs <- max_obs
+    }
+    
+    # Test Shapiro-Wilka dla odpowiednich grup
+    if (n_obs >= 3) {
+      shapiro_test <- shapiro.test(group_data)
+      shapiro_results <- rbind(shapiro_results, data.frame(
+        Group = group,
+        Variable = var,
+        Shapiro_Statistic = shapiro_test$statistic,
+        P_Value = shapiro_test$p.value,
+        Observations = n_obs
+      ))
+    } else {
+      shapiro_results <- rbind(shapiro_results, data.frame(
+        Group = group,
+        Variable = var,
+        Shapiro_Statistic = NA,
+        P_Value = NA,
+        Observations = n_obs
+      ))
+    }
+  }
+}
+
+# Formatowanie P-value w notacji naukowej
+shapiro_results$P_Value <- format(shapiro_results$P_Value, scientific = TRUE, digits = 3)
+
+
+kable(shapiro_results, caption = "Wyniki testu Shapiro-Wilka dla zmiennej price w grupach")
+```
+
+#### Interpretacja wyników testu Shapiro-Wilka dla zmiennej `price`
+
+Celem analizy było sprawdzenie, czy rozkład zmiennej `price` w grupach
+(`yes` i `no`) dla wybranych zmiennych kategorycznych spełnia założenie
+normalności. Poniżej przedstawiono interpretację wyników dla każdej
+zmiennej.
+
+#### Kluczowe wnioski:
+
+1.  **Wartość p (`P_Value`)**:
+
+    -   Dla wszystkich testowanych grup (`yes` i `no`) wartość p jest
+        **mniejsza niż 0.05**.
+
+    -   Odrzucamy hipotezę zerową testu Shapiro-Wilka, co oznacza, że
+        rozkład danych **istotnie odbiega od normalności** w każdej
+        grupie.
+
+2.  **Statystyka Shapiro-Wilka (`Shapiro_Statistic`)**:
+
+    -   Statystyka Shapiro-Wilka jest zbliżona do 1, co oznacza, że dane
+        mają pewne podobieństwa do rozkładu normalnego, ale wynik testu
+        wskazuje na istotne odchylenia.
+
+3.  **Liczba obserwacji (`Observations`)**:
+
+    -   Większość grup miała 5000 obserwacji, co wynika z zastosowania
+        próbkowania dla grup większych niż 5000.
+
+    -   Wyjątek: `has_security` w grupie `yes`, która miała 2661
+        obserwacji (pełna liczba w danych).
+
+#### Wyniki dla poszczególnych zmiennych:
+
+1.  **`has_balcony`**:
+
+    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.994, P-value:
+        1.22×10−13.
+
+    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.994, P-value:
+        5.62×10−13.
+
+    -   **Wniosek:** Dane w obu grupach istotnie odbiegają od
+        normalności.
+
+2.  **`has_parking`**:
+
+    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.994, P-value:
+        9.81×10−14.
+
+    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.993, P-value:
+        2.61×10−15.
+
+    -   **Wniosek:** Dane w obu grupach odbiegają od normalności.
+
+3.  **`has_elevator`**:
+
+    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.991, P-value:
+        1.63×10−17.
+
+    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.993, P-value:
+        1.71×10−14.
+
+    -   **Wniosek:** Dane w obu grupach istotnie odbiegają od
+        normalności.
+
+4.  **`has_security`**:
+
+    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.996, P-value:
+        5.52×10−6.
+
+    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.990, P-value:
+        3.52×10−18.
+
+    -   **Wniosek:** Dane odbiegają od normalności w obu grupach, choć w
+        grupie `yes` odchylenie jest mniej wyraźne (wyższa wartość
+        statystyki i p-value).
+
+5.  **`has_storage_room`**:
+
+    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.990, P-value:
+        1.98×10−18.
+
+    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.996, P-value:
+        6.33×10−11.
+
+    -   **Wniosek:** Dane w obu grupach odbiegają od normalności.
+
+#### Ogólne wnioski:
+
+1.  **Rozkład zmiennej `price` odbiega od normalności w każdej grupie
+    (`yes` i `no`) dla wszystkich analizowanych zmiennych
+    kategorycznych.**
+
+2.  **Zalecenia dotyczące dalszej analizy:**
+
+    -   **Test t-Studenta:** Można rozważyć jego użycie, jeśli próbki są
+        duże i opieramy się na Centralnym Twierdzeniu Granicznym (CTG).
+
+    -   **Test Wilcoxona (Mann-Whitney U):** Ze względu na brak
+        normalności, test Wilcoxona może być bardziej odpowiedni do
+        porównania grup.
+
+### Test Mann-Whitneya (Wilcoxona)
+
+#### Wprowadzenie
+
+Na podstawie wyników testu Shapiro-Wilka stwierdzono, że rozkład
+zmiennej `price` odbiega od normalności w każdej grupie (`yes` i `no`)
+dla wszystkich analizowanych zmiennych kategorycznych. W związku z tym,
+zamiast testu t-Studenta, zdecydowano się zastosować **test
+Mann-Whitneya (Wilcoxona)**, który nie wymaga założenia normalności
+rozkładu danych.
+
+#### Cel testu Mann-Whitneya
+
+Test Mann-Whitneya (zwany również testem Wilcoxona) bada, czy mediany
+zmiennej `price` różnią się istotnie pomiędzy grupami `yes` i `no` dla
+każdej zmiennej kategorycznej. Jest to test nieparametryczny, który jest
+bardziej odporny na odchylenia od założeń normalności niż test
+t-Studenta.
+
+```{r Mann-Whitney, echo=FALSE, message=FALSE}
+# Lista zmiennych kategorycznych do analizy
+categorical_vars <- c("has_balcony", "has_parking", "has_elevator", "has_security", "has_storage_room")
+
+# Tworzymy pustą ramkę danych na wyniki testu Mann-Whitneya
+mann_whitney_results <- data.frame(
+  Variable = character(),
+  W_Statistic = numeric(),
+  P_Value = numeric(),
+  Median_Yes = numeric(),
+  Median_No = numeric(),
+  stringsAsFactors = FALSE
+)
+
+# Iteracja po zmiennych kategorycznych
+for (var in categorical_vars) {
+  if (var %in% colnames(dane)) {
+    # Dane dla grup yes i no
+    group_yes <- dane$price[dane[[var]] == "yes"]
+    group_no <- dane$price[dane[[var]] == "no"]
+    
+    # Test Mann-Whitneya
+    wilcox_test <- wilcox.test(group_yes, group_no, exact = FALSE) # exact=FALSE dla dużych prób
+    
+    # Obliczanie median
+    median_yes <- median(group_yes, na.rm = TRUE)
+    median_no <- median(group_no, na.rm = TRUE)
+    
+    # Zapis wyników
+    mann_whitney_results <- rbind(mann_whitney_results, data.frame(
+      Variable = var,
+      W_Statistic = wilcox_test$statistic,
+      P_Value = wilcox_test$p.value,
+      Median_Yes = median_yes,
+      Median_No = median_no
+    ))
+  }
+}
+
+# Formatowanie P-value w notacji naukowej
+mann_whitney_results$P_Value <- format(mann_whitney_results$P_Value, scientific = TRUE, digits = 3)
+
+kable(mann_whitney_results, caption = "Wyniki testu Mann-Whitneya dla zmiennej price w grupach")
+```
+
+#### Interpretacja wyników testu Mann-Whitneya
+
+#### Wprowadzenie
+
+Test Mann-Whitneya został przeprowadzony, aby sprawdzić, czy mediany
+zmiennej `price` różnią się istotnie pomiędzy grupami `yes` i `no` dla
+każdej zmiennej kategorycznej. Wyniki testu przedstawiono poniżej.
+
+#### Kluczowe wyniki:
+
+1.  **`has_balcony`:**
+    -   **Wartość statystyki W:** 62,353,150
+    -   **P-value:** $2.05 \times 10^{-44}$ (bardzo niskie, istotne
+        statystycznie)
+    -   **Mediana (yes):** 13.52649
+    -   **Mediana (no):** 13.44300
+    -   **Wniosek:** Istnieje istotna statystycznie różnica w medianie
+        `price` pomiędzy mieszkaniami z balkonem (`yes`) a bez balkonu
+        (`no`). Mieszkania z balkonem mają wyższą medianę ceny.
+2.  **`has_parking`:**
+    -   **Wartość statystyki W:** 55,741,107
+    -   **P-value:** $7.32 \times 10^{-118}$ (bardzo niskie, istotne
+        statystycznie)
+    -   **Mediana (yes):** 13.59112
+    -   **Mediana (no):** 13.45167
+    -   **Wniosek:** Mieszkania z parkingiem (`yes`) mają istotnie
+        wyższą medianę ceny w porównaniu do mieszkań bez parkingu
+        (`no`).
+3.  **`has_elevator`:**
+    -   **Wartość statystyki W:** 71,840,735
+    -   **P-value:** $1.48 \times 10^{-219}$ (bardzo niskie, istotne
+        statystycznie)
+    -   **Mediana (yes):** 13.57710
+    -   **Mediana (no):** 13.39848
+    -   **Wniosek:** Mieszkania z windą (`yes`) mają istotnie wyższą
+        medianę ceny w porównaniu do mieszkań bez windy (`no`).
+4.  **`has_security`:**
+    -   **Wartość statystyki W:** 31,442,538
+    -   **P-value:** $2.00 \times 10^{-100}$ (bardzo niskie, istotne
+        statystycznie)
+    -   **Mediana (yes):** 13.66352
+    -   **Mediana (no):** 13.45741
+    -   **Wniosek:** Obecność zabezpieczeń (`yes`) wiąże się z istotnie
+        wyższą medianą ceny mieszkań w porównaniu do mieszkań bez
+        zabezpieczeń (`no`).
+5.  **`has_storage_room`:**
+    -   **Wartość statystyki W:** 45,223,376
+    -   **P-value:** $9.00 \times 10^{-146}$ (bardzo niskie, istotne
+        statystycznie)
+    -   **Mediana (yes):** 13.41354
+    -   **Mediana (no):** 13.55415
+    -   **Wniosek:** W przeciwieństwie do innych zmiennych, mieszkania z
+        komórką lokatorską (`yes`) mają **niższą medianę ceny** w
+        porównaniu do mieszkań bez komórki (`no`).
+
+#### Ogólne wnioski:
+
+1.  **Istotne różnice w medianach:**
+    -   Dla wszystkich zmiennych kategorycznych różnice w medianach
+        `price` pomiędzy grupami `yes` i `no` są statystycznie istotne
+        (p-value \< 0.05).
+2.  **Wpływ cech na medianę ceny:**
+    -   Cechy takie jak balkon, parking, winda, czy zabezpieczenia są
+        związane z wyższymi medianami cen mieszkań.
+    -   **Wyjątek:** Komórka lokatorska (`has_storage_room`), gdzie
+        mediany wskazują na niższą cenę mieszkań z tą cechą.
+
 # **Analiza czynników geogaficznych wpływających na ceny mieszkań**
 
 ## Odległość od centrum
