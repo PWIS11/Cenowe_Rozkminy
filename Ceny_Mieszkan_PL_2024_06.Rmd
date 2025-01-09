@@ -1551,6 +1551,8 @@ wyniki_normalnosci <- data.frame(
 knitr::kable(wyniki_normalnosci, caption = "Wyniki testu Andersona-Darlinga")
 ```
 
+<a id="Anderson_Darling"></a>
+
 Wyniki testu Andersona-Darlinga wskazują na ekstremalnie małe wartości
 $p$-value ($3.7 \times 10^{-24}$) dla wszystkich analizowanych
 zmiennych, co oznacza, że należy odrzucić hipotezę zerową zakładającą
@@ -2309,11 +2311,6 @@ wartości przy założeniu niezależności.
 
 ### Analiza zależności dla wielu zmiennych kategorycznych
 
-```{r}
-# 2. shapirowilka wynonujesz dla max 5 tys obserwacji, bada rozład normalny (normalność) danych a matematycznie rozkłady przyjmują parametry liczbowe zeby np wyznaczyc funkcje gęstości więc robimy go tylko na danych ilościowych. dla zmiennych jakosciowych nie ma to sensu
-# 3. możemy również zbadać jednorodność wariancji ponieważ test manna wykonujemy bo nie mamy rozkładu normalnego i równych wariancji, 
-```
-
 ```{r chi-square-multiple-tests, echo=FALSE, message=FALSE, results='hide'}
 
 # Chi tabele
@@ -2349,7 +2346,7 @@ chisq.test(chi_tabela10)
 ```
 
 ```{r chi results, echo=FALSE}
-# Tworzenie ramki wyników
+
 chi_results <- data.frame(
   Pair = c(
     "has_parking vs has_balcony",
@@ -2545,374 +2542,403 @@ preferencji klientów lub optymalizacji oferty deweloperów.
 
 ### Testowanie normalności i wybór odpowiedniego testu statystycznego
 
-#### Wprowadzenie
+### Jednorodność wariancji
 
-# SHAPIRO TYLKO ZMIENNE ILOŚCIOWEEE (JAKOŚCIOWE NIE MOGĄ MIEĆ ROZKŁADU NORMALNEGO - NIE POLICZYSZ WARIANCJI ANI W.OCZEKIWANEJ Z TAKICH)
+Postanowiliśmy zbadać, czy wariancje wyników w różnych grupach
+badawczych są jednorodne. Jednorodność wariancji, czyli
+homoskedastyczność, jest kluczowym założeniem w wielu testach
+statystycznych, takich jak analiza wariancji (ANOVA) czy test
+t-Studenta. Jeśli wariancje nie są równe, wyniki tych analiz mogą być
+niewiarygodne, co może prowadzić do błędnych wniosków.
 
-Celem analizy jest sprawdzenie, czy istnieją istotne różnice w średnich
-wartości zmiennej `price` pomiędzy grupami (`yes` i `no`) dla wybranych
-zmiennych kategorycznych (`has_balcony`, `has_parking`, `has_elevator`,
-`has_security`, `has_storage_room`). Aby dobrać odpowiednią metodę
-testowania, najpierw musimy ocenić, czy dane spełniają założenia testu
-t-Studenta, w tym normalność rozkładu w grupach.
+Aby zweryfikować jednorodność wariancji w badanych grupach, zastosujemy
+**test Levene’a**. Jest to popularna i odporna metoda, która pozwala
+porównać wariancje w dwóch lub więcej grupach, nawet gdy dane nie
+spełniają założeń normalności rozkładu. Test ten będzie kluczowym
+krokiem w naszej analizie statystycznej, ponieważ od jego wyniku zależy,
+czy możemy zastosować klasyczne metody parametryczne, czy też konieczne
+będzie użycie metod alternatywnych.
 
-#### Ograniczenia testu Shapiro-Wilka
+W dalszej części przedstawimy sposób przeprowadzenia testu Levene’a oraz
+omówimy uzyskane wyniki.
 
-Test Shapiro-Wilka, mimo swojej skuteczności w badaniu normalności, ma
-ograniczenia:
+### Test Levene’a
 
-1.  **Minimalna liczba obserwacji:** Wymaga co najmniej 3 obserwacji w
-    każdej grupie.
+Test Levene’a jest statystycznym testem służącym do sprawdzenia
+jednorodności wariancji (homoskedastyczności) w dwóch lub więcej
+grupach. Jest szczególnie użyteczny w analizach, które wymagają równości
+wariancji jako jednego z założeń, np. analiza wariancji (ANOVA) czy test
+t-Studenta.
 
-2.  **Maksymalna liczba obserwacji:** Nie może być stosowany dla prób
-    większych niż 5000 obserwacji.
+#### Hipotezy testu:
 
-W przypadku dużych prób (więcej niż 5000 obserwacji w grupie) konieczne
-było zastosowanie losowego próbkowania, aby dostosować dane do wymagań
-testu.
+-   **Hipoteza zerowa (H₀)**: Wariancje w każdej grupie są równe.
+-   **Hipoteza alternatywna (H₁)**: Istnieją różnice w wariancjach
+    pomiędzy grupami.
 
-#### Zastosowanie losowego próbkowania
+#### Mechanizm działania:
 
-Dla grup zawierających więcej niż 5000 obserwacji wylosowano dokładnie
-5000 elementów. Dzięki temu test Shapiro-Wilka mógł być przeprowadzony
-na reprezentatywnych próbkach:
+Test Levene’a porównuje odchylenia wartości w każdej grupie od mediany
+lub średniej. W wersji klasycznej test bazuje na średniej, natomiast
+modyfikacja Browna-Forsythe’a stosuje medianę, co czyni test bardziej
+odpornym na wartości odstające.
 
--   **Zastosowanie próbkowania losowego:** Zapewnia, że wyniki są zgodne
-    z charakterystyką całej grupy.
+```{r Levene Test, echo=FALSE, warning=FALSE}
 
--   **Powtarzalność wyników:** Użyto funkcji `set.seed(123)` w celu
-    zapewnienia powtarzalności losowania.
+dane$has_parking <- as.factor(dane$has_parking)
+dane$has_balcony <- as.factor(dane$has_balcony)
+dane$has_elevator <- as.factor(dane$has_elevator)
+dane$has_security <- as.factor(dane$has_security)
+dane$has_storage_room <- as.factor(dane$has_storage_room)
 
-#### Wyniki analizy
+levene_test_has_parking <- leveneTest(price ~ has_parking, data = dane)
+levene_test_has_balcony <- leveneTest(price ~ has_balcony, data = dane)
+levene_test_has_elevator <- leveneTest(price ~ has_elevator, data = dane)
+levene_test_has_security <- leveneTest(price ~ has_security, data = dane)
+levene_test_has_storage_room <- leveneTest(price ~ has_storage_room, data = dane)
 
-Wyniki testu Shapiro-Wilka zostały zapisane w tabeli, która zawiera
-następujące informacje:
-
--   **Zmienna (`Variable`):** Nazwa zmiennej kategorycznej.
-
--   **Grupa (`Group`):** Grupa `yes` lub `no`.
-
--   **Statystyka testu (`Shapiro_Statistic`):** Wartość statystyki
-    Shapiro-Wilka.
-
--   **P-value (`P_Value`):** Wartość p, wskazująca istotność
-    statystyczną.
-
--   **Liczba obserwacji (`Observations`):** Liczba obserwacji użytych do
-    testu (po próbkowaniu, jeśli zastosowano).
-
-```{r Shapiro-Wilk, echo=FALSE, message=FALSE}
-# Lista zmiennych kategorycznych do analizy
-categorical_vars <- c("has_balcony", "has_parking", "has_elevator", "has_security", "has_storage_room")
-
-# Tworzymy pustą ramkę danych na wyniki testu Shapiro-Wilka
-shapiro_results <- data.frame(
-  Group = character(),
-  Variable = character(),
-  Shapiro_Statistic = numeric(),
-  P_Value = numeric(),
-  Observations = integer(),
-  stringsAsFactors = FALSE
-)
-
-# Maksymalna liczba obserwacji dla testu Shapiro-Wilka
-max_obs <- 5000
-
-# Iteracja po zmiennych kategorycznych
-for (var in categorical_vars) {
-  for (group in c("yes", "no")) { # Grupy to "yes" i "no"
-    group_data <- dane$price[dane[[var]] == group]  # Pobieramy dane dla grupy
-    
-    # Liczba obserwacji w grupie
-    n_obs <- length(group_data)
-    
-    # Jeżeli liczba obserwacji przekracza 5000, losujemy próbkę
-    if (n_obs > max_obs) {
-      set.seed(123)  # Dla powtarzalności wyników
-      group_data <- sample(group_data, max_obs)
-      n_obs <- max_obs
-    }
-    
-    # Test Shapiro-Wilka dla odpowiednich grup
-    if (n_obs >= 3) {
-      shapiro_test <- shapiro.test(group_data)
-      shapiro_results <- rbind(shapiro_results, data.frame(
-        Group = group,
-        Variable = var,
-        Shapiro_Statistic = shapiro_test$statistic,
-        P_Value = shapiro_test$p.value,
-        Observations = n_obs
-      ))
-    } else {
-      shapiro_results <- rbind(shapiro_results, data.frame(
-        Group = group,
-        Variable = var,
-        Shapiro_Statistic = NA,
-        P_Value = NA,
-        Observations = n_obs
-      ))
-    }
-  }
-}
-
-# Formatowanie P-value w notacji naukowej
-shapiro_results$P_Value <- format(shapiro_results$P_Value, scientific = TRUE, digits = 3)
-
-
-kable(shapiro_results, caption = "Wyniki testu Shapiro-Wilka dla zmiennej price w grupach")
 ```
 
-#### Interpretacja wyników testu Shapiro-Wilka dla zmiennej `price`
+```{r Levene Table, echo=FALSE, warning=FALSE}
 
-Celem analizy było sprawdzenie, czy rozkład zmiennej `price` w grupach
-(`yes` i `no`) dla wybranych zmiennych kategorycznych spełnia założenie
-normalności. Poniżej przedstawiono interpretację wyników dla każdej
-zmiennej.
+levene_results <- data.frame(
+  Variable = c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room"),
+  F_Statistic = c(
+    levene_test_has_parking[1, "F value"],
+    levene_test_has_balcony[1, "F value"],
+    levene_test_has_elevator[1, "F value"],
+    levene_test_has_security[1, "F value"],
+    levene_test_has_storage_room[1, "F value"]
+  ),
+  p_value = c(
+    levene_test_has_parking[1, "Pr(>F)"],
+    levene_test_has_balcony[1, "Pr(>F)"],
+    levene_test_has_elevator[1, "Pr(>F)"],
+    levene_test_has_security[1, "Pr(>F)"],
+    levene_test_has_storage_room[1, "Pr(>F)"]
+  )
+)
 
-#### Kluczowe wnioski:
+levene_results <- levene_results %>%
+  mutate(
+    Interpretation = ifelse(p_value < 0.05, "Wariancje różnią się istotnie", "Wariancje są jednorodne")
+  )
 
-1.  **Wartość p (`P_Value`)**:
+kable(levene_results, caption = "Podsumowanie wyników testów Levene’a dla zmiennej price.")
 
-    -   Dla wszystkich testowanych grup (`yes` i `no`) wartość p jest
-        **mniejsza niż 0.05**.
+```
 
-    -   Odrzucamy hipotezę zerową testu Shapiro-Wilka, co oznacza, że
-        rozkład danych **istotnie odbiega od normalności** w każdej
-        grupie.
+### Interpretacja
 
-2.  **Statystyka Shapiro-Wilka (`Shapiro_Statistic`)**:
+-   **has_parking** (p = 0.8754) – nie ma podstaw do odrzucenia hipotezy
+    zerowej o jednorodności wariancji, dlatego **wariancje są
+    jednorodne**.
 
-    -   Statystyka Shapiro-Wilka jest zbliżona do 1, co oznacza, że dane
-        mają pewne podobieństwa do rozkładu normalnego, ale wynik testu
-        wskazuje na istotne odchylenia.
+-   **has_balcony** (p \< 0.0001) – występują istotne statystycznie
+    różnice w wariancjach grup,\
+    czyli **wariancje różnią się istotnie**.
 
-3.  **Liczba obserwacji (`Observations`)**:
+-   **has_elevator** (p = 0.0069) – p \< 0.05, co również wskazuje na
+    istotną różnicę wariancji,\
+    a zatem **wariancje różnią się istotnie**.
 
-    -   Większość grup miała 5000 obserwacji, co wynika z zastosowania
-        próbkowania dla grup większych niż 5000.
+-   **has_security** (p = 0.3173) – brak podstaw do odrzucenia hipotezy
+    zerowej, **wariancje są jednorodne**.
 
-    -   Wyjątek: `has_security` w grupie `yes`, która miała 2661
-        obserwacji (pełna liczba w danych).
+-   **has_storage_room** (p \< 0.0001) – wariancje w poszczególnych
+    grupach różnią się istotnie, czyli **wariancje różnią się
+    istotnie**.
 
-#### Wyniki dla poszczególnych zmiennych:
+Na podstawie tych wyników widać, że jednorodność wariancji została
+zachowana wyłącznie w przypadku zmiennych **has_parking** i
+**has_security**, natomiast dla **has_balcony**, **has_elevator** oraz
+**has_storage_room** stwierdzamy istotne różnice w wariancjach między
+grupami.
 
-1.  **`has_balcony`**:
+#### Wprowadzenie
 
-    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.994, P-value:
-        1.22×10−13.
-
-    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.994, P-value:
-        5.62×10−13.
-
-    -   **Wniosek:** Dane w obu grupach istotnie odbiegają od
-        normalności.
-
-2.  **`has_parking`**:
-
-    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.994, P-value:
-        9.81×10−14.
-
-    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.993, P-value:
-        2.61×10−15.
-
-    -   **Wniosek:** Dane w obu grupach odbiegają od normalności.
-
-3.  **`has_elevator`**:
-
-    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.991, P-value:
-        1.63×10−17.
-
-    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.993, P-value:
-        1.71×10−14.
-
-    -   **Wniosek:** Dane w obu grupach istotnie odbiegają od
-        normalności.
-
-4.  **`has_security`**:
-
-    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.996, P-value:
-        5.52×10−6.
-
-    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.990, P-value:
-        3.52×10−18.
-
-    -   **Wniosek:** Dane odbiegają od normalności w obu grupach, choć w
-        grupie `yes` odchylenie jest mniej wyraźne (wyższa wartość
-        statystyki i p-value).
-
-5.  **`has_storage_room`**:
-
-    -   **Grupa `yes`:** Statystyka Shapiro-Wilka: 0.990, P-value:
-        1.98×10−18.
-
-    -   **Grupa `no`:** Statystyka Shapiro-Wilka: 0.996, P-value:
-        6.33×10−11.
-
-    -   **Wniosek:** Dane w obu grupach odbiegają od normalności.
-
-#### Ogólne wnioski:
-
-1.  **Rozkład zmiennej `price` odbiega od normalności w każdej grupie
-    (`yes` i `no`) dla wszystkich analizowanych zmiennych
-    kategorycznych.**
-
-2.  **Zalecenia dotyczące dalszej analizy:**
-
-    -   **Test t-Studenta:** Można rozważyć jego użycie, jeśli próbki są
-        duże i opieramy się na Centralnym Twierdzeniu Granicznym (CTG).
-
-    -   **Test Wilcoxona (Mann-Whitney U):** Ze względu na brak
-        normalności, test Wilcoxona może być bardziej odpowiedni do
-        porównania grup.
+Na podstawie wyników testu [**Andersona-Darlinga**](#Anderson_Darling)
+(brak rozkładu normalnego) i testu Levene’a (różnice w wariancjach dla
+niektórych zmiennych), testy parametryczne, takie jak analiza wariancji
+(ANOVA) czy test t-Studenta, nie są odpowiednie. Zamiast tego
+zastosujemy test **Manna-Whitneya** (dla dwóch grup).
 
 ### Test Mann-Whitneya (Wilcoxona)
 
-#### Wprowadzenie
-
-# ANDERSON WYŻEJ ???? O NIM TEŻ TRZEBA WSPOMNIEĆ PO TO BYŁ ROBIONY
-
-Na podstawie wyników testu Shapiro-Wilka stwierdzono, że rozkład
-zmiennej `price` odbiega od normalności w każdej grupie (`yes` i `no`)
-dla wszystkich analizowanych zmiennych kategorycznych. W związku z tym,
-zamiast testu t-Studenta, zdecydowano się zastosować **test
-Mann-Whitneya (Wilcoxona)**, który nie wymaga założenia normalności
-rozkładu danych.
-
 #### Cel testu Mann-Whitneya
 
-# ten test nie wymaga normalnosci i jednorodnosci wariancji.
+Test Manna-Whitneya, znany również jako test U Manna-Whitneya, jest
+nieparametrycznym testem statystycznym stosowanym do porównania median
+dwóch niezależnych grup. Jest użyteczny, gdy dane nie spełniają założeń
+testów parametrycznych, takich jak normalność rozkładu czy jednorodności
+wariancji.
 
-Test Mann-Whitneya (zwany również testem Wilcoxona) bada, czy mediany
-zmiennej `price` różnią się istotnie pomiędzy grupami `yes` i `no` dla
-każdej zmiennej kategorycznej. Jest to test nieparametryczny, który jest
-bardziej odporny na odchylenia od założeń normalności niż test
-t-Studenta.
+### Założenia testu:
 
-# mann
+1.  Obie grupy są niezależne.
+2.  Dane są mierzalne w skali porządkowej, interwałowej lub ilorazowej.
+3.  Rozkłady w obu grupach mogą być różne, ale test jest najbardziej
+    efektywny, gdy kształty rozkładów są podobne.
 
-```{r}
-krakow <- dane_filtr[dane_filtr$city == "Kraków", ]
-winda_krakow <- wilcox.test(krakow$price ~ krakow$has_elevator, alternative = "less") # mozesz wybrac alternative np less albo jeszcze inne
+### Hipotezy:
 
-#Wartość p < 0.05  wynik statystycznie istotny. Możemy odrzucić hipotezę zerową (czyli brak różnicy) na poziomie istotności 0.05.
-# H0 -> ceny mieszkań z windą i bez windy są takie same.
-# H1 ->  ceny mieszkań z windą są mniejsze niż ceny mieszkań bez windy. alternative = "less" oznacza, że zakłada się, iż grupa "z windą" ma mniejsze ceny.
+-   **Hipoteza zerowa (H₀)**: Rozkłady obu grup są identyczne, a ich
+    mediany są równe.
+-   **Hipoteza alternatywna (H₁)**: Rozkłady obu grup różnią się, co
+    może wskazywać na różnicę median.
 
-#drzucamy hipotezę zerową, co oznacza, że istnieje różnica pomiędzy cenami mieszkań z windą a cenami mieszkań bez windy.
-#przez alternative = less interpretacja taka ->  wynik sugeruje, że mieszkania z windą mają niższe ceny niż te bez windy
-```
+### Wynik testu:
+
+-   **Statystyka U**: Miara różnicy rang w obu grupach.
+-   **Wartość p**: Ocenia, czy różnica między grupami jest statystycznie
+    istotna. Jeśli wartość p jest mniejsza od przyjętego poziomu
+    istotności (np. 0.05), odrzucamy H₀.
 
 ```{r Mann-Whitney, echo=FALSE, message=FALSE}
-# Lista zmiennych kategorycznych do analizy
-categorical_vars <- c("has_balcony", "has_parking", "has_elevator", "has_security", "has_storage_room")
+#Kraków
+krakow <- dane[dane$city == "Kraków", ]
 
-# Tworzymy pustą ramkę danych na wyniki testu Mann-Whitneya
-mann_whitney_results <- data.frame(
-  Variable = character(),
-  W_Statistic = numeric(),
-  P_Value = numeric(),
-  Median_Yes = numeric(),
-  Median_No = numeric(),
-  stringsAsFactors = FALSE
-)
+#MW Kraków
+winda_krakow <- wilcox.test(krakow$price ~ krakow$has_elevator, alternative = "less")
+parking_krakow <- wilcox.test(krakow$price ~ krakow$has_parking, alternative = "less")
+balkon_krakow <- wilcox.test(krakow$price ~ krakow$has_balcony, alternative = "less")
+ochrona_krakow <- wilcox.test(krakow$price ~ krakow$has_security, alternative = "less")
+pom_gosp_krakow <- wilcox.test(krakow$price ~ krakow$has_storage_room, alternative = "less")
 
-# Iteracja po zmiennych kategorycznych
-for (var in categorical_vars) {
-  if (var %in% colnames(dane)) {
-    # Dane dla grup yes i no
-    group_yes <- dane$price[dane[[var]] == "yes"]
-    group_no <- dane$price[dane[[var]] == "no"]
-    
-    # Test Mann-Whitneya
-    wilcox_test <- wilcox.test(group_yes, group_no, exact = FALSE) # exact=FALSE dla dużych prób
-    
-    # Obliczanie median
-    median_yes <- median(group_yes, na.rm = TRUE)
-    median_no <- median(group_no, na.rm = TRUE)
-    
-    # Zapis wyników
-    mann_whitney_results <- rbind(mann_whitney_results, data.frame(
-      Variable = var,
-      W_Statistic = wilcox_test$statistic,
-      P_Value = wilcox_test$p.value,
-      Median_Yes = median_yes,
-      Median_No = median_no
-    ))
+#Warszawa
+warszawa <- dane[dane$city == "Warszawa", ]
+
+#MW Warszawa
+winda_warszawa <- wilcox.test(warszawa$price ~ warszawa$has_elevator, alternative = "less")
+parking_warszawa <- wilcox.test(warszawa$price ~ warszawa$has_parking, alternative = "less")
+balkon_warszawa <- wilcox.test(warszawa$price ~ warszawa$has_balcony, alternative = "less")
+ochrona_warszawa <- wilcox.test(warszawa$price ~ warszawa$has_security, alternative = "less")
+pom_gosp_warszawa <- wilcox.test(warszawa$price ~ warszawa$has_storage_room, alternative = "less")
+
+#Radom
+radom <- dane[dane$city == "Radom", ]
+
+#MW Radom
+winda_radom <- wilcox.test(radom$price ~ radom$has_elevator, alternative = "less")
+parking_radom <- wilcox.test(radom$price ~ radom$has_parking, alternative = "less")
+balkon_radom <- wilcox.test(radom$price ~ radom$has_balcony, alternative = "less")
+ochrona_radom <- wilcox.test(radom$price ~ radom$has_security, alternative = "less")
+pom_gosp_radom <- wilcox.test(radom$price ~ radom$has_storage_room, alternative = "less")
+
+#Częstochowa
+czestochowa <- dane[dane$city == "Częstochowa", ]
+
+#MW Częstochowa
+winda_czestochowa <- wilcox.test(czestochowa$price ~ czestochowa$has_elevator, alternative = "less")
+parking_czestochowa <- wilcox.test(czestochowa$price ~ czestochowa$has_parking, alternative = "less")
+balkon_czestochowa <- wilcox.test(czestochowa$price ~ czestochowa$has_balcony, alternative = "less")
+ochrona_czestochowa <- wilcox.test(czestochowa$price ~ czestochowa$has_security, alternative = "less")
+pom_gosp_czestochowa <- wilcox.test(czestochowa$price ~ czestochowa$has_storage_room, alternative = "less")
+
+#Rzeszów
+rzeszow <- dane[dane$city == "Rzeszów", ]
+
+#MW Rzeszów
+winda_rzeszow <- wilcox.test(rzeszow$price ~ rzeszow$has_elevator, alternative = "less")
+parking_rzeszow <- wilcox.test(rzeszow$price ~ rzeszow$has_parking, alternative = "less")
+balkon_rzeszow <- wilcox.test(rzeszow$price ~ rzeszow$has_balcony, alternative = "less")
+ochrona_rzeszow <- wilcox.test(rzeszow$price ~ rzeszow$has_security, alternative = "less")
+pom_gosp_rzeszow <- wilcox.test(rzeszow$price ~ rzeszow$has_storage_room, alternative = "less")
+
+#Białystok
+bialystok <- dane[dane$city == "Białystok", ]
+
+#MW Białystok
+winda_bialystok <- wilcox.test(bialystok$price ~ bialystok$has_elevator, alternative = "less")
+parking_bialystok <- wilcox.test(bialystok$price ~ bialystok$has_parking, alternative = "less")
+balkon_bialystok <- wilcox.test(bialystok$price ~ bialystok$has_balcony, alternative = "less")
+ochrona_bialystok <- wilcox.test(bialystok$price ~ bialystok$has_security, alternative = "less")
+pom_gosp_bialystok <- wilcox.test(bialystok$price ~ bialystok$has_storage_room, alternative = "less")
+
+
+```
+
+```{r MW tabela, echo=FALSE}
+
+# Funkcja do formatowania wartości p
+format_p <- function(p_value) {
+  if (!is.na(p_value)) {
+    formatC(p_value, format = "e", digits = 2)
+  } else {
+    NA
   }
 }
 
-# Formatowanie P-value w notacji naukowej
-mann_whitney_results$P_Value <- format(mann_whitney_results$P_Value, scientific = TRUE, digits = 3)
+# Tworzenie pustej tabeli wyników
+summary_table <- data.frame(
+  City = character(),
+  Variable = character(),
+  W_Statistic = numeric(),
+  p_value = character(),  # Zmienione na character, aby przechowywać sformatowane p-value
+  Interpretation = character()
+)
 
-kable(mann_whitney_results, caption = "Wyniki testu Mann-Whitneya dla zmiennej price w grupach")
+# Funkcja do dodania wyników do tabeli
+add_to_table <- function(city, variable, test_result) {
+  if (!is.na(test_result$p.value)) {
+    interpretation <- ifelse(test_result$p.value < 0.05, "Istotna różnica", "Brak istotnej różnicy")
+  } else {
+    interpretation <- "Błąd lub brak danych"
+  }
+  
+  return(data.frame(
+    City = city,
+    Variable = variable,
+    W_Statistic = if (!is.na(test_result$statistic)) test_result$statistic else NA,
+    p_value = if (!is.na(test_result$p.value)) format_p(test_result$p.value) else NA,
+    Interpretation = interpretation
+  ))
+}
+
+summary_table <- rbind(
+  summary_table, add_to_table("Kraków", "has_elevator", winda_krakow),
+  summary_table, add_to_table("Kraków", "has_parking", parking_krakow),
+  summary_table, add_to_table("Kraków", "has_balcony", balkon_krakow),
+  summary_table, add_to_table("Kraków", "has_security", ochrona_krakow),
+  summary_table, add_to_table("Kraków", "has_storage_room", pom_gosp_krakow),
+  
+  summary_table, add_to_table("Warszawa", "has_elevator", winda_warszawa),
+  summary_table, add_to_table("Warszawa", "has_parking", parking_warszawa),
+  summary_table, add_to_table("Warszawa", "has_balcony", balkon_warszawa),
+  summary_table, add_to_table("Warszawa", "has_security", ochrona_warszawa),
+  summary_table, add_to_table("Warszawa", "has_storage_room", pom_gosp_warszawa),
+  
+  summary_table, add_to_table("Radom", "has_elevator", winda_radom),
+  summary_table, add_to_table("Radom", "has_parking", parking_radom),
+  summary_table, add_to_table("Radom", "has_balcony", balkon_radom),
+  summary_table, add_to_table("Radom", "has_security", ochrona_radom),
+  summary_table, add_to_table("Radom", "has_storage_room", pom_gosp_radom),
+  
+  summary_table, add_to_table("Częstochowa", "has_elevator", winda_czestochowa),
+  summary_table, add_to_table("Częstochowa", "has_parking", parking_czestochowa),
+  summary_table, add_to_table("Częstochowa", "has_balcony", balkon_czestochowa),
+  summary_table, add_to_table("Częstochowa", "has_security", ochrona_czestochowa),
+  summary_table, add_to_table("Częstochowa", "has_storage_room", pom_gosp_czestochowa),
+  
+  summary_table, add_to_table("Rzeszów", "has_elevator", winda_rzeszow),
+  summary_table, add_to_table("Rzeszów", "has_parking", parking_rzeszow),
+  summary_table, add_to_table("Rzeszów", "has_balcony", balkon_rzeszow),
+  summary_table, add_to_table("Rzeszów", "has_security", ochrona_rzeszow),
+  summary_table, add_to_table("Rzeszów", "has_storage_room", pom_gosp_rzeszow),
+  
+  summary_table, add_to_table("Białystok", "has_elevator", winda_bialystok),
+  summary_table, add_to_table("Białystok", "has_parking", parking_bialystok),
+  summary_table, add_to_table("Białystok", "has_balcony", balkon_bialystok),
+  summary_table, add_to_table("Białystok", "has_security", ochrona_bialystok),
+  summary_table, add_to_table("Białystok", "has_storage_room", pom_gosp_bialystok)
+)
+
+kable(summary_table, caption = "Podsumowanie wyników testów Manna-Whitneya dla miast i zmiennych kategorycznych.")
 ```
 
 #### Interpretacja wyników testu Mann-Whitneya
 
-#### Wprowadzenie
+W przeprowadzonych testach Manna–Whitneya (z alternatywą `less`)
+sprawdzano istotność statystyczną różnic w medianach ceny mieszkań
+(zmienna `price`) w zależności od pięciu cech (zmiennych
+kategorycznych):
 
-Test Mann-Whitneya został przeprowadzony, aby sprawdzić, czy mediany
-zmiennej `price` różnią się istotnie pomiędzy grupami `yes` i `no` dla
-każdej zmiennej kategorycznej. Wyniki testu przedstawiono poniżej.
+-   **has_elevator** (czy mieszkanie ma windę),
 
-#### Kluczowe wyniki:
+-   **has_parking** (czy mieszkanie ma parking),
 
-1.  **`has_balcony`:**
-    -   **Wartość statystyki W:** 62,353,150
-    -   **P-value:** $2.05 \times 10^{-44}$ (bardzo niskie, istotne
-        statystycznie)
-    -   **Mediana (yes):** 13.52649
-    -   **Mediana (no):** 13.44300
-    -   **Wniosek:** Istnieje istotna statystycznie różnica w medianie
-        `price` pomiędzy mieszkaniami z balkonem (`yes`) a bez balkonu
-        (`no`). Mieszkania z balkonem mają wyższą medianę ceny.
-2.  **`has_parking`:**
-    -   **Wartość statystyki W:** 55,741,107
-    -   **P-value:** $7.32 \times 10^{-118}$ (bardzo niskie, istotne
-        statystycznie)
-    -   **Mediana (yes):** 13.59112
-    -   **Mediana (no):** 13.45167
-    -   **Wniosek:** Mieszkania z parkingiem (`yes`) mają istotnie
-        wyższą medianę ceny w porównaniu do mieszkań bez parkingu
-        (`no`).
-3.  **`has_elevator`:**
-    -   **Wartość statystyki W:** 71,840,735
-    -   **P-value:** $1.48 \times 10^{-219}$ (bardzo niskie, istotne
-        statystycznie)
-    -   **Mediana (yes):** 13.57710
-    -   **Mediana (no):** 13.39848
-    -   **Wniosek:** Mieszkania z windą (`yes`) mają istotnie wyższą
-        medianę ceny w porównaniu do mieszkań bez windy (`no`).
-4.  **`has_security`:**
-    -   **Wartość statystyki W:** 31,442,538
-    -   **P-value:** $2.00 \times 10^{-100}$ (bardzo niskie, istotne
-        statystycznie)
-    -   **Mediana (yes):** 13.66352
-    -   **Mediana (no):** 13.45741
-    -   **Wniosek:** Obecność zabezpieczeń (`yes`) wiąże się z istotnie
-        wyższą medianą ceny mieszkań w porównaniu do mieszkań bez
-        zabezpieczeń (`no`).
-5.  **`has_storage_room`:**
-    -   **Wartość statystyki W:** 45,223,376
-    -   **P-value:** $9.00 \times 10^{-146}$ (bardzo niskie, istotne
-        statystycznie)
-    -   **Mediana (yes):** 13.41354
-    -   **Mediana (no):** 13.55415
-    -   **Wniosek:** W przeciwieństwie do innych zmiennych, mieszkania z
-        komórką lokatorską (`yes`) mają **niższą medianę ceny** w
-        porównaniu do mieszkań bez komórki (`no`).
+-   **has_balcony** (czy mieszkanie ma balkon),
 
-#### Ogólne wnioski:
+-   **has_security** (czy w budynku jest ochrona),
 
-1.  **Istotne różnice w medianach:**
-    -   Dla wszystkich zmiennych kategorycznych różnice w medianach
-        `price` pomiędzy grupami `yes` i `no` są statystycznie istotne
-        (p-value \< 0.05).
-2.  **Wpływ cech na medianę ceny:**
-    -   Cechy takie jak balkon, parking, winda, czy zabezpieczenia są
-        związane z wyższymi medianami cen mieszkań.
-    -   **Wyjątek:** Komórka lokatorska (`has_storage_room`), gdzie
-        mediany wskazują na niższą cenę mieszkań z tą cechą.
+-   **has_storage_room** (czy mieszkanie/dyspozycji jest pomieszczenie
+    gospodarcze).
+
+Test przeprowadzono osobno dla każdej z wybranych miejscowości. W
+poniższej interpretacji „istotna różnica” oznacza odrzucenie hipotezy
+zerowej (p \< 0.05), natomiast „brak istotnej różnicy” – brak podstaw do
+jej odrzucenia (p ≥ 0.05).
+
+### Kraków
+
+-   **has_elevator**, **has_parking**, **has_balcony**: stwierdzono
+    istotne różnice w rozkładach cen (p \< 0.05).
+
+-   **has_security**, **has_storage_room**: brak istotnych różnic (p ≥
+    0.05).
+
+W Krakowie cechy takie jak winda, parking czy balkon mogą więc wiązać
+się z innym poziomem mediany ceny niż w przypadku mieszkań bez tych
+udogodnień. Natomiast ochrona i pomieszczenie gospodarcze nie wykazały
+statystycznie istotnego wpływu na rozkład cen.
+
+### Warszawa
+
+-   **has_elevator**, **has_parking**, **has_balcony**,
+    **has_security**: istotna różnica (p \< 0.05).
+
+-   **has_storage_room**: brak istotnej różnicy (p ≥ 0.05).
+
+W stolicy niemal wszystkie uwzględniane udogodnienia (poza
+pomieszczeniem gospodarczym) istotnie różnicują medianę ceny.
+
+### Radom
+
+-   **has_parking**: istotna różnica (p \< 0.05).
+
+-   **has_elevator**, **has_balcony**, **has_security**,
+    **has_storage_room**: brak istotnej różnicy (p ≥ 0.05).
+
+Dla mieszkań w Radomiu tylko parking istotnie wpływa na ceny w ujęciu
+statystycznym.
+
+### Częstochowa
+
+-   **has_parking**, **has_balcony**: istotna różnica (p \< 0.05).
+
+-   **has_elevator**, **has_security**, **has_storage_room**: brak
+    istotnej różnicy (p ≥ 0.05).
+
+Tutaj ważnymi czynnikami wpływającymi na ceny (w sensie statystycznym)
+okazały się posiadanie parkingu oraz balkonu.
+
+### Rzeszów
+
+-   Dla wszystkich pięciu analizowanych cech (winda, parking, balkon,
+    ochrona, pom. gospodarcze) **brak istotnej różnicy** (p ≥ 0.05).
+
+W Rzeszowie nie stwierdzono wpływu żadnej z badanych zmiennych
+kategorycznych na rozkład cen w testach Manna–Whitneya.
+
+### Białystok
+
+-   **has_elevator**, **has_parking**, **has_balcony**: istotna różnica
+    (p \< 0.05).
+
+-   **has_security**, **has_storage_room**: brak istotnej różnicy (p ≥
+    0.05).
+
+W Białymstoku posiadanie windy, parkingu oraz balkonu różnicowało
+medianę cen, natomiast ochrona i pomieszczenie gospodarcze nie miały
+takiego istotnego efektu.
+
+**Podsumowując**, w większości miast zaobserwowano istotne statystycznie
+różnice w medianach cen przy uwzględnieniu co najmniej jednej z
+wybranych cech. Szczególnie często wyłaniającymi się zmiennymi okazały
+się:
+
+-   **has_parking** (istotne m.in. w Krakowie, Warszawie, Radomiu,
+    Częstochowie, Białymstoku),
+
+-   **has_balcony** (istotne m.in. w Krakowie, Warszawie, Częstochowie,
+    Białymstoku).
+
+Dane te sugerują, że w większości analizowanych lokalizacji obecność
+parkingu czy balkonu może wpływać na kształtowanie się cen mieszkań,
+podczas gdy ochrona i pomieszczenie gospodarcze rzadziej dawały
+statystycznie istotne różnice – wyjątkiem był Radom, gdzie jedynie
+parking się wyróżnił. W Rzeszowie z kolei żaden z badanych czynników nie
+wpłynął istotnie na medianę cen.
 
 # **Analiza czynników geogaficznych wpływających na ceny mieszkań**
 
