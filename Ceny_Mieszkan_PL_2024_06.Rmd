@@ -2309,7 +2309,31 @@ wartości przy założeniu niezależności.
 
 ### Analiza zależności dla wielu zmiennych kategorycznych
 
+
+```{r}
+# 1. test chi-kwadrat opisanie dobrze 
+# niżej kod do chi-kwadrat
+# 2. shapirowilka wynonujesz dla max 5 tys obserwacji, bada rozład normalny (normalność) danych a matematycznie rozkłady przyjmują parametry liczbowe zeby np wyznaczyc funkcje gęstości więc robimy go tylko na danych ilościowych. dla zmiennych jakosciowych nie ma to sensu
+# 3. możemy również zbadać jednorodność wariancji ponieważ test manna wykonujemy bo nie mamy rozkładu normalnego i równych wariancji, 
+```
+
+
+# chi
+
+```{r}
+
+tabela <- table(dane_filtr$has_balcony, dane_filtr$has_elevator)
+chisq.test(tabela)
+```
+
+
 ```{r chi-square-multiple-tests, echo=FALSE, message=FALSE, results='hide'}
+
+tabela <- table(dane_filtr$has_balcony, dane_filtr$has_elevator)
+chisq.test(tabela)
+
+
+
 
 # Lista zmiennych do porównania
 categorical_vars <- c("has_balcony", "has_parking", "has_elevator", "has_security", "has_storage_room")
@@ -2459,7 +2483,7 @@ Chi-kwadrat zostały przedstawione poniżej.
     -   Wnioski: Obecność zabezpieczeń i komórki lokatorskiej jest
         **silnie i istotnie zależna**.
 
-### Ogólne wnioski:
+#### Ogólne wnioski:
 
 Wszystkie pary zmiennych kategorycznych wykazują istotne zależności, co
 sugeruje, że cechy mieszkań są często powiązane. Najsilniejsze
@@ -2473,6 +2497,8 @@ standardach lub preferencji rynkowych.
 ### Testowanie normalności i wybór odpowiedniego testu statystycznego
 
 #### Wprowadzenie
+
+# SHAPIRO TYLKO ZMIENNE ILOŚCIOWEEE (JAKOŚCIOWE NIE MOGĄ MIEĆ ROZKŁADU NORMALNEGO - NIE POLICZYSZ WARIANCJI ANI W.OCZEKIWANEJ Z TAKICH)
 
 Celem analizy jest sprawdzenie, czy istnieją istotne różnice w średnich
 wartości zmiennej `price` pomiędzy grupami (`yes` i `no`) dla wybranych
@@ -2694,6 +2720,8 @@ zmiennej.
 
 #### Wprowadzenie
 
+#  ANDERSON WYŻEJ ???? O NIM TEŻ TRZEBA WSPOMNIEĆ PO TO BYŁ ROBIONY
+
 Na podstawie wyników testu Shapiro-Wilka stwierdzono, że rozkład
 zmiennej `price` odbiega od normalności w każdej grupie (`yes` i `no`)
 dla wszystkich analizowanych zmiennych kategorycznych. W związku z tym,
@@ -2703,11 +2731,28 @@ rozkładu danych.
 
 #### Cel testu Mann-Whitneya
 
+# ten test nie wymaga normalnosci i jednorodnosci wariancji. 
+
 Test Mann-Whitneya (zwany również testem Wilcoxona) bada, czy mediany
 zmiennej `price` różnią się istotnie pomiędzy grupami `yes` i `no` dla
 każdej zmiennej kategorycznej. Jest to test nieparametryczny, który jest
 bardziej odporny na odchylenia od założeń normalności niż test
 t-Studenta.
+
+# mann
+
+```{r}
+krakow <- dane_filtr[dane_filtr$city == "Kraków", ]
+winda_krakow <- wilcox.test(krakow$price ~ krakow$has_elevator, alternative = "less") # mozesz wybrac alternative np less albo jeszcze inne
+
+#Wartość p < 0.05  wynik statystycznie istotny. Możemy odrzucić hipotezę zerową (czyli brak różnicy) na poziomie istotności 0.05.
+# H0 -> ceny mieszkań z windą i bez windy są takie same.
+# H1 ->  ceny mieszkań z windą są mniejsze niż ceny mieszkań bez windy. alternative = "less" oznacza, że zakłada się, iż grupa "z windą" ma mniejsze ceny.
+
+#drzucamy hipotezę zerową, co oznacza, że istnieje różnica pomiędzy cenami mieszkań z windą a cenami mieszkań bez windy.
+#przez alternative = less interpretacja taka ->  wynik sugeruje, że mieszkania z windą mają niższe ceny niż te bez windy
+```
+
 
 ```{r Mann-Whitney, echo=FALSE, message=FALSE}
 # Lista zmiennych kategorycznych do analizy
