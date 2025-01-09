@@ -2309,116 +2309,87 @@ wartości przy założeniu niezależności.
 
 ### Analiza zależności dla wielu zmiennych kategorycznych
 
-
 ```{r}
-# 1. test chi-kwadrat opisanie dobrze 
-# niżej kod do chi-kwadrat
 # 2. shapirowilka wynonujesz dla max 5 tys obserwacji, bada rozład normalny (normalność) danych a matematycznie rozkłady przyjmują parametry liczbowe zeby np wyznaczyc funkcje gęstości więc robimy go tylko na danych ilościowych. dla zmiennych jakosciowych nie ma to sensu
 # 3. możemy również zbadać jednorodność wariancji ponieważ test manna wykonujemy bo nie mamy rozkładu normalnego i równych wariancji, 
 ```
 
-
-# chi
-
-```{r}
-
-tabela <- table(dane_filtr$has_balcony, dane_filtr$has_elevator)
-chisq.test(tabela)
-```
-
-
 ```{r chi-square-multiple-tests, echo=FALSE, message=FALSE, results='hide'}
 
-tabela <- table(dane_filtr$has_balcony, dane_filtr$has_elevator)
-chisq.test(tabela)
+# Chi tabele
+chi_tabela1 <- table(dane_filtr$has_parking, dane_filtr$has_balcony)
+chisq.test(chi_tabela1)
 
+chi_tabela2 <- table(dane_filtr$has_parking, dane_filtr$has_elevator)
+chisq.test(chi_tabela2)
 
+chi_tabela3 <- table(dane_filtr$has_parking, dane_filtr$has_security)
+chisq.test(chi_tabela3)
 
+chi_tabela4 <- table(dane_filtr$has_parking, dane_filtr$has_storage_room)
+chisq.test(chi_tabela4)
 
-# Lista zmiennych do porównania
-categorical_vars <- c("has_balcony", "has_parking", "has_elevator", "has_security", "has_storage_room")
+chi_tabela5 <- table(dane_filtr$has_balcony, dane_filtr$has_elevator)
+chisq.test(chi_tabela5)
 
-# Sprawdzenie, które zmienne istnieją w zbiorze danych
-valid_vars <- categorical_vars[categorical_vars %in% colnames(dane)]
+chi_tabela6 <- table(dane_filtr$has_balcony, dane_filtr$has_security)
+chisq.test(chi_tabela6)
 
-# Informacja o zmiennych do analizy
-cat("\nZmiennie do analizy:", valid_vars, "\n")
+chi_tabela7 <- table(dane_filtr$has_balcony, dane_filtr$has_storage_room)
+chisq.test(chi_tabela7)
 
-# Funkcja do wykonania testu Chi-kwadrat dla każdej pary zmiennych
-chi_square_results <- list()
+chi_tabela8 <- table(dane_filtr$has_elevator, dane_filtr$has_security)
+chisq.test(chi_tabela8)
 
-for (i in 1:(length(valid_vars) - 1)) {  # Iteracja do przedostatniej zmiennej
-  for (j in (i+1):length(valid_vars)) {  # Iteracja od następnej zmiennej
-    var1 <- valid_vars[i]
-    var2 <- valid_vars[j]
-    
-    # Walidacja obecności zmiennych w danych
-    if (var1 %in% colnames(dane) & var2 %in% colnames(dane)) {
-      # Tworzenie tymczasowego zbioru danych z wybranymi zmiennymi
-      temp_data <- dane[, c(var1, var2), drop = FALSE]
-      
-      # Usunięcie wierszy z brakującymi wartościami (NA)
-      temp_data <- na.omit(temp_data)
-      
-      # Sprawdzenie, czy obie zmienne mają dane
-      if (nrow(temp_data) > 0) {
-        # Tworzenie tablicy kontyngencji
-        contingency_table <- table(temp_data[[var1]], temp_data[[var2]])
-        
-        # Test Chi-kwadrat (jeśli tablica kontyngencji ma odpowiedni rozmiar)
-        if (min(dim(contingency_table)) > 1) {
-          test_result <- chisq.test(contingency_table)
-          
-          # Zapis wyników do listy
-          chi_square_results[[paste(var1, "vs", var2)]] <- list(
-            contingency_table = contingency_table,
-            chi_squared_stat = test_result$statistic,
-            p_value = test_result$p.value,
-            df = test_result$parameter
-          )
-        } else {
-          cat("\nTablica kontyngencji dla", var1, "vs", var2, "jest za mała, aby przeprowadzić test.\n")
-        }
-      } else {
-        cat("\nBrak danych do analizy dla", var1, "vs", var2, "\n")
-      }
-    } else {
-      cat("\nJedna z kolumn (", var1, "lub", var2, ") nie istnieje w danych.\n")
-    }
-  }
-}
+chi_tabela9 <- table(dane_filtr$has_elevator, dane_filtr$has_storage_room)
+chisq.test(chi_tabela9)
 
-# Ramka danych z wynikami testów Chi-kwadrat
-chi_square_results_df <- data.frame(
-  Comparison = c(
-    "has_balcony vs has_parking",
-    "has_balcony vs has_elevator",
-    "has_balcony vs has_security",
-    "has_balcony vs has_storage_room",
+chi_tabela10 <- table(dane_filtr$has_security, dane_filtr$has_storage_room)
+chisq.test(chi_tabela10)
+```
+
+```{r chi results, echo=FALSE}
+# Tworzenie ramki wyników
+chi_results <- data.frame(
+  Pair = c(
+    "has_parking vs has_balcony",
     "has_parking vs has_elevator",
     "has_parking vs has_security",
     "has_parking vs has_storage_room",
+    "has_balcony vs has_elevator",
+    "has_balcony vs has_security",
+    "has_balcony vs has_storage_room",
     "has_elevator vs has_security",
     "has_elevator vs has_storage_room",
     "has_security vs has_storage_room"
   ),
-  Chi_squared_Statistic = c(
-    178.6818, 21.27356, 139.2903, 160.8436,
-    208.3458, 79.08341, 48.34977, 282.721,
-    1775.337, 332.2429
+  ChiSq_Statistic = c(
+    chisq.test(chi_tabela1)$statistic,
+    chisq.test(chi_tabela2)$statistic,
+    chisq.test(chi_tabela3)$statistic,
+    chisq.test(chi_tabela4)$statistic,
+    chisq.test(chi_tabela5)$statistic,
+    chisq.test(chi_tabela6)$statistic,
+    chisq.test(chi_tabela7)$statistic,
+    chisq.test(chi_tabela8)$statistic,
+    chisq.test(chi_tabela9)$statistic,
+    chisq.test(chi_tabela10)$statistic
   ),
-  P_value = c(
-    9.402443e-41, 3.981856e-06, 3.805473e-32, 7.401809e-37,
-    3.153351e-47, 5.954214e-19, 3.565859e-12, 1.917139e-63,
-    1e-300, 3.120911e-74
-  ),
-  Degrees_of_Freedom = rep(1, 10) # Wszystkie testy mają df = 1
+  p_value = formatC(c(
+    chisq.test(chi_tabela1)$p.value,
+    chisq.test(chi_tabela2)$p.value,
+    chisq.test(chi_tabela3)$p.value,
+    chisq.test(chi_tabela4)$p.value,
+    chisq.test(chi_tabela5)$p.value,
+    chisq.test(chi_tabela6)$p.value,
+    chisq.test(chi_tabela7)$p.value,
+    chisq.test(chi_tabela8)$p.value,
+    chisq.test(chi_tabela9)$p.value,
+    chisq.test(chi_tabela10)$p.value
+  ), format = "e", digits = 3)
 )
 
-# Formatowanie P-value w notacji naukowej
-chi_square_results_df$P_value <- format(chi_square_results_df$P_value, scientific = TRUE, digits = 3)
-
-kable(chi_square_results_df, caption = "Wyniki testów Chi-kwadrat")
+kable(chi_results, format = "markdown", caption = "Wyniki testów Chi-kwadrat")
 ```
 
 ### Interpretacja wyników analizy Chi-kwadrat
@@ -2430,69 +2401,147 @@ Chi-kwadrat zostały przedstawione poniżej.
 
 #### Wyniki analizy:
 
-1.  **`has_balcony` vs `has_parking`**
-    -   Tablica kontyngencji pokazuje, że mieszkania z balkonem są
-        bardziej skorelowane z posiadaniem parkingu.
-    -   Statystyka Chi-kwadrat: **178.68**
-    -   Wartość p: $9.40 \times 10^{-41}$ (bardzo niskie)
-    -   Wnioski: Istnieje **silna zależność** między posiadaniem balkonu
-        a parkingu.
-2.  **`has_balcony` vs `has_elevator`**
-    -   Wynik wskazuje na zależność między balkonem a windą.
-    -   Statystyka Chi-kwadrat: **21.27**
-    -   Wartość p: $3.98 \times 10^{-6}$
-    -   Wnioski: Istnieje **istotna zależność**, ale słabsza niż w
-        innych przypadkach.
-3.  **`has_balcony` vs `has_security`**
-    -   Statystyka Chi-kwadrat: **139.29**
-    -   Wartość p: $3.80 \times 10^{-32}$
-    -   Wnioski: Istnieje **bardzo silna zależność** między balkonem a
-        obecnością zabezpieczeń.
-4.  **`has_balcony` vs `has_storage_room`**
-    -   Statystyka Chi-kwadrat: **160.84**
-    -   Wartość p: $7.40 \times 10^{-37}$
-    -   Wnioski: Zależność między balkonem a komórką lokatorską jest
-        **bardzo silna i istotna**.
-5.  **`has_parking` vs `has_elevator`**
-    -   Statystyka Chi-kwadrat: **208.35**
-    -   Wartość p: $3.15 \times 10^{-47}$
-    -   Wnioski: Istnieje **silna zależność** między parkingiem a windą.
-6.  **`has_parking` vs `has_security`**
-    -   Statystyka Chi-kwadrat: **79.08**
-    -   Wartość p: $5.95 \times 10^{-19}$
-    -   Wnioski: Parking i zabezpieczenia są również **istotnie
-        zależne**, ale w mniejszym stopniu.
-7.  **`has_parking` vs `has_storage_room`**
-    -   Statystyka Chi-kwadrat: **48.35**
-    -   Wartość p: $3.56 \times 10^{-12}$
-    -   Wnioski: Zależność między parkingiem a komórką lokatorską jest
-        **istotna, ale umiarkowana**.
-8.  **`has_elevator` vs `has_security`**
-    -   Statystyka Chi-kwadrat: **282.72**
-    -   Wartość p: $1.92 \times 10^{-63}$
-    -   Wnioski: Winda i zabezpieczenia są **silnie i istotnie
-        skorelowane**.
-9.  **`has_elevator` vs `has_storage_room`**
-    -   Statystyka Chi-kwadrat: **1775.34**
-    -   Wartość p: **0** (najsilniejszy możliwy wynik)
-    -   Wnioski: Winda i komórka lokatorska są **bardzo silnie
-        zależne**.
-10. **`has_security` vs `has_storage_room`**
-    -   Statystyka Chi-kwadrat: **332.24**
-    -   Wartość p: $3.12 \times 10^{-74}$
-    -   Wnioski: Obecność zabezpieczeń i komórki lokatorskiej jest
-        **silnie i istotnie zależna**.
+`has_parking` vs `has_balcony`
+
+Tablica kontyngencji pokazuje, że mieszkania z parkingiem są silnie
+skorelowane z posiadaniem balkonu.
+
+**Statystyka Chi-kwadrat**: 116.27\
+**Wartość p**: $4.15 \times 10^{-27}$ (bardzo niskie)
+
+**Wnioski**: Istnieje silna zależność między posiadaniem parkingu a
+balkonu.
+
+`has_parking` vs `has_elevator`
+
+Tablica kontyngencji sugeruje, że mieszkania z parkingiem są silnie
+skorelowane z posiadaniem windy.
+
+**Statystyka Chi-kwadrat**: 221.61\
+**Wartość p**: $4.03 \times 10^{-50}$ (bardzo niskie)
+
+**Wnioski**: Istnieje bardzo silna zależność między posiadaniem parkingu
+a windy.
+
+`has_parking` vs `has_security`
+
+Tablica kontyngencji wskazuje, że mieszkania z parkingiem są
+umiarkowanie skorelowane z posiadaniem ochrony.
+
+**Statystyka Chi-kwadrat**: 49.00\
+**Wartość p**: $2.56 \times 10^{-12}$ (bardzo niskie)
+
+**Wnioski**: Istnieje umiarkowana zależność między posiadaniem parkingu
+a ochrony.
+
+`has_parking` vs `has_storage_room`
+
+Tablica kontyngencji pokazuje silną korelację między posiadaniem
+parkingu a pomieszczenia gospodarczego.
+
+**Statystyka Chi-kwadrat**: 135.25\
+**Wartość p**: $2.91 \times 10^{-31}$ (bardzo niskie)
+
+**Wnioski**: Istnieje silna zależność między posiadaniem parkingu a
+pomieszczeniem gospodarczym.
+
+`has_balcony` vs `has_elevator`
+
+Tablica kontyngencji nie wskazuje istotnej korelacji między posiadaniem
+balkonu a windy.
+
+**Statystyka Chi-kwadrat**: 2.29\
+**Wartość p**: $1.31 \times 10^{-1}$ (brak istotności)
+
+**Wnioski**: Nie ma istotnej zależności między posiadaniem balkonu a
+windy.
+
+`has_balcony` vs `has_security`
+
+Tablica kontyngencji pokazuje, że mieszkania z balkonem są umiarkowanie
+skorelowane z posiadaniem ochrony.
+
+**Statystyka Chi-kwadrat**: 24.02\
+**Wartość p**: $9.52 \times 10^{-7}$ (bardzo niskie)
+
+**Wnioski**: Istnieje umiarkowana zależność między posiadaniem balkonu a
+ochrony.
+
+`has_balcony` vs `has_storage_room`
+
+Tablica kontyngencji wskazuje silną korelację między posiadaniem balkonu
+a pomieszczenia gospodarczego.
+
+**Statystyka Chi-kwadrat**: 120.41\
+**Wartość p**: $5.16 \times 10^{-28}$ (bardzo niskie)
+
+**Wnioski**: Istnieje silna zależność między posiadaniem balkonu a
+pomieszczeniem gospodarczym.
+
+`has_elevator` vs `has_security`
+
+Tablica kontyngencji pokazuje silną korelację między posiadaniem windy a
+ochrony.
+
+**Statystyka Chi-kwadrat**: 171.13\
+**Wartość p**: $4.19 \times 10^{-39}$ (bardzo niskie)
+
+**Wnioski**: Istnieje bardzo silna zależność między posiadaniem windy a
+ochrony.
+
+`has_elevator` vs `has_storage_room`
+
+Tablica kontyngencji wskazuje wyjątkowo silną korelację między
+posiadaniem windy a pomieszczenia gospodarczego.
+
+**Statystyka Chi-kwadrat**: 837.82\
+**Wartość p**: $3.23 \times 10^{-184}$ (bardzo niskie)
+
+**Wnioski**: Istnieje wyjątkowo silna zależność między posiadaniem windy
+a pomieszczeniem gospodarczym.
+
+`has_security` vs `has_storage_room`
+
+Tablica kontyngencji pokazuje bardzo silną korelację między posiadaniem
+ochrony a pomieszczenia gospodarczego.
+
+**Statystyka Chi-kwadrat**: 167.67\
+**Wartość p**: $2.39 \times 10^{-38}$ (bardzo niskie)
+
+**Wnioski**: Istnieje bardzo silna zależność między posiadaniem ochrony
+a pomieszczeniem gospodarczym.
 
 #### Ogólne wnioski:
 
-Wszystkie pary zmiennych kategorycznych wykazują istotne zależności, co
-sugeruje, że cechy mieszkań są często powiązane. Najsilniejsze
-zależności zaobserwowano w przypadku: - `has_elevator` vs
-`has_storage_room` ($\chi^2 = 1775.34$), - `has_security` vs
-`has_storage_room` ($\chi^2 = 332.24$).
+Na podstawie przeprowadzonych testów Chi-kwadrat możemy sformułować
+następujące wnioski:
 
-Zależności te mogą wynikać z projektowania mieszkań w określonych
-standardach lub preferencji rynkowych.
+1.  **Silne powiązania**:
+    -   Najsilniejsze zależności występują między zmiennymi związanymi z
+        **windą** i **pomieszczeniem gospodarczym**. To sugeruje, że
+        obecność windy jest ściśle związana z dostępem do pomieszczenia
+        gospodarczego, co może wynikać z układu budynków lub preferencji
+        klientów.
+    -   Również zmienne **parking** i **pomieszczenie gospodarcze** oraz
+        **parking** i **winda** wykazują silną zależność.
+2.  **Umiarkowane zależności**:
+    -   Istnieje umiarkowana zależność między zmiennymi związanymi z
+        **balkonem** i **ochroną**, co może wskazywać na określone
+        standardy bezpieczeństwa w mieszkaniach z balkonem.
+3.  **Brak istotnych zależności**:
+    -   Nie stwierdzono istotnej zależności między posiadaniem
+        **balkonu** a **windą**, co oznacza, że te cechy nie są
+        powiązane w badanej próbie.
+4.  **Wpływ niskich wartości p**:
+    -   Bardzo niskie wartości p dla większości porównań sugerują, że
+        wykryte zależności nie są przypadkowe i wynikają z faktycznych
+        powiązań między cechami mieszkań.
+
+**Podsumowanie**: W analizie ujawniono liczne istotne korelacje między
+cechami mieszkań. Najsilniejsze zależności dotyczą cech związanych z
+infrastrukturą budynku (winda, pomieszczenie gospodarcze) oraz
+dostępnością (parking). Wyniki te mogą być wykorzystane do przewidywania
+preferencji klientów lub optymalizacji oferty deweloperów.
 
 ### Testowanie normalności i wybór odpowiedniego testu statystycznego
 
@@ -2720,7 +2769,7 @@ zmiennej.
 
 #### Wprowadzenie
 
-#  ANDERSON WYŻEJ ???? O NIM TEŻ TRZEBA WSPOMNIEĆ PO TO BYŁ ROBIONY
+# ANDERSON WYŻEJ ???? O NIM TEŻ TRZEBA WSPOMNIEĆ PO TO BYŁ ROBIONY
 
 Na podstawie wyników testu Shapiro-Wilka stwierdzono, że rozkład
 zmiennej `price` odbiega od normalności w każdej grupie (`yes` i `no`)
@@ -2731,7 +2780,7 @@ rozkładu danych.
 
 #### Cel testu Mann-Whitneya
 
-# ten test nie wymaga normalnosci i jednorodnosci wariancji. 
+# ten test nie wymaga normalnosci i jednorodnosci wariancji.
 
 Test Mann-Whitneya (zwany również testem Wilcoxona) bada, czy mediany
 zmiennej `price` różnią się istotnie pomiędzy grupami `yes` i `no` dla
@@ -2752,7 +2801,6 @@ winda_krakow <- wilcox.test(krakow$price ~ krakow$has_elevator, alternative = "l
 #drzucamy hipotezę zerową, co oznacza, że istnieje różnica pomiędzy cenami mieszkań z windą a cenami mieszkań bez windy.
 #przez alternative = less interpretacja taka ->  wynik sugeruje, że mieszkania z windą mają niższe ceny niż te bez windy
 ```
-
 
 ```{r Mann-Whitney, echo=FALSE, message=FALSE}
 # Lista zmiennych kategorycznych do analizy
