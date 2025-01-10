@@ -572,8 +572,6 @@ analizy.
 
 </p>
 
-## Walidacja wstępna danych i określenie reguł logicznych
-
 Kolejnym krokiem w procesie walidacji jest zastosowanie określonych
 reguł logicznych, które zapewniają spójność danych. <br> <br>**W
 projekcie zastosowano następujące reguły walidacyjne**:
@@ -973,6 +971,39 @@ Interpretacja jest następująca:
 -   Rozkład lewoskośny -- skośność jest ujemna, lewe ramię rozkładu jest
     wydłużone, większość obserwacji w próbie ma wartości powyżej
     średniej.
+
+**Rozkład normalny** nazywany również rozkładem Gaussa lub rozkładem
+Gaussowskim, jest jednym z najważniejszych i najczęściej stosowanych
+rozkładów w statystyce. Jego wykres przyjmuje charakterystyczny kształt
+dzwonu, dlatego często określa się go mianem krzywej dzwonowej.
+
+***Właściwości rozkładu normalnego:***
+
+1.  Symetria: Rozkład normalny jest symetryczny względem swojej
+    średniej. Oznacza to, że wartości po obu stronach średniej są
+    równomiernie rozłożone.
+
+2.  Średnia, mediana i dominanta: W rozkładzie normalnym średnia,
+    mediana i dominanta (wartość modalna) są równe i znajdują się w
+    centrum rozkładu.
+
+3.  Kształt: Krzywa rozkładu normalnego ma jeden szczyt (jest
+    jednoszczytowa), a jej ogony asymptotycznie zbliżają się do osi
+    poziomej, co oznacza, że prawdopodobieństwo wartości bardzo
+    odległych od średniej nigdy nie wynosi dokładnie 0, ale jest bardzo
+    małe.
+
+4.  Funkcja gęstości: Matematyczny wzór funkcji gęstości rozkładu
+    normalnego: $$
+    f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+    $$ gdzie:
+
+    -   $\mu$ -- średnia,
+    -   $\sigma$ -- odchylenie standardowe,
+    -   $x$ -- wartość zmiennej losowej.
+
+Rozkład normalny jest fundamentem wielu metod statystycznych, np. testów
+hipotez, regresji czy analizy wariancji.
 
 ### Wykresy pudełkowe
 
@@ -2097,6 +2128,8 @@ dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 
 # **Analiza udogodnień w nieruchomościach**
 
+## Wykresy pudełkowe udogodnień
+
 ```{r zaleznosciboxplot1, echo=FALSE, fig.height=8,fig.width=12}
 wybrane_miasta <- c("Warszawa", "Kraków", "Częstochowa", "Radom", "Białystok", "Rzeszów")
 dane_filtr <- dane %>% filter(city %in% wybrane_miasta)
@@ -2112,7 +2145,7 @@ p1 <- ggplot(dane_filtr, aes(x = has_balcony, y = price)) +
     text = element_text(size = 12),
     title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
     axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
-    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+    axis.text = element_text(size = 10),legend.position = "none"  # Czcionka etykiet osi
   )
 
 p2 <- ggplot(dane_filtr, aes(x = has_elevator, y = price)) +
@@ -2126,7 +2159,7 @@ p2 <- ggplot(dane_filtr, aes(x = has_elevator, y = price)) +
     text = element_text(size = 12), 
     title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
     axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
-    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+    axis.text = element_text(size = 10), legend.position = "none"  # Czcionka etykiet osi
   )
 grid.arrange(p1, p2, nrow = 1)
 ```
@@ -2143,7 +2176,7 @@ p3 <- ggplot(dane_filtr, aes(x = has_parking, y = price)) +
     text = element_text(size = 12), 
     title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
     axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
-    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+    axis.text = element_text(size = 10), legend.position = "none"  # Czcionka etykiet osi
   )
 
 p4 <- ggplot(dane_filtr, aes(x = has_security, y = price)) +
@@ -2157,7 +2190,7 @@ p4 <- ggplot(dane_filtr, aes(x = has_security, y = price)) +
     text = element_text(size = 12), 
     title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
     axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
-    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+    axis.text = element_text(size = 10),legend.position = "none"  # Czcionka etykiet osi
   )
 
 p5 <- ggplot(dane_filtr, aes(x = has_storage_room, y = price)) +
@@ -2171,7 +2204,7 @@ p5 <- ggplot(dane_filtr, aes(x = has_storage_room, y = price)) +
     text = element_text(size = 12),  
     title = element_text(size = 14, face = "bold"),   # Czcionka tytułu
     axis.title = element_text(size = 12, face = "bold"), # Czcionka tytułów osi
-    axis.text = element_text(size = 10)  # Czcionka etykiet osi
+    axis.text = element_text(size = 10),legend.position = "none"  # Czcionka etykiet osi
   )
 
 grid.arrange(p3, p4, p5, nrow = 2)
@@ -2273,6 +2306,8 @@ ograniczona.<br> 4.**Ochrona:** Wysoko cenione w dużych aglomeracjach,
 szczególnie tam, gdzie bezpieczeństwo jest priorytetem.<br> 5.**Komórka
 lokatorska:** Ważna w miastach o wysokim zagęszczeniu, gdzie przestrzeń
 przechowywania ma istotne znaczenie.<br>
+
+## Test Chi-kwadrat
 
 ### Wstęp do analizy testem Chi-kwadrat
 
@@ -2540,9 +2575,7 @@ infrastrukturą budynku (winda, pomieszczenie gospodarcze) oraz
 dostępnością (parking). Wyniki te mogą być wykorzystane do przewidywania
 preferencji klientów lub optymalizacji oferty deweloperów.
 
-### Testowanie normalności i wybór odpowiedniego testu statystycznego
-
-### Jednorodność wariancji
+## Testowanie normalności i jednorodności wariancji
 
 Postanowiliśmy zbadać, czy wariancje wyników w różnych grupach
 badawczych są jednorodne. Jednorodność wariancji, czyli
@@ -2552,19 +2585,19 @@ t-Studenta. Jeśli wariancje nie są równe, wyniki tych analiz mogą być
 niewiarygodne, co może prowadzić do błędnych wniosków.
 
 Aby zweryfikować jednorodność wariancji w badanych grupach, zastosujemy
-**test Levene’a**. Jest to popularna i odporna metoda, która pozwala
+**test Levene'a**. Jest to popularna i odporna metoda, która pozwala
 porównać wariancje w dwóch lub więcej grupach, nawet gdy dane nie
 spełniają założeń normalności rozkładu. Test ten będzie kluczowym
 krokiem w naszej analizie statystycznej, ponieważ od jego wyniku zależy,
 czy możemy zastosować klasyczne metody parametryczne, czy też konieczne
 będzie użycie metod alternatywnych.
 
-W dalszej części przedstawimy sposób przeprowadzenia testu Levene’a oraz
+W dalszej części przedstawimy sposób przeprowadzenia testu Levene'a oraz
 omówimy uzyskane wyniki.
 
-### Test Levene’a
+### Test Levene'a
 
-Test Levene’a jest statystycznym testem służącym do sprawdzenia
+Test Levene'a jest statystycznym testem służącym do sprawdzenia
 jednorodności wariancji (homoskedastyczności) w dwóch lub więcej
 grupach. Jest szczególnie użyteczny w analizach, które wymagają równości
 wariancji jako jednego z założeń, np. analiza wariancji (ANOVA) czy test
@@ -2578,9 +2611,9 @@ t-Studenta.
 
 #### Mechanizm działania:
 
-Test Levene’a porównuje odchylenia wartości w każdej grupie od mediany
+Test Levene'a porównuje odchylenia wartości w każdej grupie od mediany
 lub średniej. W wersji klasycznej test bazuje na średniej, natomiast
-modyfikacja Browna-Forsythe’a stosuje medianę, co czyni test bardziej
+modyfikacja Browna-Forsythe'a stosuje medianę, co czyni test bardziej
 odpornym na wartości odstające.
 
 ```{r Levene Test, echo=FALSE, warning=FALSE}
@@ -2630,22 +2663,22 @@ kable(levene_results, caption = "Podsumowanie wyników testów Levene’a dla zm
 
 ### Interpretacja
 
--   **has_parking** (p = 0.8754) – nie ma podstaw do odrzucenia hipotezy
-    zerowej o jednorodności wariancji, dlatego **wariancje są
+-   **has_parking** (p = 0.8754) -- nie ma podstaw do odrzucenia
+    hipotezy zerowej o jednorodności wariancji, dlatego **wariancje są
     jednorodne**.
 
--   **has_balcony** (p \< 0.0001) – występują istotne statystycznie
+-   **has_balcony** (p \< 0.0001) -- występują istotne statystycznie
     różnice w wariancjach grup,\
     czyli **wariancje różnią się istotnie**.
 
--   **has_elevator** (p = 0.0069) – p \< 0.05, co również wskazuje na
+-   **has_elevator** (p = 0.0069) -- p \< 0.05, co również wskazuje na
     istotną różnicę wariancji,\
     a zatem **wariancje różnią się istotnie**.
 
--   **has_security** (p = 0.3173) – brak podstaw do odrzucenia hipotezy
+-   **has_security** (p = 0.3173) -- brak podstaw do odrzucenia hipotezy
     zerowej, **wariancje są jednorodne**.
 
--   **has_storage_room** (p \< 0.0001) – wariancje w poszczególnych
+-   **has_storage_room** (p \< 0.0001) -- wariancje w poszczególnych
     grupach różnią się istotnie, czyli **wariancje różnią się
     istotnie**.
 
@@ -2658,12 +2691,12 @@ grupami.
 #### Wprowadzenie
 
 Na podstawie wyników testu [**Andersona-Darlinga**](#Anderson_Darling)
-(brak rozkładu normalnego) i testu Levene’a (różnice w wariancjach dla
+(brak rozkładu normalnego) i testu Levene'a (różnice w wariancjach dla
 niektórych zmiennych), testy parametryczne, takie jak analiza wariancji
 (ANOVA) czy test t-Studenta, nie są odpowiednie. Zamiast tego
 zastosujemy test **Manna-Whitneya** (dla dwóch grup).
 
-### Test Mann-Whitneya (Wilcoxona)
+## Test Mann-Whitneya (Wilcoxona)
 
 #### Cel testu Mann-Whitneya
 
@@ -2673,21 +2706,21 @@ dwóch niezależnych grup. Jest użyteczny, gdy dane nie spełniają założeń
 testów parametrycznych, takich jak normalność rozkładu czy jednorodności
 wariancji.
 
-### Założenia testu:
+#### Założenia testu:
 
 1.  Obie grupy są niezależne.
 2.  Dane są mierzalne w skali porządkowej, interwałowej lub ilorazowej.
 3.  Rozkłady w obu grupach mogą być różne, ale test jest najbardziej
     efektywny, gdy kształty rozkładów są podobne.
 
-### Hipotezy:
+#### Hipotezy:
 
 -   **Hipoteza zerowa (H₀)**: Rozkłady obu grup są identyczne, a ich
     mediany są równe.
 -   **Hipoteza alternatywna (H₁)**: Rozkłady obu grup różnią się, co
     może wskazywać na różnicę median.
 
-### Wynik testu:
+#### Wynik testu:
 
 -   **Statystyka U**: Miara różnicy rang w obu grupach.
 -   **Wartość p**: Ocenia, czy różnica między grupami jest statystycznie
@@ -2838,7 +2871,7 @@ kable(summary_table, caption = "Podsumowanie wyników testów Manna-Whitneya dla
 
 #### Interpretacja wyników testu Mann-Whitneya
 
-W przeprowadzonych testach Manna–Whitneya (z alternatywą `less`)
+W przeprowadzonych testach Manna--Whitneya (z alternatywą `less`)
 sprawdzano istotność statystyczną różnic w medianach ceny mieszkań
 (zmienna `price`) w zależności od pięciu cech (zmiennych
 kategorycznych):
@@ -2855,9 +2888,9 @@ kategorycznych):
     gospodarcze).
 
 Test przeprowadzono osobno dla każdej z wybranych miejscowości. W
-poniższej interpretacji „istotna różnica” oznacza odrzucenie hipotezy
-zerowej (p \< 0.05), natomiast „brak istotnej różnicy” – brak podstaw do
-jej odrzucenia (p ≥ 0.05).
+poniższej interpretacji „istotna różnica" oznacza odrzucenie hipotezy
+zerowej (p \< 0.05), natomiast „brak istotnej różnicy" -- brak podstaw
+do jej odrzucenia (p ≥ 0.05).
 
 ### Kraków
 
@@ -2908,7 +2941,7 @@ okazały się posiadanie parkingu oraz balkonu.
     ochrona, pom. gospodarcze) **brak istotnej różnicy** (p ≥ 0.05).
 
 W Rzeszowie nie stwierdzono wpływu żadnej z badanych zmiennych
-kategorycznych na rozkład cen w testach Manna–Whitneya.
+kategorycznych na rozkład cen w testach Manna--Whitneya.
 
 ### Białystok
 
@@ -2936,7 +2969,7 @@ się:
 Dane te sugerują, że w większości analizowanych lokalizacji obecność
 parkingu czy balkonu może wpływać na kształtowanie się cen mieszkań,
 podczas gdy ochrona i pomieszczenie gospodarcze rzadziej dawały
-statystycznie istotne różnice – wyjątkiem był Radom, gdzie jedynie
+statystycznie istotne różnice -- wyjątkiem był Radom, gdzie jedynie
 parking się wyróżnił. W Rzeszowie z kolei żaden z badanych czynników nie
 wpłynął istotnie na medianę cen.
 
@@ -3060,7 +3093,7 @@ ggplot(dane_filtr, aes(x = school_distance, y = price)) +
 2.  **Częstochowa, Radom, Białystok, Rzeszów**:
     -   W mniejszych miastach, takich jak Radom, Rzeszów czy
         Częstochowa, linie regresji są nachylone w górę, co sugeruje
-        zależność – ceny mieszkań mogą nieco rosnąć wraz z odległością
+        zależność -- ceny mieszkań mogą nieco rosnąć wraz z odległością
         od szkół. To może wynikać z preferencji mieszkańców, którzy wolą
         spokojniejsze rejony z dala od szkół.
 3.  **Rozrzut danych**:
@@ -3165,7 +3198,7 @@ ggplot(dane_filtr, aes(x = clinic_distance, y = price)) +
 #### Interpretacja:
 
 W dużych miastach, takich jak Warszawa i Kraków, odległość od klinik ma
-wyraźny wpływ na ceny mieszkań – im bliżej klinik, tym wyższe ceny.
+wyraźny wpływ na ceny mieszkań -- im bliżej klinik, tym wyższe ceny.
 Wskazuje to na duże znaczenie bliskości do placówek medycznych w
 kształtowaniu wartości nieruchomości w tych aglomeracjach. W mniejszych
 miastach, takich jak Radom, Częstochowa czy Białystok, ta zależność jest
@@ -3362,10 +3395,10 @@ ggplot(dane_filtr, aes(x = kindergarten_distance, y = price)) +
         poziomą co oznacza, że nie jest to kluczowy czynnik wpływający
         na cenę mieszkań.
 4.  **Rozrzut danych**:
-    -   Dane są gęsto skupione blisko początku osi X (odległość do 0,5–2
-        km). To sugeruje, że większość mieszkań znajduje się blisko
-        przedszkoli. W miastach takich jak Kraków i Warszawa dane są
-        bardziej rozproszone w porównaniu z mniejszymi miastami.
+    -   Dane są gęsto skupione blisko początku osi X (odległość do
+        0,5--2 km). To sugeruje, że większość mieszkań znajduje się
+        blisko przedszkoli. W miastach takich jak Kraków i Warszawa dane
+        są bardziej rozproszone w porównaniu z mniejszymi miastami.
 
 #### **Interpretacja:**
 
@@ -3469,8 +3502,8 @@ ggplot(dane_filtr, aes(x = restaurant_distance, y = price)) +
 
 1.  **Warszawa i Kraków**
     -   W **Warszawie** i **Krakowie** zauważalne jest, że odległość od
-        restauracji ma delikatnie **ujemny wpływ na ceny mieszkań** – im
-        dalej restauracji, tym ceny mieszkań są niższe To może
+        restauracji ma delikatnie **ujemny wpływ na ceny mieszkań** --
+        im dalej restauracji, tym ceny mieszkań są niższe To może
         sugerować, że bliskość restauracji jest postrzegana jako atut
         przez mieszkańców i inwestorów. W obu miastach skupisko punktów
         w bliskiej odległości od restauracji sugeruje dużą gęstość ofert
@@ -3496,7 +3529,7 @@ ggplot(dane_filtr, aes(x = restaurant_distance, y = price)) +
 #### **Interpretacja:**
 
 W dużych miastach, takich jak Warszawa i Kraków, odległość od
-restauracji ma delikatny ujemny wpływ na ceny mieszkań – bliżej
+restauracji ma delikatny ujemny wpływ na ceny mieszkań -- bliżej
 restauracji mieszkania są droższe. W Krakowie efekt ten jest bardziej
 zauważalny niż w Warszawie, co może wynikać z większego znaczenia
 gastronomii w mieście turystycznym. W Warszawie bliskość restauracji ma
@@ -3510,7 +3543,7 @@ preferencji dla spokojniejszych lokalizacji. W Częstochowie brak
 wyraźnej zależności.
 
 W Rzeszowie i Białymstoku odległość od restauracji nie ma istotnego
-wpływu na ceny mieszkań – linie regresji są niemal poziome. Może to
+wpływu na ceny mieszkań -- linie regresji są niemal poziome. Może to
 wynikać z dobrej dostępności restauracji i niewielkich odległości w tych
 miastach.
 
@@ -3585,7 +3618,7 @@ ggplot(dane_filtr, aes(x = college_distance, y = price)) +
 
 1.  **Warszawa i Kraków**
     -   W obu miastach (szczególnie w **Warszawie**) odległość od
-        uczelni również wykazuje lekki **ujemny wpływ** – mieszkania
+        uczelni również wykazuje lekki **ujemny wpływ** -- mieszkania
         bliżej uczelni są droższe. W **Krakowie** efekt jest bardziej
         widoczny, co może wynikać z charakteru miasta akademickiego,
         gdzie bliskość uczelni jest silnym czynnikiem wpływającym na
@@ -3610,7 +3643,7 @@ ggplot(dane_filtr, aes(x = college_distance, y = price)) +
 #### **Interpretacja:**
 
 W dużych miastach, takich jak Warszawa i Kraków, odległość od uczelni ma
-lekki ujemny wpływ na ceny mieszkań – bliżej uczelni mieszkania są
+lekki ujemny wpływ na ceny mieszkań -- bliżej uczelni mieszkania są
 droższe. W Krakowie efekt ten jest bardziej widoczny, co może wynikać z
 charakteru miasta akademickiego, gdzie bliskość uczelni silnie wpływa na
 wartość nieruchomości. W Warszawie wpływ ten jest słabszy, co może być
@@ -4028,7 +4061,7 @@ plot_ly(wynagrodzenia_vs_ceny,
         wymaga krótszego czasu pracy w porównaniu z innymi
         lokalizacjami.
 
-3.  **Częstochowa i Radom – dobre kompromisy**:
+3.  **Częstochowa i Radom -- dobre kompromisy**:
 
     -   Wysoka liczba m² za średnie wynagrodzenie (1,19 dla Częstochowy
         i 1,06 dla Radomia) oraz umiarkowane wskaźniki dostępności (0,84
