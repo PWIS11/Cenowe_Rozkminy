@@ -71,14 +71,14 @@ library(car)
 
 # **Cel projektu**
 
-<p style="text-align: justify;">
+
 
 Celem naszego projektu jest analiza cen mieszkań w największych miastach
 Polski, uwzględniając różnorodne czynniki, które mogą wpływać na wartość
 nieruchomości. Wykorzystamy metody analizy danych, aby odpowiedzieć na
 kluczowe pytania, takie jak:
 
-</p>
+
 
 -   *Od czego zależy cena mieszkań?*
 
@@ -131,7 +131,7 @@ predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
 
 ## **Opis danych**
 
-<p style="text-align: justify;">
+
 
 Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15
 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te
@@ -139,7 +139,7 @@ obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje
 z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa
 mieszkań.
 
-</p>
+
 
 **Miasta w zbiorze danych:** Warszawa, Łódź, Kraków, Wrocław, Poznań,
 Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
@@ -168,7 +168,7 @@ Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
 
 ## **Dane dodatkowe**
 
-<p style="text-align: justify;">
+
 
 W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się
 wzbogacić nasz zbiór o **granice administracyjne województw** oraz dane
@@ -180,7 +180,7 @@ nieruchomości. Dzięki temu możliwe jest badanie, czy wysokość
 wynagrodzeń ma związek z cenami nieruchomości w poszczególnych regionach
 Polski.
 
-</p>
+
 
 ### **Cel dodania danych:**
 
@@ -191,18 +191,18 @@ Polski.
     nieruchomości**, aby sprawdzić, czy wyższe wynagrodzenia są
     powiązane z wyższymi cenami mieszkań.
 
-<p style="text-align: justify;">
+
 
 Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku
 nieruchomości na poziomie miast, ale także **porównanie wyników w
 kontekście regionalnym** oraz uwzględnienie czynników ekonomicznych,
 takich jak wynagrodzenia, które mogą wpływać na ceny mieszkań.
 
-</p>
+
 
 ## **Znaczenie projektu**
 
-<p style="text-align: justify;">
+
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników,
 takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość
@@ -210,19 +210,19 @@ kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć
 mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia
 wspomagające decyzje zakupowe i inwestycyjne.
 
-</p>
+
 
 # **Brudne dane i ich znaczenie w analizie**
 
 ## **Czym są brudne dane?**
 
-<p style="text-align: justify;">
+
 
 Brudne dane to dane, które są niekompletne, nieprawidłowe, niespójne lub
 w inny sposób niezgodne z wymaganiami jakościowymi potrzebnymi do ich
 analizy. Przykłady brudnych danych obejmują:
 
-</p>
+
 
 -   **Braki danych (NA):** Puste komórki w zestawie danych, które mogą
     być spowodowane błędami w zbieraniu danych lub brakiem odpowiednich
@@ -235,12 +235,12 @@ analizy. Przykłady brudnych danych obejmują:
 
 ## **Dlaczego należy walczyć z brudnymi danymi?**
 
-<p style="text-align: justify;">
+
 
 Analiza danych oparta na brudnych danych prowadzi do błędnych wniosków i
 modeli. Wysoka jakość danych jest kluczowa, ponieważ:
 
-</p>
+
 
 1.  **Zapewnia wiarygodność wyników:** Poprawne dane umożliwiają
     uzyskanie rzetelnych wniosków.
@@ -251,12 +251,12 @@ modeli. Wysoka jakość danych jest kluczowa, ponieważ:
 
 ## **Działania naprawcze dla brudnych danych**
 
-<p style="text-align: justify;">
+
 
 W naszym projekcie podjęliśmy działania w celu naprawy brudnych danych,
 obejmujące:
 
-</p>
+
 
 1.  **Ujednolicenie nazw miast:** Naprawimy niezgodności w zapisie nazw,
     aby zapewnić spójność.
@@ -276,14 +276,14 @@ obejmujące:
 
 ## **Planowane działania techniczne**
 
-<p style="text-align: justify;">
+
 
 Przegląd kolumn w poszukiwaniu braków, niezgodności oraz błędów
 logicznych. Transformacja danych, aby były zgodne z wymaganiami do
 analizy i modelowania. Sprawdzenie zgodności z przyjętymi regułami
 walidacyjnymi oraz weryfikacja efektów imputacji i transformacji danych.
 
-</p>
+
 
 **Zmiana nazw kolumn** Poniżej znajduje się tabela z przekształconymi
 nazwami kolumn:
@@ -462,7 +462,7 @@ dane$building_material <- case_when(
 
 # **Walidacja danych**
 
-<p style="text-align: justify;">
+
 
 Walidacja danych to kluczowy etap przygotowania zbioru, który następuje
 po wstępnym oczyszczeniu danych. Jej celem jest sprawdzenie **zgodności
@@ -470,9 +470,9 @@ danych** z określonymi **regułami logicznymi** i **jakościowymi**, aby
 upewnić się, że dane są **kompletne**, **spójne** i gotowe do dalszej
 analizy oraz modelowania.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Proces ten polega na weryfikacji, czy dane spełniają określone
 **kryteria**, zapewniając ich **poprawność**, **spójność** oraz
@@ -482,16 +482,16 @@ kolumna powinna mieć odpowiedni **typ danych** (np.**numeryczny**,
 **tekstowy**, **całkowity**), a liczba unikalnych wartości powinna być
 zgodna z oczekiwaniami.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Dzięki takiej analizie można wykryć potencjalne błędy w **strukturze
 danych**, takie jak niewłaściwe przypisanie typu do kolumny czy
 nieoczekiwane wartości. Zapewnia to odpowiednie przygotowanie danych do
 dalszych etapów analizy i modelowania.
 
-</p>
+
 
 ### Typy danych oraz ich charakterystyka
 
@@ -530,7 +530,7 @@ knitr::kable(data_types, caption = "Typy Danych")
 
 ```
 
-<p style="text-align: justify;">
+
 
 Zbiór danych składa się z **28 kolumn**, które charakteryzują się
 następującymi typami: **18 zmiennych numerycznych (typ numeric)**,
@@ -538,7 +538,7 @@ następującymi typami: **18 zmiennych numerycznych (typ numeric)**,
 (typ factor)**, **2 zmiennymi całkowitymi (typ integer)** oraz **brakiem
 zmiennych logicznych.**
 
-</p>
+
 
 -   Zmienne **numeryczne**, takie jak `square_meters`, `price` czy
     `centre_distance`, mają dużą liczbę unikalnych wartości, co
@@ -552,7 +552,7 @@ zmiennych logicznych.**
 -   Kolumny z typem **integer**, jak np. `price` mogą być również
     używane w analizach numerycznych.
 
-<p style="text-align: justify;">
+
 
 Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej
 analizy i modelowania. Zmienne numeryczne będą wykorzystywane w
@@ -560,9 +560,9 @@ analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a
 zmienne character mogą wymagać kodowania na typ factor, aby mogły być
 wykorzystane w dalszej analizie.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Na podstawie tej analizy możemy przejść do przygotowania danych do
 modelowania, dobierając odpowiednie metody przetwarzania, takie jak
@@ -570,7 +570,7 @@ kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych
 czy tworzenie nowych zmiennych,w zależności od typu danych i celu
 analizy.
 
-</p>
+
 
 Kolejnym krokiem w procesie walidacji jest zastosowanie określonych
 reguł logicznych, które zapewniają spójność danych. <br> <br>**W
@@ -684,25 +684,25 @@ te zostaną zastąpione:
 
 # **Data wrangling**
 
-<p style="text-align: justify;">
+
 
 Proces **data wrangling** umożliwia przekształcenie surowego zbioru
 danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W
 ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach:
 analizie wartości brakujących oraz obserwacji odstających.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 W tej części projektu podjęliśmy działania mające na celu: - zrozumienie
 i klasyfikację braków danych (MCAR, MAR, MNAR), - wybór odpowiednich
 strategii imputacji brakujących wartości, - wykrycie i obsługę
 obserwacji odstających, które mogą zaburzać statystyczne wnioski.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów
 pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score)
@@ -710,19 +710,19 @@ możliwe było zarówno dokładne zrozumienie problemów związanych z danymi,
 jak i zaplanowanie działań korygujących. Tak przygotowany zbiór danych
 stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w
 ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji
 wartości odstających, a także opis zastosowanych metod ich obsługi.
 
-</p>
+
 
 ## **Obserwacje brakujące**
 
-<p style="text-align: justify;">
+
 
 Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno
 wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny
@@ -734,7 +734,7 @@ danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę
 współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe
 zależności w danych.
 
-</p>
+
 
 Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej
 zrozumieć przyczyny ich występowania.
@@ -913,7 +913,7 @@ dane$building_age <- ifelse(is.na(dane$build_year), NA, as.numeric(currentYear) 
 
 ## **Obserwacje odstające**
 
-<p style="text-align: justify;">
+
 
 Do analizy obserwacji odstających decydowaliśmy się użyć **wykresów
 pudełkowych**, ponieważ są one prostym i skutecznym narzędziem
@@ -928,15 +928,15 @@ odległości od różnych punktów użyteczności publicznej. Dzięki temu możn
 szybko zidentyfikować zmienne, które mogą zawierać nietypowe wartości i
 potencjalnie wpłynąć na dalsze analizy lub modelowanie danych.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Dodatkowo, aby potwierdzić statystycznie obecność obserwacji odstających
 zastosowaliśmy metodę Z-score oraz zbadaliśmy czy rozkład danych jest
 zbliżony do rozkładu normalnego.
 
-</p>
+
 
 Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na
 podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
@@ -1370,7 +1370,7 @@ curve(dnorm(x, mean = mean(na.omit(dane$build_year)),
 
 #### **Interpretacja wyników histogramów**
 
-<p style="text-align: justify;">
+
 
 Przeprowadzona analiza histogramów pozwoliła na dokładne przyjrzenie się
 rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba
@@ -1379,7 +1379,7 @@ umożliwiły identyfikację wartości **typowych** (dominanty, gęstość
 wartości) oraz **wartości odstających**, które znajdują się na krańcach
 rozkładów.
 
-</p>
+
 
 Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy
 punkt odniesienia do oceny kształtu rozkładów. Pozwalają one
@@ -1629,7 +1629,7 @@ wyniki <- data.frame(
 knitr::kable(wyniki, caption = "Wyniki Z-Score")
 ```
 
-<p style="text-align: justify;">
+
 
 Standaryzacja przy użyciu z-score umożliwia identyfikację wartości
 odstających. Wartości, które są znacznie większe lub mniejsze niż 3
@@ -1639,7 +1639,7 @@ wokół średniej, co stanowi podstawę do dalszych, bardziej szczegółowych
 analiz. Większość wartości w danych jest symetrycznie rozłożona wokół
 średniej i nie dominuje żaden zbiór ekstremalnych wartości.
 
-</p>
+
 
 ### Transformacje
 
@@ -1804,7 +1804,7 @@ rzeczywistości i kontekstu analizy.
 
 # **Ponowna Walidacja Danych**
 
-<p style="text-align: justify;">
+
 
 Po przeprowadzeniu **pierwszej, wstępnej walidacji**, która ujawniła
 **znaczną liczbę brakujących danych (NA)** w zbiorze, zdecydowano się na
@@ -1814,9 +1814,9 @@ spójne i gotowe do dalszej obróbki. **Celem ponownej walidacji** jest
 weryfikacja skuteczności uzupełniania brakujących wartości oraz
 sprawdzenie, czy po tej operacji dane są spójne z przyjętymi regułami.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych
 numerycznych i kategorycznych **(mediana i moda)** zostały odpowiednio
@@ -1826,16 +1826,16 @@ korektach, dane są logicznie spójne, a reguły dotyczące relacji między
 zmiennymi, takie jak zgodność zmiennych `floor` i `floor_count`, zostały
 właściwie zastosowane.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 **Druga walidacja** ma na celu zapewnienie, że dane są w pełni spójne i
 zgodne z wymaganiami, eliminując ryzyko wystąpienia problemów, które
 mogłyby wpływać na jakość dalszej analizy. Dzięki tym czynnościom dane
 będą gotowe do kolejnych etapów analizy i przetwarzania.
 
-</p>
+
 
 ```{r walidacja_kontrolna_danych, echo=FALSE}
 
@@ -1873,7 +1873,7 @@ ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
 
 ```
 
-<p style="text-align: justify;">
+
 
 W procesie walidacji danych większość reguł została spełniona, jednak w
 przypadku jednej reguły, dotyczącej zgodności zmiennych `floor` i
@@ -1884,18 +1884,18 @@ spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i
 **nie wykryto żadnych innych istotnych problemów** w analizowanych
 danych.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Przed rozpoczęciem walidacji **brakujące wartości (NA)** zostały
 uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z
 regułami. **Imputacja brakujących danych** była kluczowym krokiem,
 umożliwiającym dalsze etapy weryfikacji danych.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Błędy w danych `floor` i `floor_count` mogą wynikać z błędnie
 uzupełnionych wartości lub **nieaktualnych danych** (budynki mogły
@@ -1907,7 +1907,7 @@ dane pozostały niezmienione. Taka korekta zapewnia **spójność danych** i
 eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w
 budynku.**Nie znaleziono duplikatów wierszy w danych**.
 
-</p>
+
 
 ```{r walidacja_i_korekta_wartości;floor_floor_count,flitracja_duplikatów, echo=FALSE}
 
@@ -1962,7 +1962,7 @@ voivodeship_centroids <- suppressWarnings({
 })
 ```
 
-<p style="text-align: justify;">
+
 
 Celem analizy regionalnej cen mieszkań jest zrozumienie zróżnicowania
 poziomu cen nieruchomości w Polsce. Wykorzystanie mapy województw
@@ -1973,7 +1973,7 @@ stanowić punkt wyjścia do dalszej analizy rynku nieruchomości,
 uwzględniającej czynniki wpływające na cenę, takie jak urbanizacja,
 poziom dochodów czy lokalna infrastruktura.
 
-</p>
+
 
 ```{r wykres_choropleth srednia cena mieszk na wojew, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(data = voivodeship) +
@@ -2024,7 +2024,7 @@ knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
 
 1.  **Województwo mazowieckie jako lider cenowy**
 
-    <p style="text-align: justify;">
+    
 
     Z wykresu wynika, że województwo mazowieckie, w szczególności
     Warszawa, dominuje pod względem średnich cen za metr kwadratowy,
@@ -2032,22 +2032,22 @@ knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
     odzwierciedleniem centralnej roli stolicy w gospodarce, jej
     rozwiniętego rynku pracy oraz wysokiego popytu na mieszkania.
 
-    </p>
+    
 
 2.  **Regiony o najniższych cenach**
 
-    <p style="text-align: justify;">
+    
 
     Województwa takie jak podkarpackie, lubelskie i podlaskie
     charakteryzują się znacznie niższymi cenami, oscylującymi wokół **10
     000 PLN/m²**. Są to regiony o mniejszym stopniu urbanizacji oraz
     niższym popycie na nieruchomości w porównaniu do dużych miast.
 
-    </p>
+    
 
 3.  **Regiony o średnich cenach**
 
-    <p style="text-align: justify;">
+    
 
     Województwa dolnośląskie, pomorskie i wielkopolskie znajdują się w
     średnim przedziale cenowym, wynoszącym od **12 000 PLN/m² do 16 000
@@ -2055,22 +2055,22 @@ knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
     Wrocław, Gdańsk czy Poznań, które są istotnymi ośrodkami
     akademickimi i biznesowymi.
 
-    </p>
+    
 
 4.  **Różnice między regionami**
 
-    <p style="text-align: justify;">
+    
 
     Mapa podkreśla wyraźne różnice w rozwoju regionalnym. Województwa
     takie jak opolskie czy świętokrzyskie należą do najtańszych, co może
     być związane z niższym stopniem urbanizacji, mniejszym popytem oraz
     ograniczoną dostępnością pracy w tych regionach.
 
-    </p>
+    
 
 #### **Wnioski**
 
-<p style="text-align: justify;">
+
 
 Wykres średnich cen mieszkań za metr kwadratowy w podziale na
 województwa jasno pokazuje istotne różnice regionalne. Najwyższe ceny
@@ -2082,7 +2082,7 @@ Wyniki te sugerują, że dalsze badania powinny uwzględnić czynniki
 demograficzne, ekonomiczne i infrastrukturalne, które kształtują rynek
 nieruchomości w Polsce.
 
-</p>
+
 
 ### Wybór miast do dalszej analizy
 
@@ -4216,7 +4216,7 @@ mieszkania w sześciu miastach Polski przy uwzględnieniu cen minimalnych,
 knitr::include_graphics("Gdansk_zdjecie.jpg")
 ```
 
-<p style="text-align: justify;">
+
 
 Gdańsk, jedno z najstarszych miast Polski, charakteryzuje się nie tylko
 bogatą historią i malowniczym położeniem nad Bałtykiem, ale również
@@ -4224,9 +4224,9 @@ dynamicznie rozwijającym się rynkiem nieruchomości. W ramach tej analizy
 dokonaliśmy podziału miasta na 35 dzielnic, aby dokładniej przyjrzeć
 sięzróżnicowaniu średnich cen mieszkań za metr kwadratowy.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Mapa wizualizuje ceny mieszkań w różnych obszarach, uwzględniając
 zarówno centralne, historyczne części miasta, jak Śródmieście, jak i
@@ -4234,7 +4234,7 @@ peryferyjne, bardziej spokojne dzielnice. Zaznaczenie Śródmieścia jako
 centrum miasta pozwala łatwiej interpretować wyniki i lokalizować
 najważniejsze obszary urbanistyczne Gdańska.
 
-</p>
+
 
 ```{r wczytanie dzielnic Gdańska, echo=FALSE, comment=FALSE, warning=FALSE, message = FALSE}
 # Wczytanie danych dzielnic Gdańska
@@ -4338,7 +4338,7 @@ knitr::kable(
 
 #### Interpretacja wyników analizy cen mieszkań per dzielnica:
 
-<p style="text-align: justify;">
+
 
 Analiza wykazała znaczne zróżnicowanie cen mieszkań w poszczególnych
 dzielnicach Gdańska. Najwyższe średnie ceny za metr kwadratowy występują
@@ -4347,18 +4347,18 @@ dzielnice, np. Żabianka--Wejhera--Jelitkowo--Tysiąclecia. Są to miejsca
 o wysokim prestiżu, dogodnym dostępie do atrakcji turystycznych i
 rozwiniętej infrastrukturze.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Z kolei dzielnice bardziej oddalone od centrum, takie jak Kokoszki czy
 Matarnia, cechują się znacznie niższymi cenami, co może przyciągać osoby
 poszukujące spokojniejszych lokalizacji oraz bardziej przystępnych
 cenowo mieszkań.
 
-</p>
 
-<p style="text-align: justify;">
+
+
 
 Porównanie tych różnic uwidacznia rolę lokalizacji w kształtowaniu cen
 nieruchomości, co może być cenną wskazówką zarówno dla inwestorów, jak i
@@ -4367,4 +4367,4 @@ do dalszych analiz, uwzględniających takie czynniki jak dostępność
 komunikacyjna, sąsiedztwo terenów zielonych czy rozwój lokalnej
 infrastruktury.
 
-</p>
+
