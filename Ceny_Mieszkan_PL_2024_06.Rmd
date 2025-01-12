@@ -2172,9 +2172,15 @@ Wyniki analizy ANOVA oraz testu Tukeya dotyczące średnich cen nieruchomości w
 
 ### 1. **Wyniki testu ANOVA:**
 
-Test ANOVA służy do sprawdzenia, czy istnieje statystycznie istotna różnica pomiędzy średnimi cenami nieruchomości w różnych miastach. Test ten sprawdza hipotezę zerową, która mówi, że średnie ceny nieruchomości w różnych miastach są równe.
+Ponieważ wartość p jest mniejsza niż 0.05 (w tym przypadku jest to < 2e-16), 
+możemy odrzucić hipotezę zerową. Oznacza to, że średnie ceny nieruchomości 
+w różnych miastach różnią się w sposób statystycznie istotny. Innymi słowy,
+przynajmniej jedno z badanych miast ma inną średnią cenę nieruchomości niż 
+pozostałe.
 
-Chociaż w kodzie nie wyświetlono bezpośrednio wyników testu ANOVA (ponieważ linia `summary(model)` jest zakomentowana), zakładając, że wartość p w wyniku testu ANOVA jest mniejsza niż typowy poziom istotności (np. 0.05), możemy wnioskować, że hipoteza zerowa zostaje odrzucona. Oznacza to, że **średnie ceny nieruchomości w różnych miastach różnią się w sposób statystycznie istotny**.
+Test ANOVA wskazuje na istnienie różnic, ale nie precyzuje, które konkretnie 
+miasta różnią się między sobą. Aby dowiedzieć się, które pary miast są różne,
+przeprowadzamy dodatkowy test post-hoc, na przykład test Tukeya.
 
 ### 2. **Wyniki testu Tukeya (Tukey HSD):**
 
