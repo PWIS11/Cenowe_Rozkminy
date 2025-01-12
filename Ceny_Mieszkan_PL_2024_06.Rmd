@@ -89,8 +89,12 @@ kluczowe pytania, takie jak:
 
 -   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są
     najbardziej cenione?*
+    
+    
 
 ## **Analizy w projekcie**
+
+
 
 Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby
 lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
@@ -107,6 +111,8 @@ lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
 
 -   Wykorzystanie interaktywnych wizualizacji, takich jak mapy i
     wykresy, aby przedstawić wyniki w przystępny sposób.
+    
+    
 
 ### **Hipotezy i oczekiwane wyniki**
 
@@ -128,6 +134,8 @@ lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
 Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki
 wpływające na ceny mieszkań oraz umożliwią stworzenie użytecznych modeli
 predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
+
+
 
 ## **Opis danych**
 
@@ -472,8 +480,6 @@ analizy oraz modelowania.
 
 
 
-
-
 Proces ten polega na weryfikacji, czy dane spełniają określone
 **kryteria**, zapewniając ich **poprawność**, **spójność** oraz
 **integralność**. Szczególną uwagę zwraca się na **typy danych** i
@@ -481,8 +487,6 @@ Proces ten polega na weryfikacji, czy dane spełniają określone
 kolumna powinna mieć odpowiedni **typ danych** (np.**numeryczny**,
 **tekstowy**, **całkowity**), a liczba unikalnych wartości powinna być
 zgodna z oczekiwaniami.
-
-
 
 
 
@@ -510,7 +514,7 @@ data_types <- data.frame(
   Liczba_unikalnych = as.character(unique_values)
 )
 
-knitr::kable(data_types, caption = "Typy Danych oraz ich ilość")
+knitr::kable(data_types, caption = "Typy danych oraz ich ilość")
 ```
 
 ```{r weryfikacja_typów_danych2, echo=FALSE, results='asis', eval=TRUE}
@@ -526,7 +530,7 @@ data_types <- data.frame(
   Liczba_kolumn = c(liczba_numeric, liczba_character, liczba_factor, liczba_integer, liczba_logical)
 )
 
-knitr::kable(data_types, caption = "Typy Danych")
+knitr::kable(data_types, caption = "Typy danych")
 
 ```
 
@@ -843,31 +847,29 @@ kable(
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można
 podzielić na kilka grup pod względem liczby braków:
 
--   **Bardzo duża liczba braków:** condition (74.0%) i building_material
+-   **Bardzo duża liczba braków:** `condition` (74.0%) i `building_material`
     (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się
     usunąć kolumnę condition, a dla building_material zastosujemy
     imputację najczęstszą wartością.
 
--   **Umiarkowana liczba braków:** building_type (20.5%), floor (16.6%),
-    build_year (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą
-    najczęstszej wartości dla zmiennych kategorycznych (building_type)
-    oraz medianą dla zmiennych liczbowych (floor, build_year).
+-   **Umiarkowana liczba braków:** `building_type` (20.5%), `floor` (16.6%),
+    `build_year` (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą
+    najczęstszej wartości dla zmiennych kategorycznych (`building_type`)
+    oraz medianą dla zmiennych liczbowych (`floor`, `build_year`).
 
--   **Niewielka liczba braków:** Kolumny takie jak has_elevator (4.46%)
-    czy college_distance (2.72%) zostaną uzupełnione odpowiednio modą i
+-   **Niewielka liczba braków:** Kolumny takie jak `has_elevator` (4.46%)
+    czy `college_distance` (2.72%) zostaną uzupełnione odpowiednio modą i
     medianą.
 
 -   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1%
     braków zostaną imputowane prostymi metodami (medianą lub najczęstszą
     wartością).
 
--   **Kolumny bez braków:** Pozostałe zmienne, takie jak price,
-    square_meters czy rooms, są kompletne i nie wymagają dodatkowych
+-   **Kolumny bez braków:** Pozostałe zmienne, takie jak `price`,
+    `square_meters` czy `rooms`, są kompletne i nie wymagają dodatkowych
     działań.
 
 ```{r Zastąpienie_braków_medianą_i_najczęstszą_wartością, echo = FALSE}
-
-#### Iza - czy tutaj chcemy dać jakieś podsumowanie, ilu zmian dokonano per kolumna?
 
 ################################################################################
 
@@ -1621,7 +1623,7 @@ wyniki <- data.frame(
               "floor", "floor_count", "centre_distance", "building_age", "school_distance",
               "clinic_distance", "post_office_distance", "kindergarten_distance", 
               "restaurant_distance", "college_distance", "pharmacy_distance", "poi_count"),
-  Wartosc = c("1.321569e-15", "9.155718e-17", "3.0552e-17", "-5.888089e-17", "-1.961117e-16",
+  Wartość = c("1.321569e-15", "9.155718e-17", "3.0552e-17", "-5.888089e-17", "-1.961117e-16",
               "-3.274304e-17", "-9.234339e-17", "-1.348539e-16", "8.221441e-17", "1.247826e-17",
              " 2.77439e-17", "9.446714e-17", "-4.220434e-17", "5.62074e-17", "-2.656712e-17",
               "-1.519166e-17", "-2.97876e-17")
@@ -1707,7 +1709,7 @@ curve(dnorm(x, mean = mean(dane$poi_count),
 ##### Powody przeprowadzenia transformacji logarytmicznej:
 
 1.  **Zmniejszenie wpływu wartości odstających**:
-    -   W zmiennych takich jak **price** i **poi_count** występują duże
+    -   W zmiennych takich jak `price` i `poi_count` występują duże
         wartości odstające. Dla ceny może to być kilka luksusowych
         apartamentów o bardzo wysokiej cenie, a dla liczby punktów
         zainteresowania miejsca z wyjątkowo dużą liczbą udogodnień w
@@ -1731,65 +1733,65 @@ analizowane wyniki.
 
 #### Uzasadnienie braku transformacji dla poszczególnych kolumn
 
-1.  **square_meters**
+1.  `square_meters`
     -   **Uzasadnienie**: Duże wartości tej zmiennej (np. powyżej 200
         m²) mogą odnosić się do apartamentów luksusowych lub
         przestronnych domów, co jest zrozumiałe w kontekście rynku
         nieruchomości. Asymetria rozkładu wynika z faktu, że małe
         mieszkania są bardziej powszechne, ale większe jednostki wciąż
         mają naturalne uzasadnienie.
-2.  **rooms**
+2.  `rooms`
     -   **Uzasadnienie**: Liczba pokoi w mieszkaniach czy domach jest
         zwykle niewielka i wynika z ich przeznaczenia. Duże liczby (np.
         7--10 pokoi) mogą odnosić się do dużych domów jednorodzinnych
         lub luksusowych apartamentów. Każda wartość zmiennej ma swoje
         logiczne wyjaśnienie.
-3.  **floor oraz floor_count**
+3.  `floor` oraz `floor_count`
     -   **Uzasadnienie**: Wysokie wartości (np. powyżej 10. piętra)
         zazwyczaj odnoszą się do mieszkań w wieżowcach, co jest typowe w
         dużych miastach. Rozkład zmiennej jest zgodny z różnorodnością
         rynku.
-4.  **build_year**
+4.  `build_year`
     -   **Uzasadnienie**: Starsze budynki (np. przedwojenne) mają swoje
         unikalne cechy (np. kamienice), a nowe budynki charakteryzują
         nowoczesne technologie i standardy. Każda wartość zmiennej
         niesie ze sobą istotny kontekst historyczny i architektoniczny.
-5.  **centre_distance**
+5.  `centre_distance`
     -   **Uzasadnienie**: Duże odległości (np. \>20 km) zwykle oznaczają
         mieszkania na przedmieściach lub w miejscowościach satelickich,
         co jest naturalne w kontekście urbanistycznym. Mniejsze wartości
         wskazują na nieruchomości w centrum miasta, co również ma sens.
-6.  **school_distance**
+6.  `school_distance`
     -   **Uzasadnienie**: Krótsze odległości są typowe dla osiedli
         mieszkaniowych, gdzie szkoły są blisko mieszkańców. Większe
         odległości mogą dotyczyć obszarów wiejskich lub mniej
         zurbanizowanych.
-7.  **clinic_distance**
+7.  `clinic_distance`
     -   **Uzasadnienie**: Podobnie jak w przypadku szkół, krótsze
         odległości charakteryzują gęsto zabudowane obszary, a większe --
         mniej rozwinięte okolice. Rozkład zmiennej jest zgodny z
         rzeczywistością.
-8.  **post_office_distance**
+8.  `post_office_distance`
     -   **Uzasadnienie**: Odległości te odzwierciedlają rzeczywisty
         dostęp do infrastruktury. Krótsze odległości oznaczają bardziej
         zurbanizowane tereny, a dłuższe -- obszary mniej zaludnione.
-9.  **kindergarten_distance**
+9.  `kindergarten_distance`
     -   **Uzasadnienie**: Podobnie jak w przypadku szkół, odległości
         mają naturalne wyjaśnienie w charakterystyce lokalizacji.
-10. **restaurant_distance**
+10. `restaurant_distance`
     -   **Uzasadnienie**: Krótsze odległości są typowe dla centrów
         miast, a większe -- dla terenów podmiejskich i wiejskich.
         Zmienna w swojej formie jest wystarczająco zrozumiała.
-11. **college_distance**
+11. `college_distance`
     -   **Uzasadnienie**: Podobnie jak inne odległości, wartości tej
         zmiennej mają naturalne uzasadnienie w zależności od lokalizacji
         nieruchomości względem centrów edukacyjnych.
-12. **pharmacy_distance**
+12. `pharmacy_distance`
     -   **Uzasadnienie**: Odległości te są intuicyjne i w pełni
         odpowiadają rzeczywistości. Apteki są zlokalizowane bliżej
         mieszkańców w gęsto zaludnionych obszarach, co tłumaczy krótsze
         wartości.
-13. **building_age**
+13. `building_age`
     -   **Uzasadnienie**: Starsze budynki (np. \>50 lat) są często
         kamienicami lub historycznymi budynkami, a nowe (np. \<10 lat)
         to inwestycje deweloperskie. Wiek budynku jest intuicyjny i
@@ -1802,7 +1804,7 @@ analizę, bez utraty interpretowalności. W przypadku tych zmiennych,
 zachowanie ich w pierwotnej formie pozwala na lepsze oddanie
 rzeczywistości i kontekstu analizy.
 
-# **Ponowna Walidacja Danych**
+# **Ponowna walidacja danych**
 
 
 
@@ -1859,7 +1861,7 @@ addwwfw$expression <- c("Floor > Floor Count", "Build Year <= 2024","Build Year 
 
 ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
   geom_bar(stat = "identity", show.legend = FALSE) +
-  ggtitle("Wyniki Walidacji Danych") +
+  ggtitle("Wyniki walidacji danych") +
   xlab("Reguły walidacji") +
   ylab("Liczba naruszeń") +
   theme_minimal() +
@@ -2009,7 +2011,7 @@ get_mode <- function(v) {
 }
 
 statystyki <- dane %>%
-  group_by(city) %>%
+  group_by(Miasto = city) %>%
   summarise(
     "Średnia powierzchnia mieszkania" = round(mean(square_meters, na.rm = TRUE), 2),
     "Średnia cena za $m^2$" = round(mean(price_per_square_meter, na.rm = TRUE), 2),
@@ -2195,6 +2197,19 @@ model <- aov(Cena ~ Miasto, data = średnie_ceny_nieruchomości_w_wybranych_mias
 tukey_result <- TukeyHSD(model)
 #summary(tukey_result)
 
+
+##Zmienne do Anovy:
+##Warszawa	Kraków	Rzeszów	Białystok	Radom	Częstochowa
+##Balkon	  Balkon	        	Balkon		      Balkon
+##Winda	     Winda	  Winda	  Winda		
+##Parking	  Parking		        Parking	Parking	Parking
+##Ochrona	  Ochrona				
+##Komórka	 Komórka   Komórka			
+
+##Fragment kodu wzorcowego 
+##aov(krakow$price~krakow$has_balcony)
+
+
 ```
 Wyniki analizy ANOVA oraz testu Tukeya dotyczące średnich cen nieruchomości 
 w wybranych miastach pozwalają na ocenę, czy różnice w cenach nieruchomości
@@ -2290,6 +2305,8 @@ i Częstochową oraz Krakowem i Białymstokiem. <br>W przypadku miast takich jak
 i Częstochowa różnice są mniej wyraźne.
 
 # **Analiza udogodnień w nieruchomościach**
+
+Wykonamy analizę, aby sprawdzić, w jaki sposób różne udogodnienia, takie jak balkon, winda, parking, ochrona czy komórka lokatorska, wpływają na ceny mieszkań w wybranych miastach. Za pomocą wykresów pudełkowych ocenimy, czy obecność tych udogodnień ma znaczący wpływ na wartość nieruchomości oraz jak różnice te kształtują się w zależności od lokalizacji.
 
 ## Wykresy pudełkowe udogodnień
 
@@ -2546,7 +2563,7 @@ chisq.test(chi_tabela10)
 ```{r chi results, echo=FALSE}
 
 chi_results <- data.frame(
-  Pair = c(
+  Zmienne = c(
     "has_parking vs has_balcony",
     "has_parking vs has_elevator",
     "has_parking vs has_security",
@@ -2557,18 +2574,6 @@ chi_results <- data.frame(
     "has_elevator vs has_security",
     "has_elevator vs has_storage_room",
     "has_security vs has_storage_room"
-  ),
-  ChiSq_Statistic = c(
-    chisq.test(chi_tabela1)$statistic,
-    chisq.test(chi_tabela2)$statistic,
-    chisq.test(chi_tabela3)$statistic,
-    chisq.test(chi_tabela4)$statistic,
-    chisq.test(chi_tabela5)$statistic,
-    chisq.test(chi_tabela6)$statistic,
-    chisq.test(chi_tabela7)$statistic,
-    chisq.test(chi_tabela8)$statistic,
-    chisq.test(chi_tabela9)$statistic,
-    chisq.test(chi_tabela10)$statistic
   ),
   p_value = formatC(c(
     chisq.test(chi_tabela1)$p.value,
@@ -2798,7 +2803,7 @@ levene_test_has_storage_room <- leveneTest(price ~ has_storage_room, data = dane
 ```{r Levene Table, echo=FALSE, warning=FALSE}
 
 levene_results <- data.frame(
-  Variable = c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room"),
+  Zmienna = c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room"),
   F_Statistic = c(
     levene_test_has_parking[1, "F value"],
     levene_test_has_balcony[1, "F value"],
@@ -2817,7 +2822,7 @@ levene_results <- data.frame(
 
 levene_results <- levene_results %>%
   mutate(
-    Interpretation = ifelse(p_value < 0.05, "Wariancje różnią się istotnie", "Wariancje są jednorodne")
+    Interpretacja = ifelse(p_value < 0.05, "Wariancje różnią się istotnie", "Wariancje są jednorodne")
   )
 
 kable(levene_results, caption = "Podsumowanie wyników testów Levene’a dla zmiennej price.")
@@ -2826,29 +2831,29 @@ kable(levene_results, caption = "Podsumowanie wyników testów Levene’a dla zm
 
 ### Interpretacja
 
--   **has_parking** (p = 0.8754) -- nie ma podstaw do odrzucenia
+-   `has_parking` (p = 0.8754) -- nie ma podstaw do odrzucenia
     hipotezy zerowej o jednorodności wariancji, dlatego **wariancje są
     jednorodne**.
 
--   **has_balcony** (p \< 0.0001) -- występują istotne statystycznie
+-   `has_balcony` (p \< 0.0001) -- występują istotne statystycznie
     różnice w wariancjach grup,\
     czyli **wariancje różnią się istotnie**.
 
--   **has_elevator** (p = 0.0069) -- p \< 0.05, co również wskazuje na
+-   `has_elevator` (p = 0.0069) -- p \< 0.05, co również wskazuje na
     istotną różnicę wariancji,\
     a zatem **wariancje różnią się istotnie**.
 
--   **has_security** (p = 0.3173) -- brak podstaw do odrzucenia hipotezy
+-   `has_security` (p = 0.3173) -- brak podstaw do odrzucenia hipotezy
     zerowej, **wariancje są jednorodne**.
 
--   **has_storage_room** (p \< 0.0001) -- wariancje w poszczególnych
+-   `has_storage_room` (p \< 0.0001) -- wariancje w poszczególnych
     grupach różnią się istotnie, czyli **wariancje różnią się
     istotnie**.
 
 Na podstawie tych wyników widać, że jednorodność wariancji została
-zachowana wyłącznie w przypadku zmiennych **has_parking** i
-**has_security**, natomiast dla **has_balcony**, **has_elevator** oraz
-**has_storage_room** stwierdzamy istotne różnice w wariancjach między
+zachowana wyłącznie w przypadku zmiennych `has_parking` i
+`has_security`, natomiast dla `has_balcony`, `has_elevator` oraz
+`has_storage_room` stwierdzamy istotne różnice w wariancjach między
 grupami.
 
 #### Wprowadzenie
@@ -2983,11 +2988,11 @@ add_to_table <- function(city, variable, test_result) {
   }
   
   return(data.frame(
-    City = city,
-    Variable = variable,
+    Miasto = city,
+    Zmienna = variable,
     W_Statistic = if (!is.na(test_result$statistic)) test_result$statistic else NA,
     p_value = if (!is.na(test_result$p.value)) format_p(test_result$p.value) else NA,
-    Interpretation = interpretation
+    Interpretacja = interpretation
   ))
 }
 
@@ -3039,15 +3044,15 @@ sprawdzano istotność statystyczną różnic w medianach ceny mieszkań
 (zmienna `price`) w zależności od pięciu cech (zmiennych
 kategorycznych):
 
--   **has_elevator** (czy mieszkanie ma windę),
+-   `has_elevator` (czy mieszkanie ma windę),
 
--   **has_parking** (czy mieszkanie ma parking),
+-   `has_parking` (czy mieszkanie ma parking),
 
--   **has_balcony** (czy mieszkanie ma balkon),
+-   `has_balcony` (czy mieszkanie ma balkon),
 
--   **has_security** (czy w budynku jest ochrona),
+-   `has_security` (czy w budynku jest ochrona),
 
--   **has_storage_room** (czy mieszkanie/dyspozycji jest pomieszczenie
+-   `has_storage_room` (czy mieszkanie/dyspozycji jest pomieszczenie
     gospodarcze).
 
 Test przeprowadzono osobno dla każdej z wybranych miejscowości. W
@@ -3057,10 +3062,10 @@ do jej odrzucenia (p ≥ 0.05).
 
 ### Kraków
 
--   **has_elevator**, **has_parking**, **has_balcony**: stwierdzono
+-   `has_elevator`, `has_parking`, `has_balcony`: stwierdzono
     istotne różnice w rozkładach cen (p \< 0.05).
 
--   **has_security**, **has_storage_room**: brak istotnych różnic (p ≥
+-   `has_security`, `has_storage_room`: brak istotnych różnic (p ≥
     0.05).
 
 W Krakowie cechy takie jak winda, parking czy balkon mogą więc wiązać
@@ -3070,29 +3075,29 @@ statystycznie istotnego wpływu na rozkład cen.
 
 ### Warszawa
 
--   **has_elevator**, **has_parking**, **has_balcony**,
-    **has_security**: istotna różnica (p \< 0.05).
+-   `has_elevator`, `has_parking`, `has_balcony`,
+    `has_security`: istotna różnica (p \< 0.05).
 
--   **has_storage_room**: brak istotnej różnicy (p ≥ 0.05).
+-   `has_storage_room`: brak istotnej różnicy (p ≥ 0.05).
 
 W stolicy niemal wszystkie uwzględniane udogodnienia (poza
 pomieszczeniem gospodarczym) istotnie różnicują medianę ceny.
 
 ### Radom
 
--   **has_parking**: istotna różnica (p \< 0.05).
+-   `has_parking`: istotna różnica (p \< 0.05).
 
--   **has_elevator**, **has_balcony**, **has_security**,
-    **has_storage_room**: brak istotnej różnicy (p ≥ 0.05).
+-   `has_elevator`, `has_balcony`, `has_security`,
+    `has_storage_room`: brak istotnej różnicy (p ≥ 0.05).
 
 Dla mieszkań w Radomiu tylko parking istotnie wpływa na ceny w ujęciu
 statystycznym.
 
 ### Częstochowa
 
--   **has_parking**, **has_balcony**: istotna różnica (p \< 0.05).
+-   `has_parking`, `has_balcony`: istotna różnica (p \< 0.05).
 
--   **has_elevator**, **has_security**, **has_storage_room**: brak
+-   `has_elevator`, `has_security`, `has_storage_room`: brak
     istotnej różnicy (p ≥ 0.05).
 
 Tutaj ważnymi czynnikami wpływającymi na ceny (w sensie statystycznym)
@@ -3108,10 +3113,10 @@ kategorycznych na rozkład cen w testach Manna--Whitneya.
 
 ### Białystok
 
--   **has_elevator**, **has_parking**, **has_balcony**: istotna różnica
+-   `has_elevator`, `has_parking`, `has_balcony`: istotna różnica
     (p \< 0.05).
 
--   **has_security**, **has_storage_room**: brak istotnej różnicy (p ≥
+-   `has_security`, `has_storage_room`: brak istotnej różnicy (p ≥
     0.05).
 
 W Białymstoku posiadanie windy, parkingu oraz balkonu różnicowało
@@ -3123,10 +3128,10 @@ różnice w medianach cen przy uwzględnieniu co najmniej jednej z
 wybranych cech. Szczególnie często wyłaniającymi się zmiennymi okazały
 się:
 
--   **has_parking** (istotne m.in. w Krakowie, Warszawie, Radomiu,
+-   `has_parking` (istotne m.in. w Krakowie, Warszawie, Radomiu,
     Częstochowie, Białymstoku),
 
--   **has_balcony** (istotne m.in. w Krakowie, Warszawie, Częstochowie,
+-   `has_balcony` (istotne m.in. w Krakowie, Warszawie, Częstochowie,
     Białymstoku).
 
 Dane te sugerują, że w większości analizowanych lokalizacji obecność
@@ -4526,25 +4531,34 @@ infrastruktury.
 
 ## Cel projektu
 
-Celem naszego projektu było zrozumienie zmienności cen mieszkań w Polsce w oparciu o dane rynkowe zebrane w 2024 roku. Analiza miała na celu zidentyfikowanie głównych trendów, czynników wpływających na ceny mieszkań oraz zaproponowanie rekomendacji dla potencjalnych inwestorów i osób poszukujących mieszkań.
+Celem naszego projektu była staranie się znalezienia odpowiedzi na poniższe pytania:
+
+-   *Od czego zależy cena mieszkań?*
+
+-   *Jakie różnice w cenach występują pomiędzy miastami?*
+
+-   *Czy odległość od centrum lub interesujących miejsc (POI) ma
+    znaczenie dla wartości nieruchomości?*
+
+-   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są
+    najbardziej cenione?*
 
 ## Zakres prac
 
 W ramach realizacji projektu zespół podjął następujące kroki:
 
 1. **Zbieranie danych**: Przeanalizowaliśmy dostępne dane rynkowe obejmujące ceny mieszkań w różnych lokalizacjach Polski. Dane pochodziły z wiarygodnych źródeł, takich jak raporty rynkowe i bazy nieruchomości.
-2. **Przygotowanie danych**: Dane zostały oczyszczone i znormalizowane, aby umożliwić ich właściwą analizę. Usunięto duplikaty oraz niekompletne rekordy.
+2. **Przygotowanie danych**: Dane zostały oczyszczone i znormalizowane, aby umożliwić ich właściwą analizę. Dane poddane zostały imputacji, zaktualizowano nazwy kolumn czy zmiennych.
 3. **Analiza statystyczna**: Wykorzystaliśmy różne techniki analizy statystycznej, w tym:
-   - Testy istotności, takie jak test t-Studenta i ANOVA, w celu porównania średnich cen mieszkań w różnych regionach.
-   - Analizę korelacji, aby zidentyfikować zależności między zmiennymi, takimi jak powierzchnia mieszkania a cena za metr kwadratowy.
-   - Testy normalności, takie jak test Shapiro-Wilka, aby sprawdzić rozkład danych.
+   - Testy istotności, takie jak ANOVA, w celu porównania średnich cen mieszkań w różnych regionach, test Chi-kwadrat czy Levene'a.
+   - Analizę korelacji, aby zidentyfikować zależności między zmiennymi, takimi jak powierzchnia mieszkania a cena za metr kwadratowy czy odległość do POI.
+   - Testy normalności, takie jak test Andersona-Darlinga, aby sprawdzić rozkład danych.
 4. **Wizualizacja danych**: Wyniki zostały przedstawione za pomocą interaktywnych wykresów i map, aby ułatwić zrozumienie wyników.
 5. **Wnioski i rekomendacje**: Opracowaliśmy wnioski, które mogą być użyteczne dla różnych grup interesariuszy, takich jak kupujący, deweloperzy i inwestorzy.
 
 ## Wyniki
 
-1. **Główne trendy**: Zauważyliśmy, że największy wzrost cen mieszkań wystąpił w dużych miastach, takich jak Warszawa, Kraków i Gdańsk, podczas gdy mniejsze miasta i wsie wykazywały stabilność cen.
-2. **Czynniki wpływające na ceny**:
+1. **Czynniki wpływające na ceny**:
    - **Lokalizacja**: Lokalizacja nieruchomości okazała się kluczowym czynnikiem wpływającym na cenę. Mieszkania położone w centrum miast były wyceniane znacznie wyżej niż te na obrzeżach. Dostęp do infrastruktury, takich jak szkoły, sklepy i transport publiczny, dodatkowo zwiększał wartość nieruchomości.
    - **Powierzchnia**: Cena za metr kwadratowy malała wraz ze wzrostem powierzchni mieszkania, co sugeruje, że większe mieszkania oferują lepszy stosunek ceny do metrażu.
    - **Rok budowy**: Nowe mieszkania, zwłaszcza te zbudowane po 2015 roku, były wyceniane wyżej ze względu na nowoczesne technologie budowlane, lepszą efektywność energetyczną i atrakcyjne projekty architektoniczne.
@@ -4552,7 +4566,7 @@ W ramach realizacji projektu zespół podjął następujące kroki:
    - **Czynniki makroekonomiczne**: Wzrost stóp procentowych oraz inflacja miały pośredni wpływ na poziom cen, ograniczając zdolności nabywcze części klientów.
    - **Udogodnienia i odległość od infrastruktury**: Bliskość do szkół, sklepów, parków czy transportu publicznego miała istotny wpływ na ceny mieszkań. Mieszkania zlokalizowane w pobliżu tych udogodnień były wyceniane wyżej.
 
-3. **Regionalne różnice**: Wschodnia Polska wykazywała znacząco niższe ceny w porównaniu z regionami zachodnimi.
+2. **Regionalne różnice**: Wschodnia Polska wykazywała znacząco niższe ceny w porównaniu z regionami zachodnimi.
 
 ## Wnioski
 
