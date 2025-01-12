@@ -1,0 +1,201 @@
+/* Cerulean-inspired CSS for R Markdown */
+
+/* General Body Styling */
+body {
+    background-color: #fdfdfd;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    text-align: justify;
+    direction: rtl;
+    overflow-y: scroll;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    color: #0275d8;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    text-align: left;
+    direction: ltr;
+}
+
+h1 {
+    font-size: 2.5em;
+    border-bottom: 2px solid #d9edf7;
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 2em;
+    border-bottom: 1px solid #d9edf7;
+    padding-bottom: 5px;
+}
+
+h3 {
+    font-size: 1.75em;
+}
+
+h4 {
+    font-size: 1.5em;
+}
+
+h5 {
+    font-size: 1.25em;
+}
+
+h6 {
+    font-size: 1em;
+    color: #5bc0de;
+}
+
+/* Paragraphs */
+p {
+    margin: 0 0 15px;
+    text-align: justify;
+    direction: ltr;
+}
+
+/* Lists */
+ul, ol {
+    padding-left: 40px;
+    text-align: left;
+    direction: ltr;
+}
+
+ul li, ol li {
+    margin-bottom: 10px;
+    text-align: left;
+    direction: ltr;
+    padding-left: 0;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+    background-color: #fff;
+    direction: ltr;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #0275d8;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Code Blocks */
+code {
+    background-color: #f7f7f9;
+    border: 1px solid #ddd;
+    padding: 2px 4px;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    color: #d9534f;
+}
+
+pre {
+    background-color: #f7f7f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    overflow-x: auto;
+}
+
+/* Blockquotes */
+blockquote {
+    padding: 10px 20px;
+    margin: 20px 0;
+    font-size: 1.25em;
+    border-left: 5px solid #d9edf7;
+    background-color: #f5f5f5;
+    color: #555;
+}
+
+/* Links */
+a {
+    color: #0275d8;
+    text-decoration: none;
+    direction: ltr;
+}
+
+a:hover {
+    color: #014c8c;
+    text-decoration: underline;
+    direction: ltr;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+    background-color: #fff;
+}
+
+/* Horizontal Rule */
+hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 20px 0;
+}
+
+/* Alerts (for tips, notes, etc.) */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-info {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+}
+
+.alert-warning {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+}
+
+.alert-danger {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+}
+
+.alert-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+}
+
+/* Footnotes */
+.footnote {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* Custom Divs */
+.custom-div {
+    border: 1px solid #ddd;
+    padding: 15px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
