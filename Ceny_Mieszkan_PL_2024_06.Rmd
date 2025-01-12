@@ -2128,19 +2128,47 @@ dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 
 ## Test Anova i test Tukeya
 
-Przeprowadzenie testu ANOVA oraz testu Tukeya ma na celu szczegółową analizę 
-różnic w średnich cenach nieruchomości w wybranych miastach. Test ANOVA pozwala 
-na ocenę, czy istnieje statystycznie istotna różnica między średnimi cenami 
-nieruchomości w różnych miastach, co jest kluczowe dla zrozumienia, czy ceny 
-w tych miastach są podobne, czy też występują znaczące różnice, które mogą 
-wynikać z różnych czynników ekonomicznych, społecznych lub infrastrukturalnych. 
-Ponieważ ANOVA wskazuje jedynie, czy różnice istnieją, ale nie precyzuje, które 
-grupy (miasta) się różnią, stosujemy test Tukeya. Jest to post hoc test, który 
-pozwala na dokładne porównanie każdej pary miast, identyfikując, które z nich 
-różnią się od siebie w sposób istotny. Dzięki tym dwóm testom możemy kompleksowo
-ocenić, czy ceny nieruchomości w analizowanych miastach są statystycznie różne 
-oraz które miasta mają ceny wyraźnie wyższe lub niższe w porównaniu do innych.
+### Cel
+Celem przeprowadzenia testu ANOVA oraz testu Tukeya jest szczegółowa analiza różnic w średnich cenach nieruchomości w wybranych miastach. Test ANOVA pozwala na ocenę, czy istnieje statystycznie istotna różnica między średnimi cenami nieruchomości w różnych miastach, co jest kluczowe dla zrozumienia, czy ceny w tych miastach są podobne, czy też występują znaczące różnice, które mogą wynikać z różnych czynników ekonomicznych, społecznych lub infrastrukturalnych.
 
+### Definicja Testu ANOVA
+Test ANOVA to statystyczna metoda służąca do analizy różnic między średnimi wartościami w różnych grupach. W szczególności:
+- **Hipoteza zerowa (H₀):** Średnie we wszystkich grupach są równe.
+- **Hipoteza alternatywna (H₁):** Przynajmniej jedna para średnich grup jest różna.
+
+Statystyka testu **F** wyrażana jest wzorem:
+
+\[
+F = \frac{\text{MS}_{\text{between}}}{\text{MS}_{\text{within}}}
+\]
+
+gdzie:
+- \(\text{MS}_{\text{between}} = \frac{\text{SS}_{\text{between}}}{df_{\text{between}}}\) – średni kwadrat między grupami,
+- \(\text{MS}_{\text{within}} = \frac{\text{SS}_{\text{within}}}{df_{\text{within}}}\) – średni kwadrat wewnątrz grup,
+- \(\text{SS}_{\text{between}}\) – suma kwadratów odchyleń między grupami,
+- \(\text{SS}_{\text{within}}\) – suma kwadratów odchyleń wewnątrz grup,
+- \(df_{\text{between}}\) i \(df_{\text{within}}\) – liczby stopni swobody odpowiednio dla efektu między grupami i resztowego.
+
+### Definicja Testu Tukeya
+Test Tukeya (Tukey's Honest Significant Difference, HSD) jest testem post hoc stosowanym po przeprowadzeniu analizy ANOVA, aby zidentyfikować, które grupy (np. miasta) różnią się między sobą pod względem średnich wartości. 
+
+Test ten porównuje każdą możliwą parę grup i oblicza różnice między średnimi wartościami. Następnie ocenia, czy różnice te są statystycznie istotne, wykorzystując jednoczesne przedziały ufności i korektę dla wielokrotnych porównań. Dzięki temu test Tukeya minimalizuje ryzyko popełnienia błędu pierwszego rodzaju (fałszywe odrzucenie hipotezy zerowej).
+
+Formuła statystyki testu Tukeya:
+
+\[
+q = \frac{\text{M}_{i} - \text{M}_{j}}{\sqrt{\frac{\text{MS}_{\text{within}}}{n}}}
+\]
+
+gdzie:
+- \(\text{M}_{i}\) i \(\text{M}_{j}\) – średnie wartości dwóch porównywanych grup,
+- \(\text{MS}_{\text{within}}\) – średni kwadrat wewnątrz grup (pochodzący z ANOVA),
+- \(n\) – liczebność próby w każdej grupie.
+
+### Wymagania Testu ANOVA
+1. Zmienne w grupach są niezależne.
+2. Rozkład wyników w każdej grupie jest normalny.
+3. Wariancje w grupach są homogeniczne (jednakowe).
 
 ```{r test_ANOVA,Porównanie_średnich_cen_nieruchomości_w_różnych_miastach, echo=FALSE}
 
