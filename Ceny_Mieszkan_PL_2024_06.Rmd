@@ -4,7 +4,7 @@ date: "`r Sys.Date()`"
 author: "Piotr Wiśniewski - lider zespołu, Izabela Reszka, Klaudia Woźniak"
 output:
   html_document:
-    theme: cerulean
+    css: style.css
     highlight: tango
     highlight_color: "goldenrod"
     toc: true
@@ -4510,18 +4510,10 @@ dzielnice, np. Żabianka--Wejhera--Jelitkowo--Tysiąclecia. Są to miejsca
 o wysokim prestiżu, dogodnym dostępie do atrakcji turystycznych i
 rozwiniętej infrastrukturze.
 
-
-
-
-
 Z kolei dzielnice bardziej oddalone od centrum, takie jak Kokoszki czy
 Matarnia, cechują się znacznie niższymi cenami, co może przyciągać osoby
 poszukujące spokojniejszych lokalizacji oraz bardziej przystępnych
 cenowo mieszkań.
-
-
-
-
 
 Porównanie tych różnic uwidacznia rolę lokalizacji w kształtowaniu cen
 nieruchomości, co może być cenną wskazówką zarówno dla inwestorów, jak i
@@ -4530,4 +4522,43 @@ do dalszych analiz, uwzględniających takie czynniki jak dostępność
 komunikacyjna, sąsiedztwo terenów zielonych czy rozwój lokalnej
 infrastruktury.
 
+# **Podsumowanie**
 
+## Cel projektu
+
+Celem naszego projektu było zrozumienie zmienności cen mieszkań w Polsce w oparciu o dane rynkowe zebrane w 2024 roku. Analiza miała na celu zidentyfikowanie głównych trendów, czynników wpływających na ceny mieszkań oraz zaproponowanie rekomendacji dla potencjalnych inwestorów i osób poszukujących mieszkań.
+
+## Zakres prac
+
+W ramach realizacji projektu zespół podjął następujące kroki:
+
+1. **Zbieranie danych**: Przeanalizowaliśmy dostępne dane rynkowe obejmujące ceny mieszkań w różnych lokalizacjach Polski. Dane pochodziły z wiarygodnych źródeł, takich jak raporty rynkowe i bazy nieruchomości.
+2. **Przygotowanie danych**: Dane zostały oczyszczone i znormalizowane, aby umożliwić ich właściwą analizę. Usunięto duplikaty oraz niekompletne rekordy.
+3. **Analiza statystyczna**: Wykorzystaliśmy różne techniki analizy statystycznej, w tym:
+   - Testy istotności, takie jak test t-Studenta i ANOVA, w celu porównania średnich cen mieszkań w różnych regionach.
+   - Analizę korelacji, aby zidentyfikować zależności między zmiennymi, takimi jak powierzchnia mieszkania a cena za metr kwadratowy.
+   - Testy normalności, takie jak test Shapiro-Wilka, aby sprawdzić rozkład danych.
+4. **Wizualizacja danych**: Wyniki zostały przedstawione za pomocą interaktywnych wykresów i map, aby ułatwić zrozumienie wyników.
+5. **Wnioski i rekomendacje**: Opracowaliśmy wnioski, które mogą być użyteczne dla różnych grup interesariuszy, takich jak kupujący, deweloperzy i inwestorzy.
+
+## Wyniki
+
+1. **Główne trendy**: Zauważyliśmy, że największy wzrost cen mieszkań wystąpił w dużych miastach, takich jak Warszawa, Kraków i Gdańsk, podczas gdy mniejsze miasta i wsie wykazywały stabilność cen.
+2. **Czynniki wpływające na ceny**:
+   - **Lokalizacja**: Lokalizacja nieruchomości okazała się kluczowym czynnikiem wpływającym na cenę. Mieszkania położone w centrum miast były wyceniane znacznie wyżej niż te na obrzeżach. Dostęp do infrastruktury, takich jak szkoły, sklepy i transport publiczny, dodatkowo zwiększał wartość nieruchomości.
+   - **Powierzchnia**: Cena za metr kwadratowy malała wraz ze wzrostem powierzchni mieszkania, co sugeruje, że większe mieszkania oferują lepszy stosunek ceny do metrażu.
+   - **Rok budowy**: Nowe mieszkania, zwłaszcza te zbudowane po 2015 roku, były wyceniane wyżej ze względu na nowoczesne technologie budowlane, lepszą efektywność energetyczną i atrakcyjne projekty architektoniczne.
+   - **Stan techniczny**: Stan mieszkania, w tym jakość wykończenia oraz ewentualne potrzeby remontowe, istotnie wpływały na cenę. Mieszkania w stanie "do wprowadzenia" osiągały wyższe ceny niż te wymagające generalnego remontu.
+   - **Czynniki makroekonomiczne**: Wzrost stóp procentowych oraz inflacja miały pośredni wpływ na poziom cen, ograniczając zdolności nabywcze części klientów.
+   - **Udogodnienia i odległość od infrastruktury**: Bliskość do szkół, sklepów, parków czy transportu publicznego miała istotny wpływ na ceny mieszkań. Mieszkania zlokalizowane w pobliżu tych udogodnień były wyceniane wyżej.
+
+3. **Regionalne różnice**: Wschodnia Polska wykazywała znacząco niższe ceny w porównaniu z regionami zachodnimi.
+
+## Wnioski
+
+- Dla inwestorów rekomendujemy koncentrację na rozwijających się miastach o wysokim potencjale wzrostu, takich jak Wrocław i Rzeszów.
+- Dla osób poszukujących mieszkań, mniejsze miasta oferują bardziej przystępne ceny przy zachowaniu stosunkowo dobrej infrastruktury.
+
+## Refleksje
+
+Projekt pozwolił nam na rozwinięcie umiejętności analizy danych, interpretacji wyników oraz pracy zespołowej. W szczególności praca w **RStudio** umożliwiła sprawne przetwarzanie danych, ich analizę i wizualizację, co znacząco przyczyniło się do realizacji naszych celów.
