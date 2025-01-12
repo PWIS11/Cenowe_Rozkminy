@@ -2168,7 +2168,9 @@ tukey_result <- TukeyHSD(model)
 #summary(tukey_result)
 
 ```
-Wyniki analizy ANOVA oraz testu Tukeya dotyczące średnich cen nieruchomości w wybranych miastach pozwalają na ocenę, czy różnice w cenach nieruchomości pomiędzy miastami są statystycznie istotne.
+Wyniki analizy ANOVA oraz testu Tukeya dotyczące średnich cen nieruchomości 
+w wybranych miastach pozwalają na ocenę, czy różnice w cenach nieruchomości
+pomiędzy miastami są statystycznie istotne.
 
 ### 1. **Wyniki testu ANOVA:**
 
@@ -2184,32 +2186,55 @@ przeprowadzamy dodatkowy test post-hoc, na przykład test Tukeya.
 
 ### 2. **Wyniki testu Tukeya (Tukey HSD):**
 
-Test Tukeya jest przeprowadzany, aby zidentyfikować, które pary miast różnią się od siebie pod względem średnich cen nieruchomości. Z wyników testu Tukeya możemy wyciągnąć następujące wnioski:
+Test Tukeya jest przeprowadzany, aby zidentyfikować, które pary miast różnią się 
+od siebie pod względem średnich cen nieruchomości. Z wyników testu Tukeya możemy
+wyciągnąć następujące wnioski:
 
-- **Częstochowa vs Białystok**: Istnieje istotna różnica w średnich cenach nieruchomości pomiędzy Częstochową a Białymstokiem, przy czym średnia cena w Białymstoku jest wyższa o 135996.10 PLN. Wartość p wynosi 1.81e-04, co wskazuje na bardzo silną istotność statystyczną.
+- **Częstochowa vs Białystok**: Istnieje istotna różnica w średnich cenach 
+nieruchomości pomiędzy Częstochową a Białymstokiem, przy czym średnia cena 
+w Białymstoku jest wyższa o 135996.10 PLN. Wartość p wynosi 1.81e-04,
+co wskazuje na bardzo silną istotność statystyczną.
   
-- **Kraków vs Białystok**: Istnieje bardzo istotna różnica pomiędzy Krakowem a Białymstokiem, a średnia cena w Krakowie jest wyższa o 453545.01 PLN. Wartość p wynosi 4.37e-13, co oznacza, że różnica jest ekstremalnie statystycznie istotna.
+- **Kraków vs Białystok**: Istnieje bardzo istotna różnica pomiędzy Krakowem
+a Białymstokiem, a średnia cena w Krakowie jest wyższa o 453545.01 PLN.
+Wartość p wynosi 4.37e-13, co oznacza, że różnica jest ekstremalnie statystycznie
+istotna.
 
-- **Radom vs Białystok**: Różnica pomiędzy Radomiem a Białymstokiem jest również istotna, a średnia cena w Radomiu jest niższa o 157719.33 PLN. Wartość p wynosi 1.21e-05, co wskazuje na istotność statystyczną.
+- **Radom vs Białystok**: Różnica pomiędzy Radomiem a Białymstokiem jest również 
+istotna, a średnia cena w Radomiu jest niższa o 157719.33 PLN. Wartość p wynosi
+1.21e-05, co wskazuje na istotność statystyczną.
 
-- **Rzeszów vs Białystok**: Różnica w cenach pomiędzy Rzeszowem a Białymstokiem jest również istotna, a średnia cena w Rzeszowie jest wyższa o 137554.16 PLN. Wartość p wynosi 1.50e-04, co wskazuje na istotność statystyczną.
+- **Rzeszów vs Białystok**: Różnica w cenach pomiędzy Rzeszowem a Białymstokiem
+jest również istotna, a średnia cena w Rzeszowie jest wyższa o 137554.16 PLN. 
+Wartość p wynosi 1.50e-04, co wskazuje na istotność statystyczną.
 
-- **Warszawa vs Białystok**: Różnica w cenach pomiędzy Warszawą a Białymstokiem jest bardzo istotna, a średnia cena w Warszawie jest wyższa o 532996.35 PLN. Wartość p wynosi 4.37e-13, co oznacza bardzo silną istotność statystyczną.
+- **Warszawa vs Białystok**: Różnica w cenach pomiędzy Warszawą a Białymstokiem 
+jest bardzo istotna, a średnia cena w Warszawie jest wyższa o 532996.35 PLN.
+Wartość p wynosi 4.37e-13, co oznacza bardzo silną istotność statystyczną.
 
 W analizie dalszych par miast zauważamy różne wyniki:<br>
 
--  **Kraków vs Częstochowa**: Istnieje istotna różnica (średnia cena w Krakowie jest wyższa o 589541.11 PLN, p = 4.37e-13).<br>
--  **Radom vs Częstochowa**: Różnica w cenach nie jest istotna (p = 0.9719), co sugeruje, że ceny nieruchomości w tych dwóch miastach są podobne.<br>
--  **Rzeszów vs Częstochowa**: Istnieje istotna różnica (średnia cena w Rzeszowie jest wyższa o 273550.26 PLN, p = 3.98e-12).<br>
--  **Warszawa vs Częstochowa**: Istnieje bardzo istotna różnica (średnia cena w Warszawie jest wyższa o 668992.45 PLN, p = 4.37e-13).
+-  **Kraków vs Częstochowa**: Istnieje istotna różnica (średnia cena w Krakowie 
+jest wyższa o 589541.11 PLN, p = 4.37e-13).<br>
+-  **Radom vs Częstochowa**: Różnica w cenach nie jest istotna (p = 0.9719), 
+co sugeruje, że ceny nieruchomości w tych dwóch miastach są podobne.<br>
+-  **Rzeszów vs Częstochowa**: Istnieje istotna różnica (średnia cena 
+w Rzeszowie jest wyższa o 273550.26 PLN, p = 3.98e-12).<br>
+-  **Warszawa vs Częstochowa**: Istnieje bardzo istotna różnica (średnia cena 
+w Warszawie jest wyższa o 668992.45 PLN, p = 4.37e-13).
 
 Analizując pary miast:
 
-- **Radom vs Kraków** oraz **Rzeszów vs Kraków**: Istnieją istotne różnice (p < 0.05), z większymi cenami w Krakowie.<br>
-- **Warszawa vs Kraków**: Różnica nie jest istotna (p = 0.072), co sugeruje, że ceny w Warszawie i Krakowie mogą być porównywalne.<br>
-- **Rzeszów vs Radom**: Istnieje istotna różnica na korzyść Rzeszowa (średnia cena wyższa o 295273.49 PLN, p = 7.14e-13).<br>
-- **Warszawa vs Radom**: Istnieje bardzo istotna różnica (średnia cena wyższa o 690715.68 PLN, p = 4.37e-13).<br>
-- **Warszawa vs Rzeszów**: Istnieje bardzo istotna różnica (średnia cena wyższa o 395442.20 PLN, p = 4.38e-13).
+- **Radom vs Kraków** oraz **Rzeszów vs Kraków**: Istnieją istotne różnice 
+(p < 0.05), z większymi cenami w Krakowie.<br>
+- **Warszawa vs Kraków**: Różnica nie jest istotna (p = 0.072), co sugeruje, 
+że ceny w Warszawie i Krakowie mogą być porównywalne.<br>
+- **Rzeszów vs Radom**: Istnieje istotna różnica na korzyść Rzeszowa (średnia 
+cena wyższa o 295273.49 PLN, p = 7.14e-13).<br>
+- **Warszawa vs Radom**: Istnieje bardzo istotna różnica (średnia cena wyższa 
+o 690715.68 PLN, p = 4.37e-13).<br>
+- **Warszawa vs Rzeszów**: Istnieje bardzo istotna różnica (średnia cena wyższa
+o 395442.20 PLN, p = 4.38e-13).
 
 
 ```{r Wizualizacja_testów, echo=FALSE}
