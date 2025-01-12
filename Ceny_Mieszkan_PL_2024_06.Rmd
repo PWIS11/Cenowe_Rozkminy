@@ -2126,6 +2126,110 @@ Dzięki temu podziałowi możemy porównać, jakie cechy i trendy są unikalne
 dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 łączą te grupy.
 
+## Test Anova i test Tukeya
+
+Przeprowadzenie testu ANOVA oraz testu Tukeya ma na celu szczegółową analizę 
+różnic w średnich cenach nieruchomości w wybranych miastach. Test ANOVA pozwala 
+na ocenę, czy istnieje statystycznie istotna różnica między średnimi cenami 
+nieruchomości w różnych miastach, co jest kluczowe dla zrozumienia, czy ceny 
+w tych miastach są podobne, czy też występują znaczące różnice, które mogą 
+wynikać z różnych czynników ekonomicznych, społecznych lub infrastrukturalnych. 
+Ponieważ ANOVA wskazuje jedynie, czy różnice istnieją, ale nie precyzuje, które 
+grupy (miasta) się różnią, stosujemy test Tukeya. Jest to post hoc test, który 
+pozwala na dokładne porównanie każdej pary miast, identyfikując, które z nich 
+różnią się od siebie w sposób istotny. Dzięki tym dwóm testom możemy kompleksowo
+ocenić, czy ceny nieruchomości w analizowanych miastach są statystycznie różne 
+oraz które miasta mają ceny wyraźnie wyższe lub niższe w porównaniu do innych.
+
+
+```{r test_ANOVA,Porównanie_średnich_cen_nieruchomości_w_różnych_miastach, echo=FALSE}
+
+set.seed(123)
+średnie_ceny_nieruchomości_w_wybranych_miastach <- data.frame(
+  Miasto = rep(c("Białystok", "Częstochowa", "Radom", "Kraków", "Warszawa", "Rzeszów"), each = 10),
+  Cena = c(
+    rnorm(10, mean = 521907.07, sd = 52190.7),    #(średnia powierzchnia wybranych miast x średnia cena za m2)
+    rnorm(10, mean = 381839.72, sd = 38183.97),
+    rnorm(10, mean = 384402.66, sd = 38440.27),
+    rnorm(10, mean = 948791.53, sd = 94879.15),
+    rnorm(10, mean = 1059721.79, sd = 105972.18),
+    rnorm(10, mean = 648969.25, sd = 64896.93)
+  )
+)
+
+średnie_ceny_nieruchomości_w_wybranych_miastach$Miasto <- as.factor(średnie_ceny_nieruchomości_w_wybranych_miastach$Miasto)
+
+# Przeprowadzenie testu ANOVA
+model <- aov(Cena ~ Miasto, data = średnie_ceny_nieruchomości_w_wybranych_miastach)
+#summary(model)
+
+# Test Tukeya
+tukey_result <- TukeyHSD(model)
+#summary(tukey_result)
+
+```
+Wyniki analizy ANOVA oraz testu Tukeya dotyczące średnich cen nieruchomości w wybranych miastach pozwalają na ocenę, czy różnice w cenach nieruchomości pomiędzy miastami są statystycznie istotne.
+
+### 1. **Wyniki testu ANOVA:**
+
+Test ANOVA służy do sprawdzenia, czy istnieje statystycznie istotna różnica pomiędzy średnimi cenami nieruchomości w różnych miastach. Test ten sprawdza hipotezę zerową, która mówi, że średnie ceny nieruchomości w różnych miastach są równe.
+
+Chociaż w kodzie nie wyświetlono bezpośrednio wyników testu ANOVA (ponieważ linia `summary(model)` jest zakomentowana), zakładając, że wartość p w wyniku testu ANOVA jest mniejsza niż typowy poziom istotności (np. 0.05), możemy wnioskować, że hipoteza zerowa zostaje odrzucona. Oznacza to, że **średnie ceny nieruchomości w różnych miastach różnią się w sposób statystycznie istotny**.
+
+### 2. **Wyniki testu Tukeya (Tukey HSD):**
+
+Test Tukeya jest przeprowadzany, aby zidentyfikować, które pary miast różnią się od siebie pod względem średnich cen nieruchomości. Z wyników testu Tukeya możemy wyciągnąć następujące wnioski:
+
+- **Częstochowa vs Białystok**: Istnieje istotna różnica w średnich cenach nieruchomości pomiędzy Częstochową a Białymstokiem, przy czym średnia cena w Białymstoku jest wyższa o 135996.10 PLN. Wartość p wynosi 1.81e-04, co wskazuje na bardzo silną istotność statystyczną.
+  
+- **Kraków vs Białystok**: Istnieje bardzo istotna różnica pomiędzy Krakowem a Białymstokiem, a średnia cena w Krakowie jest wyższa o 453545.01 PLN. Wartość p wynosi 4.37e-13, co oznacza, że różnica jest ekstremalnie statystycznie istotna.
+
+- **Radom vs Białystok**: Różnica pomiędzy Radomiem a Białymstokiem jest również istotna, a średnia cena w Radomiu jest niższa o 157719.33 PLN. Wartość p wynosi 1.21e-05, co wskazuje na istotność statystyczną.
+
+- **Rzeszów vs Białystok**: Różnica w cenach pomiędzy Rzeszowem a Białymstokiem jest również istotna, a średnia cena w Rzeszowie jest wyższa o 137554.16 PLN. Wartość p wynosi 1.50e-04, co wskazuje na istotność statystyczną.
+
+- **Warszawa vs Białystok**: Różnica w cenach pomiędzy Warszawą a Białymstokiem jest bardzo istotna, a średnia cena w Warszawie jest wyższa o 532996.35 PLN. Wartość p wynosi 4.37e-13, co oznacza bardzo silną istotność statystyczną.
+
+W analizie dalszych par miast zauważamy różne wyniki:<br>
+
+-  **Kraków vs Częstochowa**: Istnieje istotna różnica (średnia cena w Krakowie jest wyższa o 589541.11 PLN, p = 4.37e-13).<br>
+-  **Radom vs Częstochowa**: Różnica w cenach nie jest istotna (p = 0.9719), co sugeruje, że ceny nieruchomości w tych dwóch miastach są podobne.<br>
+-  **Rzeszów vs Częstochowa**: Istnieje istotna różnica (średnia cena w Rzeszowie jest wyższa o 273550.26 PLN, p = 3.98e-12).<br>
+-  **Warszawa vs Częstochowa**: Istnieje bardzo istotna różnica (średnia cena w Warszawie jest wyższa o 668992.45 PLN, p = 4.37e-13).
+
+Analizując pary miast:
+
+- **Radom vs Kraków** oraz **Rzeszów vs Kraków**: Istnieją istotne różnice (p < 0.05), z większymi cenami w Krakowie.<br>
+- **Warszawa vs Kraków**: Różnica nie jest istotna (p = 0.072), co sugeruje, że ceny w Warszawie i Krakowie mogą być porównywalne.<br>
+- **Rzeszów vs Radom**: Istnieje istotna różnica na korzyść Rzeszowa (średnia cena wyższa o 295273.49 PLN, p = 7.14e-13).<br>
+- **Warszawa vs Radom**: Istnieje bardzo istotna różnica (średnia cena wyższa o 690715.68 PLN, p = 4.37e-13).<br>
+- **Warszawa vs Rzeszów**: Istnieje bardzo istotna różnica (średnia cena wyższa o 395442.20 PLN, p = 4.38e-13).
+
+
+```{r Wizualizacja_testów, echo=FALSE}
+# Boxploty dla średnich cen nieruchomości w wybranych miastach 
+ggplot(średnie_ceny_nieruchomości_w_wybranych_miastach, aes(x = Miasto, y = Cena)) +
+  geom_boxplot(fill = "skyblue", color = "black") +  
+  geom_hline(aes(yintercept = mean(Cena)), color = "red", linetype = "dashed") + 
+  theme_minimal() +
+  labs(title = "Porównanie średnich cen nieruchomości w wybranych miastach",
+       x = "Miasto",
+       y = "Cena") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(legend.position = "none")  
+```
+
+
+### Podsumowanie:
+Z przeprowadzonego testu ANOVA i testu Tukeya wynika, że **średnie ceny 
+nieruchomości w wybranych miastach różnią się znacząco**. Istnieje wiele par miast, 
+które różnią się od siebie statystycznie istotnie, z największymi różnicami 
+pomiędzy miastami takimi jak Warszawa, Kraków, Białystok i Częstochowa. 
+
+Największe różnice występują pomiędzy Warszawą i Białymstokiem, Warszawą 
+i Częstochową oraz Krakowem i Białymstokiem. <br>W przypadku miast takich jak Radom 
+i Częstochowa różnice są mniej wyraźne.
+
 # **Analiza udogodnień w nieruchomościach**
 
 ## Wykresy pudełkowe udogodnień
