@@ -4562,3 +4562,55 @@ W ramach realizacji projektu zespół podjął następujące kroki:
 ## Refleksje
 
 Projekt pozwolił nam na rozwinięcie umiejętności analizy danych, interpretacji wyników oraz pracy zespołowej. W szczególności praca w **RStudio** umożliwiła sprawne przetwarzanie danych, ich analizę i wizualizację, co znacząco przyczyniło się do realizacji naszych celów.
+
+
+
+
+
+
+
+# **Podsumowanie analizy cen mieszkań w wybranych miastach**  
+Celem projektu było zrozumienie, jakie czynniki wpływają na ceny mieszkań w sześciu wybranych polskich miastach: Warszawie, Krakowie, Rzeszowie, Białymstoku, Radomiu i Częstochowie. Przeprowadzona analiza pozwoliła odpowiedzieć na kluczowe pytania badawcze oraz wyciągnąć szczegółowe wnioski.
+
+---
+
+### **Odpowiedzi na kluczowe pytania**  
+
+1. **Od czego zależy cena mieszkań?**  
+   Cena mieszkań zależy od kilku kluczowych czynników:  
+   - **Lokalizacji** (bliskość centrum, rozwinięta infrastruktura).  
+   - **Cech mieszkania**, takich jak liczba pokoi, powierzchnia, rok budowy oraz obecność udogodnień (balkon, winda, parking).  
+   - **Charakterystyki okolicy**, m.in. liczby punktów użyteczności publicznej (POI) w pobliżu, takich jak szkoły, restauracje czy kliniki.  
+
+2. **Jakie różnice w cenach występują pomiędzy miastami?**  
+   Miasta zostały podzielone na trzy grupy cenowe:  
+   - **Najdroższe:** Warszawa (18 503 PLN/m²) i Kraków (17 135 PLN/m²).  
+   - **Średnie:** Rzeszów (10 803 PLN/m²) i Białystok (10 089 PLN/m²).  
+   - **Najtańsze:** Radom (6 929 PLN/m²) i Częstochowa (7 034 PLN/m²).  
+   Różnice w cenach wynikają z poziomu urbanizacji, rozwoju gospodarczego i dostępności infrastruktury w każdym mieście.  
+
+3. **Czy odległość od centrum ma znaczenie?**  
+   Odległość od centrum miasta istotnie wpływa na ceny mieszkań. Najbardziej zauważalne jest to w Warszawie i Krakowie, gdzie mieszkania w centralnych lokalizacjach osiągają najwyższe ceny. W mniejszych miastach, takich jak Radom czy Częstochowa, ten wpływ jest mniej wyraźny.  
+
+4. **Które cechy mieszkań są najbardziej cenione?**  
+   Najbardziej cenione cechy to:  
+   - Obecność balkonu, windy i miejsca parkingowego.  
+   - Lokalizacja w centrum, bliskość szkół.  
+   - Powierzchnia mieszkania oraz liczba pokoi, co przekłada się na funkcjonalność nieruchomości.  
+
+---
+
+### **Podsumowanie według miast**  
+
+1. **Warszawa:** Najwyższe ceny wynikają z dużego zapotrzebowania na mieszkania w prestiżowych lokalizacjach, rozwiniętej infrastruktury i szerokiego dostępu do usług.  
+2. **Kraków:** Drugie najdroższe miasto, gdzie ceny są determinowane bliskością atrakcji turystycznych oraz rozwiniętym rynkiem wynajmu.  
+3. **Rzeszów:** Miasto w średnim przedziale cenowym, które rozwija się jako lokalne centrum biznesowe.  
+4. **Białystok:** Charakteryzuje się umiarkowanymi cenami, wynikającymi z mniejszego zapotrzebowania i niższego poziomu urbanizacji.  
+5. **Radom:** Najtańsze miast, zdominowane przez starsze budynki i ograniczone możliwości inwestycyjne.  
+6. **Częstochowa:** Drugie najtańsze miasto w badaniu, gdzie ceny są najniższe z uwagi na mniejszą atrakcyjność inwestycyjną i ograniczoną infrastrukturę.  
+
+---
+
+### **Wnioski końcowe**  
+Przeprowadzona analiza wykazała, że ceny mieszkań w dużym stopniu zależą od lokalizacji, charakterystyki mieszkania oraz dostępności usług w okolicy. Miasta takie jak Warszawa i Kraków dominują pod względem cen, co wynika z ich centralnej roli w gospodarce. Z kolei mniejsze miasta, takie jak Radom i Częstochowa, oferują tańsze mieszkania, ale z ograniczonym potencjałem inwestycyjnym.  
+
