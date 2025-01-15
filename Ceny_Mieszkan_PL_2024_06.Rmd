@@ -4534,7 +4534,7 @@ infrastruktury.
 
 ## Cel projektu
 
-Celem naszego projektu była staranie się znalezienia odpowiedzi na poniższe pytania:
+Celem projektu było zrozumienie, jakie czynniki wpływają na ceny mieszkań w sześciu wybranych polskich miastach: Warszawie, Krakowie, Rzeszowie, Białymstoku, Radomiu i Częstochowie. Przeprowadzona analiza pozwoliła odpowiedzieć na kluczowe pytania badawcze oraz wyciągnąć szczegółowe wnioski.
 
 -   *Od czego zależy cena mieszkań?*
 
@@ -4581,17 +4581,9 @@ W ramach realizacji projektu zespół podjął następujące kroki:
 Projekt pozwolił nam na rozwinięcie umiejętności analizy danych, interpretacji wyników oraz pracy zespołowej. W szczególności praca w **RStudio** umożliwiła sprawne przetwarzanie danych, ich analizę i wizualizację, co znacząco przyczyniło się do realizacji naszych celów.
 
 
-
-
-
-
-
-# **Podsumowanie analizy cen mieszkań w wybranych miastach**  
-Celem projektu było zrozumienie, jakie czynniki wpływają na ceny mieszkań w sześciu wybranych polskich miastach: Warszawie, Krakowie, Rzeszowie, Białymstoku, Radomiu i Częstochowie. Przeprowadzona analiza pozwoliła odpowiedzieć na kluczowe pytania badawcze oraz wyciągnąć szczegółowe wnioski.
-
 ---
 
-### **Odpowiedzi na kluczowe pytania**  
+## Odpowiedzi na kluczowe pytania 
 
 1. **Od czego zależy cena mieszkań?**  
    Cena mieszkań zależy od kilku kluczowych czynników:  
@@ -4614,6 +4606,30 @@ Celem projektu było zrozumienie, jakie czynniki wpływają na ceny mieszkań w 
    - Obecność balkonu, windy i miejsca parkingowego.  
    - Lokalizacja w centrum, bliskość szkół.  
    - Powierzchnia mieszkania oraz liczba pokoi, co przekłada się na funkcjonalność nieruchomości.  
+
+
+---
+
+### Dodatkowe obserwacje 
+
+2. **Odległość od centrum**  
+   - W dużych miastach, takich jak Warszawa i Kraków, ceny spadają wraz z odległością od centrum. W mniejszych miastach, takich jak Radom i Częstochowa, wpływ ten jest mniej zauważalny.  
+
+3. **Rola udogodnień**  
+   - Mieszkania z balkonem, miejscem parkingowym lub windą osiągają ceny wyższe niż te bez takich udogodnień, zwłaszcza w dużych aglomeracjach.  
+   - W miastach takich jak Warszawa i Kraków kluczowym czynnikiem wpływającym na wartość nieruchomości są również dodatkowe usługi w budynkach, np. ochrona czy komórki lokatorskie.  
+
+4. **Powierzchnia i liczba pokoi**  
+   - Typowe mieszkania w analizowanych miastach mają 2-3 pokoje i powierzchnię 50–60 m². 
+
+5. **Wpływ demografii i wynagrodzeń**  
+   - W miastach o wyższych średnich wynagrodzeniach (np. Warszawa, Kraków) ceny mieszkań są proporcjonalnie wyższe, co wskazuje na związek między lokalnym rynkiem pracy a wartością nieruchomości.  
+   - Regiony o niższych dochodach, takie jak Radom czy Częstochowa, oferują tańsze nieruchomości, ale mają również mniejszy potencjał inwestycyjny.  
+
+6. **Obserwacje dotyczące rynku**  
+   - Rynek w Warszawie i Krakowie charakteryzuje się dużą zmiennością cen, podczas gdy w Radomiu i Częstochowie jest bardziej stabilny.  
+   - W miastach średnich, takich jak Rzeszów i Białystok, zauważalny jest trend wzrostowy, co wskazuje na rosnący potencjał inwestycyjny.  
+
 
 ---
 
