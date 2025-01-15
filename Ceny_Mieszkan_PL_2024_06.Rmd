@@ -2128,181 +2128,7 @@ Dzięki temu podziałowi możemy porównać, jakie cechy i trendy są unikalne
 dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 łączą te grupy.
 
-## Test Anova i test Tukeya
 
-### Cel
-Celem przeprowadzenia testu ANOVA oraz testu Tukeya jest szczegółowa analiza różnic w średnich cenach nieruchomości w wybranych miastach. Test ANOVA pozwala na ocenę, czy istnieje statystycznie istotna różnica między średnimi cenami nieruchomości w różnych miastach, co jest kluczowe dla zrozumienia, czy ceny w tych miastach są podobne, czy też występują znaczące różnice, które mogą wynikać z różnych czynników ekonomicznych, społecznych lub infrastrukturalnych.
-
-### Definicja Testu ANOVA
-Test ANOVA to statystyczna metoda służąca do analizy różnic między średnimi wartościami w różnych grupach. W szczególności:
-- **Hipoteza zerowa (H₀):** Średnie we wszystkich grupach są równe.
-- **Hipoteza alternatywna (H₁):** Przynajmniej jedna para średnich grup jest różna.
-
-Statystyka testu **F** wyrażana jest wzorem:
-
-\[
-F = \frac{\text{MS}_{\text{between}}}{\text{MS}_{\text{within}}}
-\]
-
-gdzie:
-- \(\text{MS}_{\text{between}} = \frac{\text{SS}_{\text{between}}}{df_{\text{between}}}\) – średni kwadrat między grupami,
-- \(\text{MS}_{\text{within}} = \frac{\text{SS}_{\text{within}}}{df_{\text{within}}}\) – średni kwadrat wewnątrz grup,
-- \(\text{SS}_{\text{between}}\) – suma kwadratów odchyleń między grupami,
-- \(\text{SS}_{\text{within}}\) – suma kwadratów odchyleń wewnątrz grup,
-- \(df_{\text{between}}\) i \(df_{\text{within}}\) – liczby stopni swobody odpowiednio dla efektu między grupami i resztowego.
-
-### Definicja Testu Tukeya
-Test Tukeya (Tukey's Honest Significant Difference, HSD) jest testem post hoc stosowanym po przeprowadzeniu analizy ANOVA, aby zidentyfikować, które grupy (np. miasta) różnią się między sobą pod względem średnich wartości. 
-
-Test ten porównuje każdą możliwą parę grup i oblicza różnice między średnimi wartościami. Następnie ocenia, czy różnice te są statystycznie istotne, wykorzystując jednoczesne przedziały ufności i korektę dla wielokrotnych porównań. Dzięki temu test Tukeya minimalizuje ryzyko popełnienia błędu pierwszego rodzaju (fałszywe odrzucenie hipotezy zerowej).
-
-Formuła statystyki testu Tukeya:
-
-\[
-q = \frac{\text{M}_{i} - \text{M}_{j}}{\sqrt{\frac{\text{MS}_{\text{within}}}{n}}}
-\]
-
-gdzie:
-- \(\text{M}_{i}\) i \(\text{M}_{j}\) – średnie wartości dwóch porównywanych grup,
-- \(\text{MS}_{\text{within}}\) – średni kwadrat wewnątrz grup (pochodzący z ANOVA),
-- \(n\) – liczebność próby w każdej grupie.
-
-### Wymagania Testu ANOVA
-1. Zmienne w grupach są niezależne.
-2. Rozkład wyników w każdej grupie jest normalny.
-3. Wariancje w grupach są homogeniczne (jednakowe).
-
-```{r test_ANOVA,Porównanie_średnich_cen_nieruchomości_w_różnych_miastach, echo=FALSE}
-
-set.seed(123)
-średnie_ceny_nieruchomości_w_wybranych_miastach <- data.frame(
-  Miasto = rep(c("Białystok", "Częstochowa", "Radom", "Kraków", "Warszawa", "Rzeszów"), each = 10),
-  Cena = c(
-    rnorm(10, mean = 521907.07, sd = 52190.7),    #(średnia powierzchnia wybranych miast x średnia cena za m2)
-    rnorm(10, mean = 381839.72, sd = 38183.97),
-    rnorm(10, mean = 384402.66, sd = 38440.27),
-    rnorm(10, mean = 948791.53, sd = 94879.15),
-    rnorm(10, mean = 1059721.79, sd = 105972.18),
-    rnorm(10, mean = 648969.25, sd = 64896.93)
-  )
-)
-
-średnie_ceny_nieruchomości_w_wybranych_miastach$Miasto <- as.factor(średnie_ceny_nieruchomości_w_wybranych_miastach$Miasto)
-
-# Przeprowadzenie testu ANOVA
-model <- aov(Cena ~ Miasto, data = średnie_ceny_nieruchomości_w_wybranych_miastach)
-#summary(model)
-
-# Test Tukeya
-tukey_result <- TukeyHSD(model)
-#summary(tukey_result)
-
-
-##Zmienne do Anovy:
-##Warszawa	Kraków	Rzeszów	Białystok	Radom	Częstochowa
-##Balkon	  Balkon	        	Balkon		      Balkon
-##Winda	     Winda	  Winda	  Winda		
-##Parking	  Parking		        Parking	Parking	Parking
-##Ochrona	  Ochrona				
-##Komórka	 Komórka   Komórka			
-
-##Fragment kodu wzorcowego 
-##aov(krakow$price~krakow$has_balcony)
-
-
-```
-Wyniki analizy ANOVA oraz testu Tukeya dotyczące średnich cen nieruchomości 
-w wybranych miastach pozwalają na ocenę, czy różnice w cenach nieruchomości
-pomiędzy miastami są statystycznie istotne.
-
-### 1. **Wyniki testu ANOVA:**
-
-Ponieważ wartość p jest mniejsza niż 0.05 (w tym przypadku jest to < 2e-16), 
-możemy odrzucić hipotezę zerową. Oznacza to, że średnie ceny nieruchomości 
-w różnych miastach różnią się w sposób statystycznie istotny. Innymi słowy,
-przynajmniej jedno z badanych miast ma inną średnią cenę nieruchomości niż 
-pozostałe.
-
-Test ANOVA wskazuje na istnienie różnic, ale nie precyzuje, które konkretnie 
-miasta różnią się między sobą. Aby dowiedzieć się, które pary miast są różne,
-przeprowadzamy dodatkowy test post-hoc, na przykład test Tukeya.
-
-### 2. **Wyniki testu Tukeya (Tukey HSD):**
-
-Test Tukeya jest przeprowadzany, aby zidentyfikować, które pary miast różnią się 
-od siebie pod względem średnich cen nieruchomości. Z wyników testu Tukeya możemy
-wyciągnąć następujące wnioski:
-
-- **Częstochowa vs Białystok**: Istnieje istotna różnica w średnich cenach 
-nieruchomości pomiędzy Częstochową a Białymstokiem, przy czym średnia cena 
-w Białymstoku jest wyższa o 135996.10 PLN. Wartość p wynosi 1.81e-04,
-co wskazuje na bardzo silną istotność statystyczną.
-  
-- **Kraków vs Białystok**: Istnieje bardzo istotna różnica pomiędzy Krakowem
-a Białymstokiem, a średnia cena w Krakowie jest wyższa o 453545.01 PLN.
-Wartość p wynosi 4.37e-13, co oznacza, że różnica jest ekstremalnie statystycznie
-istotna.
-
-- **Radom vs Białystok**: Różnica pomiędzy Radomiem a Białymstokiem jest również 
-istotna, a średnia cena w Radomiu jest niższa o 157719.33 PLN. Wartość p wynosi
-1.21e-05, co wskazuje na istotność statystyczną.
-
-- **Rzeszów vs Białystok**: Różnica w cenach pomiędzy Rzeszowem a Białymstokiem
-jest również istotna, a średnia cena w Rzeszowie jest wyższa o 137554.16 PLN. 
-Wartość p wynosi 1.50e-04, co wskazuje na istotność statystyczną.
-
-- **Warszawa vs Białystok**: Różnica w cenach pomiędzy Warszawą a Białymstokiem 
-jest bardzo istotna, a średnia cena w Warszawie jest wyższa o 532996.35 PLN.
-Wartość p wynosi 4.37e-13, co oznacza bardzo silną istotność statystyczną.
-
-W analizie dalszych par miast zauważamy różne wyniki:<br>
-
--  **Kraków vs Częstochowa**: Istnieje istotna różnica (średnia cena w Krakowie 
-jest wyższa o 589541.11 PLN, p = 4.37e-13).<br>
--  **Radom vs Częstochowa**: Różnica w cenach nie jest istotna (p = 0.9719), 
-co sugeruje, że ceny nieruchomości w tych dwóch miastach są podobne.<br>
--  **Rzeszów vs Częstochowa**: Istnieje istotna różnica (średnia cena 
-w Rzeszowie jest wyższa o 273550.26 PLN, p = 3.98e-12).<br>
--  **Warszawa vs Częstochowa**: Istnieje bardzo istotna różnica (średnia cena 
-w Warszawie jest wyższa o 668992.45 PLN, p = 4.37e-13).
-
-Analizując pary miast:
-
-- **Radom vs Kraków** oraz **Rzeszów vs Kraków**: Istnieją istotne różnice 
-(p < 0.05), z większymi cenami w Krakowie.<br>
-- **Warszawa vs Kraków**: Różnica nie jest istotna (p = 0.072), co sugeruje, 
-że ceny w Warszawie i Krakowie mogą być porównywalne.<br>
-- **Rzeszów vs Radom**: Istnieje istotna różnica na korzyść Rzeszowa (średnia 
-cena wyższa o 295273.49 PLN, p = 7.14e-13).<br>
-- **Warszawa vs Radom**: Istnieje bardzo istotna różnica (średnia cena wyższa 
-o 690715.68 PLN, p = 4.37e-13).<br>
-- **Warszawa vs Rzeszów**: Istnieje bardzo istotna różnica (średnia cena wyższa
-o 395442.20 PLN, p = 4.38e-13).
-
-
-```{r Wizualizacja_testów, echo=FALSE}
-# Boxploty dla średnich cen nieruchomości w wybranych miastach 
-ggplot(średnie_ceny_nieruchomości_w_wybranych_miastach, aes(x = Miasto, y = Cena)) +
-  geom_boxplot(fill = "skyblue", color = "black") +  
-  geom_hline(aes(yintercept = mean(Cena)), color = "red", linetype = "dashed") + 
-  theme_minimal() +
-  labs(title = "Porównanie średnich cen nieruchomości w wybranych miastach",
-       x = "Miasto",
-       y = "Cena") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  theme(legend.position = "none")  
-```
-
-
-### Podsumowanie:
-Z przeprowadzonego testu ANOVA i testu Tukeya wynika, że **średnie ceny 
-nieruchomości w wybranych miastach różnią się znacząco**. Istnieje wiele par miast, 
-które różnią się od siebie statystycznie istotnie, z największymi różnicami 
-pomiędzy miastami takimi jak Warszawa, Kraków, Białystok i Częstochowa. 
-
-Największe różnice występują pomiędzy Warszawą i Białymstokiem, Warszawą 
-i Częstochową oraz Krakowem i Białymstokiem. <br>W przypadku miast takich jak Radom 
-i Częstochowa różnice są mniej wyraźne.
 
 # **Analiza udogodnień w nieruchomościach**
 
@@ -3141,7 +2967,184 @@ statystycznie istotne różnice -- wyjątkiem był Radom, gdzie jedynie
 parking się wyróżnił. W Rzeszowie z kolei żaden z badanych czynników nie
 wpłynął istotnie na medianę cen.
 
-# **Analiza czynników geogaficznych wpływających na ceny mieszkań**
+
+
+## Test ANOVA
+
+### Cel
+Zdecydowaliśmy się na przeprowadzenie testu Anova na podstawie zmiennych:
+`has_balcony`, `has_elevator`, `has_parking`, `has_security` oraz 
+`has_storage_room` ze względu na to, że w naszych poprzednich analizach okazały 
+się one być najbardziej kluczowe w kształtowaniu się cen nieruchomości. 
+Celem testu Anova będzie weryfikacja i ewentualne potwierdzenie czy rzeczywiście
+mają one tak ważne znaczenie w modelowaniu się cen mieszkań w wybranych miastach. 
+
+### Definicja Testu ANOVA
+Test ANOVA to statystyczna metoda służąca do analizy różnic między średnimi 
+wartościami w różnych grupach. W szczególności:  <br>
+- **Hipoteza zerowa (H₀):** Średnie we wszystkich grupach są równe.<br>
+- **Hipoteza alternatywna (H₁):** Przynajmniej jedna para średnich grup jest różna.
+
+Statystyka testu **F** wyrażana jest wzorem:
+
+\[
+F = \frac{\text{MS}_{\text{between}}}{\text{MS}_{\text{within}}}
+\]
+
+gdzie: <br>
+- \(\text{MS}_{\text{between}} = \frac{\text{SS}_{\text{between}}}{df_{\text
+{between}}}\) – średni kwadrat między grupami,<br>
+- \(\text{MS}_{\text{within}} = \frac{\text{SS}_{\text{within}}}{df_{\text
+{within}}}\) – średni kwadrat wewnątrz grup,<br>
+- \(\text{SS}_{\text{between}}\) – suma kwadratów odchyleń między grupami, <br>
+- \(\text{SS}_{\text{within}}\) – suma kwadratów odchyleń wewnątrz grup,<br>
+- \(df_{\text{between}}\) i \(df_{\text{within}}\) – liczby stopni swobody
+odpowiednio dla efektu między grupami i resztowego.
+
+
+### Wymagania Testu ANOVA
+1. Zmienne w grupach są niezależne.
+2. Rozkład wyników w każdej grupie jest normalny.
+3. Wariancje w grupach są homogeniczne (jednakowe).
+
+```{r test_ANOVA, echo=FALSE}
+
+#Zmienne do przeprowadzenia testu ANOVA
+zmienne_do_testu_Anova <- data.frame(
+  city = c("Białystok", "Częstochowa", "Radom", "Kraków", "Warszawa", "Rzeszów"),
+  has_balcony = c(TRUE, TRUE, FALSE, TRUE, TRUE, FALSE),
+  has_elevator = c(TRUE, FALSE, FALSE, TRUE, TRUE, TRUE),
+  has_parking = c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE),
+  has_security = c(FALSE, FALSE, FALSE, TRUE, TRUE, FALSE),
+  has_storage_room = c(FALSE, FALSE, FALSE, TRUE, TRUE, TRUE)
+)
+
+# Test Anovy dla Białegostoku: 
+aov_bialystok <- aov(bialystok$price~bialystok$has_balcony + bialystok$has_elevator + bialystok$has_parking)
+#summary(aov_bialystok)
+
+# Test Anovy dla Częstochowy: 
+aov_czestochowa <- aov(czestochowa$price~czestochowa$has_balcony + czestochowa$has_parking)
+#summary(aov_czestochowa)
+
+# Test Anovy dla Radomia: 
+aov_radom <- aov(radom$price~radom$has_parking)
+#summary(aov_radom)
+
+# Test Anovy dla Krakowa: 
+aov_krakow <- aov(krakow$price~krakow$has_balcony + krakow$has_elevator + krakow$has_parking + krakow$has_security + krakow$has_storage_room)
+#summary(aov_krakow) 
+
+# Test Anovy dla Warszawy: 
+aov_warszawa <- aov(warszawa$price~warszawa$has_balcony + warszawa$has_elevator + warszawa$has_parking + warszawa$has_security + warszawa$has_storage_room)
+#summary(aov_warszawa)
+
+# Test Anovy dla Rzeszowa: 
+aov_rzeszow <- aov(rzeszow$price~rzeszow$has_elevator + rzeszow$has_storage_room)
+#summary(aov_rzeszow)
+
+```
+
+### Wyniki testu
+```{r wizualizacja_wyników_ANOVY, echo=FALSE}
+# Funkcja do dodania wyników do tabeli
+add_to_table <- function(city, variable, f_value, p_value) {
+# Interpretacja na podstawie wartości p
+interpretation <- ifelse(p_value < 0.05, "Istotna różnica", "Brak istotnej różnicy")
+  
+  return(data.frame(
+    Miasto = city,
+    Zmienna = variable,
+    F_value = f_value,
+    p_value = format(p_value, scientific = FALSE),
+    Interpretacja = interpretation
+  ))
+}
+
+# Utworzenie pustej tabeli do przechowywania wyników
+summary_table <- data.frame(Miasto = character(), Zmienna = character(), 
+                            F_value = numeric(), p_value = character(), Interpretacja = character(), stringsAsFactors = FALSE)
+
+# Dodanie wyników testów ANOVA do tabeli
+summary_table <- rbind(
+  summary_table, add_to_table("Białystok", "has_balcony", 4.985, 0.02654),
+  summary_table, add_to_table("Białystok", "has_elevator", 9.919, 0.00186),
+  summary_table, add_to_table("Białystok", "has_parking", 1.046, 0.30757),
+  
+  summary_table, add_to_table("Częstochowa", "has_balcony", 13.82, 0.000231),
+  summary_table, add_to_table("Częstochowa", "has_parking", 23.75, 1.61e-06),
+  
+  summary_table, add_to_table("Radom", "has_parking", 45.71, 1.58e-10),
+  
+  summary_table, add_to_table("Kraków", "has_balcony", 50.170, 1.72e-12),
+  summary_table, add_to_table("Kraków", "has_elevator", 4.470, 0.0346),
+  summary_table, add_to_table("Kraków", "has_parking", 19.975, 8.12e-06),
+  summary_table, add_to_table("Kraków", "has_security", 0.019, 0.8918),
+  summary_table, add_to_table("Kraków", "has_storage_room", 43.431, 5.11e-11),
+  
+  summary_table, add_to_table("Warszawa", "has_balcony", 55.88, 8.64e-14),
+  summary_table, add_to_table("Warszawa", "has_elevator", 43.80, 3.90e-11),
+  summary_table, add_to_table("Warszawa", "has_parking", 210.07, 2e-16),
+  summary_table, add_to_table("Warszawa", "has_security", 45.52, 1.63e-11),
+  summary_table, add_to_table("Warszawa", "has_storage_room", 62.48, 3.11e-15),
+  
+  summary_table, add_to_table("Rzeszów", "has_elevator", 0.240, 0.6252),
+  summary_table, add_to_table("Rzeszów", "has_storage_room", 4.676, 0.0321)
+)
+
+library(kableExtra)
+kable(summary_table, caption = "Podsumowanie wyników testów ANOVA dla miast i zmiennych kategorycznych.") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
+
+```
+### Interpretacja wyników testu ANOVA
+
+### 1. **Białystok**:
+- `has_balcony` (F = 4.985, p = 0.02654): F-value wskazuje, że różnice w cenie między nieruchomościami z balkonem a tymi bez niego są stosunkowo duże. Istotność statystyczna (p < 0.05) potwierdza, że obecność balkonu wpływa na cenę nieruchomości.
+- `has_elevator` (F = 9.919, p = 0.00186): F-value wskazuje, że różnice w cenach nieruchomości z windą są jeszcze bardziej wyraźne. Ponownie, p-value < 0.05, więc wpływ windy na cenę jest istotny.
+- `has_parking` (F = 1.046, p = 0.30757): F-value sugeruje, że różnice w cenach nieruchomości z parkingiem nie są duże w Białymstoku, a p-value > 0.05, więc nie ma istotnych różnic między grupami.
+
+### 2. **Częstochowa**:
+- `has_balcony` (F = 13.820, p = 0.000231): Bardzo duża wartość F wskazuje na dużą różnicę w cenach nieruchomości z balkonem i tych bez niego. Bardzo małe p-value (< 0.05) potwierdza istotność tego czynnika.
+- `has_parking` (F = 23.750, p = 0.00000161): F-value jest wyjątkowo wysokie, co sugeruje, że parking ma ogromny wpływ na cenę nieruchomości w Częstochowie. p-value < 0.05 wskazuje na bardzo istotny wpływ parkingu na cenę.
+
+### 3. **Radom**:
+- `has_parking` (F = 45.710, p = 0.000000000158): F-value jest bardzo wysokie, co oznacza, że różnice w cenach między nieruchomościami z parkingiem i tymi bez parkingu w Radomiu są bardzo duże. p-value bliskie zeru (< 0.05) potwierdza, że obecność parkingu znacząco wpływa na cenę.
+
+
+### 4. **Kraków**:
+- `has_balcony` (F = 50.170, p = 0.00000000000172): Bardzo wysoka wartość F wskazuje na bardzo dużą różnicę w cenach nieruchomości z balkonem w Krakowie. p-value < 0.05 potwierdza istotność tego czynnika.
+- `has_elevator` (F = 4.470, p = 0.0346): Chociaż F-value jest mniejsze, to nadal wskazuje na istotną różnicę w cenach nieruchomości z windą. p-value < 0.05 potwierdza istotność tej cechy.
+- `has_parking` (F = 19.975, p = 0.00000812): Wysokie F-value oznacza, że parking ma istotny wpływ na cenę nieruchomości w Krakowie. p-value < 0.05 potwierdza istotność parkingu.
+- `has_security` (F = 0.019, p = 0.8918): Niska wartość F i p-value > 0.05 sugerują, że obecność zabezpieczeń nie wpływa istotnie na cenę nieruchomości w Krakowie.
+- `has_storage_room` (F = 43.431, p = 0.0000000000511): Bardzo wysoka wartość F sugeruje, że pokój do przechowywania ma bardzo duży wpływ na cenę nieruchomości w Krakowie. p-value < 0.05 potwierdza istotność tej cechy.
+
+### 5. **Warszawa**:
+- `has_balcony` (F = 55.880, p = 0.0000000000000864): Bardzo wysoka wartość F wskazuje na bardzo istotny wpływ balkonu na cenę nieruchomości w Warszawie. p-value < 0.05 potwierdza istotność tego czynnika.
+- `has_elevator` (F = 43.800, p = 0.000000000039): Wysokie F-value sugeruje, że winda ma istotny wpływ na cenę nieruchomości. p-value < 0.05 potwierdza istotność windy.
+- `has_parking` (F = 210.070, p = 0.0000000000000002): Bardzo wysokie F-value wskazuje na ogromny wpływ parkingu na cenę nieruchomości w Warszawie. p-value < 0.05 potwierdza istotność parkingu.
+- `has_security` (F = 45.520, p = 0.0000000000163): Bardzo wysoka wartość F sugeruje, że obecność zabezpieczeń ma bardzo silny wpływ na cenę nieruchomości w Warszawie. p-value < 0.05 wskazuje na istotność tej cechy.
+- `has_storage_room` (F = 62.480, p = 0.00000000000000311): Najwyższe F-value z wszystkich zmiennych w Warszawie, co sugeruje, że pokój do przechowywania ma bardzo silny wpływ na cenę nieruchomości. p-value < 0.05 potwierdza istotność tej cechy.
+
+### 6. **Rzeszów**:
+- `has_elevator` (F = 0.240, p = 0.6252): Bardzo niska wartość F i p-value > 0.05 wskazują, że winda nie ma istotnego wpływu na cenę nieruchomości w Rzeszowie.
+- `has_storage_room` (F = 4.676, p = 0.0321): F-value wskazuje na istotną różnicę w cenach nieruchomości z pokojem do przechowywania. p-value < 0.05 wskazuje, że obecność pokoju do przechowywania ma wpływ na cenę nieruchomości w Rzeszowie.
+
+
+### **Dodatkowe wnioski:**
+
+- Wpływ cech na cenę nieruchomości:
+  - `Balkon` i `Parking` mają bardzo silny wpływ na cenę nieruchomości, zwłaszcza w **większych miastach** jak **Warszawa** i **Kraków** (wysokie F-value i niskie p-value).
+  - `Winda` wpływa na cenę, ale w **mniejszych miastach** (np. w **Rzeszowie**) wpływ jest mniejszy.
+  - `Pokój do przechowywania` również wykazuje istotny wpływ na cenę, szczególnie w **Krakowie** i **Warszawie**.
+  - `Zabezpieczenia` w większości miast (z wyjątkiem **Warszawy**) nie mają znaczącego wpływu na cenę nieruchomości.
+
+### **Podsumowanie**:
+- **Spełnione założenia**: Zmienność wyników w grupach jest niezależna, a wyniki mogą w dużej mierze spełniać założenia o normalności i homogeniczności wariancji.
+- **Wnioski dotyczące wpływu cech na ceny**: Obecność balkonu, parkingu, windy oraz pokoju do przechowywania mają istotny wpływ na cenę nieruchomości, szczególnie w większych miastach, takich jak Warszawa czy Kraków.
+
+
+# **Analiza czynników geograficznych wpływających na ceny mieszkań**
 
 ## Odległość od centrum
 
