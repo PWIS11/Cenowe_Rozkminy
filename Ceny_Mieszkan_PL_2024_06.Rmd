@@ -3100,48 +3100,111 @@ kable(summary_table, caption = "Podsumowanie wyników testów ANOVA dla miast i 
 ### Interpretacja wyników testu ANOVA
 
 ### 1. **Białystok**:
-- `has_balcony` (F = 4.985, p = 0.02654): F-value wskazuje, że różnice w cenie między nieruchomościami z balkonem a tymi bez niego są stosunkowo duże. Istotność statystyczna (p < 0.05) potwierdza, że obecność balkonu wpływa na cenę nieruchomości.
-- `has_elevator` (F = 9.919, p = 0.00186): F-value wskazuje, że różnice w cenach nieruchomości z windą są jeszcze bardziej wyraźne. Ponownie, p-value < 0.05, więc wpływ windy na cenę jest istotny.
-- `has_parking` (F = 1.046, p = 0.30757): F-value sugeruje, że różnice w cenach nieruchomości z parkingiem nie są duże w Białymstoku, a p-value > 0.05, więc nie ma istotnych różnic między grupami.
+- `has_balcony` (F = 4.985, p = 0.02654): F-value wskazuje, że różnice w cenie
+między nieruchomościami z balkonem a tymi bez niego są stosunkowo duże. 
+Istotność statystyczna (p < 0.05) potwierdza, że obecność balkonu wpływa na cenę 
+nieruchomości.
+
+- `has_elevator` (F = 9.919, p = 0.00186): F-value wskazuje, że różnice w cenach 
+nieruchomości z windą są jeszcze bardziej wyraźne. Ponownie, p-value < 0.05,
+więc wpływ windy na cenę jest istotny.
+
+- `has_parking` (F = 1.046, p = 0.30757): F-value sugeruje, że różnice 
+w cenach nieruchomości z parkingiem nie są duże w Białymstoku, a p-value > 0.05,
+więc nie ma istotnych różnic między grupami.
 
 ### 2. **Częstochowa**:
-- `has_balcony` (F = 13.820, p = 0.000231): Bardzo duża wartość F wskazuje na dużą różnicę w cenach nieruchomości z balkonem i tych bez niego. Bardzo małe p-value (< 0.05) potwierdza istotność tego czynnika.
-- `has_parking` (F = 23.750, p = 0.00000161): F-value jest wyjątkowo wysokie, co sugeruje, że parking ma ogromny wpływ na cenę nieruchomości w Częstochowie. p-value < 0.05 wskazuje na bardzo istotny wpływ parkingu na cenę.
+- `has_balcony` (F = 13.820, p = 0.000231): Bardzo duża wartość F wskazuje na 
+dużą różnicę w cenach nieruchomości z balkonem i tych bez niego. Bardzo małe
+p-value (< 0.05) potwierdza istotność tego czynnika.
+
+- `has_parking` (F = 23.750, p = 0.00000161): F-value jest wyjątkowo wysokie, 
+co sugeruje, że parking ma ogromny wpływ na cenę nieruchomości w Częstochowie. 
+p-value < 0.05 wskazuje na bardzo istotny wpływ parkingu na cenę.
 
 ### 3. **Radom**:
-- `has_parking` (F = 45.710, p = 0.000000000158): F-value jest bardzo wysokie, co oznacza, że różnice w cenach między nieruchomościami z parkingiem i tymi bez parkingu w Radomiu są bardzo duże. p-value bliskie zeru (< 0.05) potwierdza, że obecność parkingu znacząco wpływa na cenę.
+- `has_parking` (F = 45.710, p = 0.000000000158): F-value jest bardzo wysokie, 
+co oznacza, że różnice w cenach między nieruchomościami z parkingiem i tymi bez
+parkingu w Radomiu są bardzo duże. p-value bliskie zeru (< 0.05) potwierdza, 
+że obecność parkingu znacząco wpływa na cenę.
 
 
 ### 4. **Kraków**:
-- `has_balcony` (F = 50.170, p = 0.00000000000172): Bardzo wysoka wartość F wskazuje na bardzo dużą różnicę w cenach nieruchomości z balkonem w Krakowie. p-value < 0.05 potwierdza istotność tego czynnika.
-- `has_elevator` (F = 4.470, p = 0.0346): Chociaż F-value jest mniejsze, to nadal wskazuje na istotną różnicę w cenach nieruchomości z windą. p-value < 0.05 potwierdza istotność tej cechy.
-- `has_parking` (F = 19.975, p = 0.00000812): Wysokie F-value oznacza, że parking ma istotny wpływ na cenę nieruchomości w Krakowie. p-value < 0.05 potwierdza istotność parkingu.
-- `has_security` (F = 0.019, p = 0.8918): Niska wartość F i p-value > 0.05 sugerują, że obecność zabezpieczeń nie wpływa istotnie na cenę nieruchomości w Krakowie.
-- `has_storage_room` (F = 43.431, p = 0.0000000000511): Bardzo wysoka wartość F sugeruje, że pokój do przechowywania ma bardzo duży wpływ na cenę nieruchomości w Krakowie. p-value < 0.05 potwierdza istotność tej cechy.
+- `has_balcony` (F = 50.170, p = 0.00000000000172): Bardzo wysoka wartość 
+F wskazuje na bardzo dużą różnicę w cenach nieruchomości z balkonem w Krakowie.
+p-value < 0.05 potwierdza istotność tego czynnika.
+
+- `has_elevator` (F = 4.470, p = 0.0346): Chociaż F-value jest mniejsze, 
+to nadal wskazuje na istotną różnicę w cenach nieruchomości z windą. 
+p-value < 0.05 potwierdza istotność tej cechy.
+
+- `has_parking` (F = 19.975, p = 0.00000812): Wysokie F-value oznacza, 
+że parking ma istotny wpływ na cenę nieruchomości w Krakowie. p-value < 0.05
+potwierdza istotność parkingu.
+
+- `has_security` (F = 0.019, p = 0.8918): Niska wartość F i p-value > 0.05 
+sugerują, że obecność zabezpieczeń nie wpływa istotnie na cenę nieruchomości
+w Krakowie.
+
+- `has_storage_room` (F = 43.431, p = 0.0000000000511): Bardzo wysoka wartość 
+F sugeruje, że pokój do przechowywania ma bardzo duży wpływ na cenę nieruchomości 
+w Krakowie. p-value < 0.05 potwierdza istotność tej cechy.
 
 ### 5. **Warszawa**:
-- `has_balcony` (F = 55.880, p = 0.0000000000000864): Bardzo wysoka wartość F wskazuje na bardzo istotny wpływ balkonu na cenę nieruchomości w Warszawie. p-value < 0.05 potwierdza istotność tego czynnika.
-- `has_elevator` (F = 43.800, p = 0.000000000039): Wysokie F-value sugeruje, że winda ma istotny wpływ na cenę nieruchomości. p-value < 0.05 potwierdza istotność windy.
-- `has_parking` (F = 210.070, p = 0.0000000000000002): Bardzo wysokie F-value wskazuje na ogromny wpływ parkingu na cenę nieruchomości w Warszawie. p-value < 0.05 potwierdza istotność parkingu.
-- `has_security` (F = 45.520, p = 0.0000000000163): Bardzo wysoka wartość F sugeruje, że obecność zabezpieczeń ma bardzo silny wpływ na cenę nieruchomości w Warszawie. p-value < 0.05 wskazuje na istotność tej cechy.
-- `has_storage_room` (F = 62.480, p = 0.00000000000000311): Najwyższe F-value z wszystkich zmiennych w Warszawie, co sugeruje, że pokój do przechowywania ma bardzo silny wpływ na cenę nieruchomości. p-value < 0.05 potwierdza istotność tej cechy.
+- `has_balcony` (F = 55.880, p = 0.0000000000000864): Bardzo wysoka wartość F 
+wskazuje na bardzo istotny wpływ balkonu na cenę nieruchomości w Warszawie. 
+p-value < 0.05 potwierdza istotność tego czynnika.
+
+- `has_elevator` (F = 43.800, p = 0.000000000039): Wysokie F-value sugeruje, 
+że winda ma istotny wpływ na cenę nieruchomości. p-value < 0.05 potwierdza 
+istotność windy.
+
+- `has_parking` (F = 210.070, p = 0.0000000000000002): Bardzo wysokie F-value 
+wskazuje na ogromny wpływ parkingu na cenę nieruchomości w Warszawie. 
+p-value < 0.05 potwierdza istotność parkingu.
+
+- `has_security` (F = 45.520, p = 0.0000000000163): Bardzo wysoka wartość 
+F sugeruje, że obecność zabezpieczeń ma bardzo silny wpływ na cenę nieruchomości 
+w Warszawie. p-value < 0.05 wskazuje na istotność tej cechy.
+
+- `has_storage_room` (F = 62.480, p = 0.00000000000000311): Najwyższe F-value 
+z wszystkich zmiennych w Warszawie, co sugeruje, że pokój do przechowywania ma 
+bardzo silny wpływ na cenę nieruchomości. p-value < 0.05 potwierdza istotność
+tej cechy.
 
 ### 6. **Rzeszów**:
-- `has_elevator` (F = 0.240, p = 0.6252): Bardzo niska wartość F i p-value > 0.05 wskazują, że winda nie ma istotnego wpływu na cenę nieruchomości w Rzeszowie.
-- `has_storage_room` (F = 4.676, p = 0.0321): F-value wskazuje na istotną różnicę w cenach nieruchomości z pokojem do przechowywania. p-value < 0.05 wskazuje, że obecność pokoju do przechowywania ma wpływ na cenę nieruchomości w Rzeszowie.
+- `has_elevator` (F = 0.240, p = 0.6252): Bardzo niska wartość F i p-value > 0.05 
+wskazują, że winda nie ma istotnego wpływu na cenę nieruchomości w Rzeszowie.
+
+- `has_storage_room` (F = 4.676, p = 0.0321): F-value wskazuje na istotną różnicę 
+w cenach nieruchomości z pokojem do przechowywania. p-value < 0.05 wskazuje, 
+że obecność pokoju do przechowywania ma wpływ na cenę nieruchomości w Rzeszowie.
 
 
 ### **Dodatkowe wnioski:**
 
 - Wpływ cech na cenę nieruchomości:
-  - `Balkon` i `Parking` mają bardzo silny wpływ na cenę nieruchomości, zwłaszcza w **większych miastach** jak **Warszawa** i **Kraków** (wysokie F-value i niskie p-value).
-  - `Winda` wpływa na cenę, ale w **mniejszych miastach** (np. w **Rzeszowie**) wpływ jest mniejszy.
-  - `Pokój do przechowywania` również wykazuje istotny wpływ na cenę, szczególnie w **Krakowie** i **Warszawie**.
-  - `Zabezpieczenia` w większości miast (z wyjątkiem **Warszawy**) nie mają znaczącego wpływu na cenę nieruchomości.
+  - `Balkon` i `Parking` mają bardzo silny wpływ na cenę nieruchomości, 
+  zwłaszcza w **większych miastach** jak **Warszawa** i **Kraków** 
+  (wysokie F-value i niskie p-value).
+  
+  - `Winda` wpływa na cenę, ale w **mniejszych miastach** (np. w **Rzeszowie**) 
+  wpływ jest mniejszy.
+  
+  - `Pokój do przechowywania` również wykazuje istotny wpływ na cenę, 
+  szczególnie w **Krakowie** i **Warszawie**.
+  
+  - `Zabezpieczenia` w większości miast (z wyjątkiem **Warszawy**) 
+  nie mają znaczącego wpływu na cenę nieruchomości.
 
 ### **Podsumowanie**:
-- **Spełnione założenia**: Zmienność wyników w grupach jest niezależna, a wyniki mogą w dużej mierze spełniać założenia o normalności i homogeniczności wariancji.
-- **Wnioski dotyczące wpływu cech na ceny**: Obecność balkonu, parkingu, windy oraz pokoju do przechowywania mają istotny wpływ na cenę nieruchomości, szczególnie w większych miastach, takich jak Warszawa czy Kraków.
+- **Spełnione założenia**: Zmienność wyników w grupach jest niezależna, 
+a wyniki mogą w dużej mierze spełniać założenia o normalności 
+i homogeniczności wariancji.
+
+- **Wnioski dotyczące wpływu cech na ceny**: Obecność balkonu, parkingu,
+windy oraz pokoju do przechowywania mają istotny wpływ na cenę nieruchomości, 
+szczególnie w większych miastach, takich jak Warszawa czy Kraków.
 
 
 # **Analiza czynników geograficznych wpływających na ceny mieszkań**
