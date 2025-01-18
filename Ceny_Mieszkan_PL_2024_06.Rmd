@@ -3024,7 +3024,7 @@ aov_bialystok <- aov(bialystok$price~bialystok$has_balcony + bialystok$has_eleva
 #summary(aov_bialystok)
 
 # Test Anovy dla Częstochowy: 
-aov_czestochowa <- aov(czestochowa$price~czestochowa$has_balcony + czestochowa$has_parking)
+aov_czestochowa <- aov(czestochowa$price~czestochowa$has_balcony + czestochowa$has_parking, type = 'III')
 #summary(aov_czestochowa)
 
 # Test Anovy dla Radomia: 
@@ -3043,7 +3043,28 @@ aov_warszawa <- aov(warszawa$price~warszawa$has_balcony + warszawa$has_elevator 
 aov_rzeszow <- aov(rzeszow$price~rzeszow$has_elevator + rzeszow$has_storage_room)
 #summary(aov_rzeszow)
 
+
+
+
+### PRZYKŁAD TESTU ANCOVA DLA MIASTA CZĘSTOCHOWA
+
+aov_czestochowa22 <- aov(price ~ price_per_square_meter + has_balcony + has_parking, data = czestochowa)
+summary(aov_czestochowa22)
+
+
+#Zmienna has_balcony jest istotna na poziomie 5% (p = 0,01253). Wartość F wynosząca 6,293 sugeruje, że posiadanie balkonu znacząco wpływa na cenę nieruchomości, po uwzględnieniu efektu price_per_square_meter. Podobnie, has_parking jest również statystycznie istotne, z wartością p 0,00126 (znacznie mniejszą niż 0,05). Wartość F 10,564 sugeruje, że posiadanie parkingu ma znaczący wpływ na ceny nieruchomości, nawet po uwzględnieniu price_per_square_meter.
+
+#Posiadanie balkonu ( has_balcony) jest istotnym czynnikiem wpływającym na cenę, przy czym wartość p wynosi 0,01253. Oznacza to, że nieruchomości z balkonem mają statystycznie istotną różnicę w cenie w porównaniu do nieruchomości bez balkonu, po uwzględnieniu ceny za metr kwadratowy.
+
+#Dostępność miejsc parkingowych ( has_parking) jest również istotnym czynnikiem, przy czym wartość p wynosi 0,00126. Oznacza to, że dostępność miejsc parkingowych ma istotny wpływ na cenę, nawet po uwzględnieniu ceny za metr kwadratowy.
+
+#Można również napisać o gwiazdkach które są przy zmiennych (oznaczają istotnosci zmiennych).
+
 ```
+
+
+
+
 
 ### Wyniki testu
 ```{r wizualizacja_wyników_ANOVY, echo=FALSE}
