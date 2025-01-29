@@ -2909,20 +2909,20 @@ zmienne_do_testu_Anova <- data.frame(
 ancova_bialystok <- aov(price ~ price_per_square_meter + has_balcony + has_elevator + has_parking + 
                          price_per_square_meter:has_balcony + price_per_square_meter:has_elevator + price_per_square_meter:has_parking, 
                          data = bialystok)
-summary(ancova_bialystok)
+#summary(ancova_bialystok)
 
 
 # Test Ancovy dla Częstochowy: 
 ancova_czestochowa <- aov(price ~ price_per_square_meter + has_balcony + has_parking + 
                            price_per_square_meter:has_balcony + price_per_square_meter:has_parking, 
                            data = czestochowa)
-summary(ancova_czestochowa)
+#summary(ancova_czestochowa)
 
 # Test Ancovy dla Radomia: 
 ancova_radom <- aov(price ~ price_per_square_meter + has_parking + 
                     price_per_square_meter:has_parking, 
                     data = radom)
-summary(ancova_radom)
+#summary(ancova_radom)
 
 
 # Test Anocvy dla Krakowa: 
@@ -2930,7 +2930,7 @@ ancova_krakow <- aov(price ~ price_per_square_meter + has_balcony + has_elevator
                       price_per_square_meter:has_balcony + price_per_square_meter:has_elevator + price_per_square_meter:has_parking + 
                       price_per_square_meter:has_security + price_per_square_meter:has_storage_room, 
                       data = krakow)
-summary(ancova_krakow)
+#summary(ancova_krakow)
 
 
 # Test Anocvy dla Warszawy: 
@@ -2938,14 +2938,14 @@ ancova_warszawa <- aov(warszawa$price ~ warszawa$price_per_square_meter + warsza
                        warszawa$price_per_square_meter:warszawa$has_balcony + warszawa$price_per_square_meter:warszawa$has_elevator + 
                        warszawa$price_per_square_meter:warszawa$has_parking + warszawa$price_per_square_meter:warszawa$has_security + 
                        warszawa$price_per_square_meter:warszawa$has_storage_room, data = warszawa)
-summary(ancova_warszawa)
+#summary(ancova_warszawa)
 
 
 # Test Anocvy dla Rzeszowa: 
 ancova_rzeszow <- aov(rzeszow$price ~ rzeszow$price_per_square_meter + rzeszow$has_elevator + rzeszow$has_storage_room + 
                       rzeszow$price_per_square_meter:rzeszow$has_elevator + rzeszow$price_per_square_meter:rzeszow$has_storage_room, 
                       data = rzeszow)
-summary(ancova_rzeszow)
+#summary(ancova_rzeszow)
 
 ```
 
@@ -2954,280 +2954,222 @@ summary(ancova_rzeszow)
 ```{r wizualizacja_wyników_ANCOVY, echo=FALSE}
 # Funkcja do dodania wyników do tabeli
 add_to_table <- function(city, variable, f_value, p_value) {
-# Interpretacja na podstawie wartości p
-interpretation <- ifelse(p_value < 0.05, "Istotna różnica", "Brak istotnej różnicy")
+
   
   return(data.frame(
     Miasto = city,
     Zmienna = variable,
     F_value = f_value,
-    p_value = format(p_value, scientific = FALSE),
-    Interpretacja = interpretation
+    p_value = format(p_value, scientific = FALSE)
   ))
 }
 
-# Utworzenie pustej tabeli do przechowywania wyników
 summary_table <- data.frame(Miasto = character(), Zmienna = character(), 
-                            F_value = numeric(), p_value = character(), Interpretacja = character(), stringsAsFactors = FALSE)
+                            F_value = numeric(), p_value = character(), stringsAsFactors = FALSE)
 
-# Dodanie wyników testów ANCOVA do tabeli
 summary_table <- rbind(
-  summary_table, add_to_table("Białystok", "price_per_square_meter", 15.736, 9.78e-05),
-  summary_table, add_to_table("Białystok", "has_balcony", 4.609, 0.0329),
-  summary_table, add_to_table("Białystok", "has_elevator", 4.826, 0.0291),
-  summary_table, add_to_table("Białystok", "has_parking", 0.679, 0.4109),
+  summary_table, add_to_table("Białystok", "has_balcony", 4.803, 0.0294),
+  summary_table, add_to_table("Białystok", "has_elevator", 5.029, 0.0259),
+  summary_table, add_to_table("Białystok", "has_parking", 0.707, 0.4013),
+  summary_table, add_to_table("Białystok", "price_per_square_meter:has_balcony", 0.597, 0.4404),
+  summary_table, add_to_table("Białystok", "price_per_square_meter:has_elevator", 0.547, 0.4604),
+  summary_table, add_to_table("Białystok", "price_per_square_meter:has_parking", 11.364, 0.000883),
   
-  summary_table, add_to_table("Częstochowa", "price_per_square_meter", 173.018, 2e-16),
-  summary_table, add_to_table("Częstochowa", "has_balcony", 6.293, 0.01253),
-  summary_table, add_to_table("Częstochowa", "has_parking", 10.564, 0.00126),
+  summary_table, add_to_table("Częstochowa", "has_balcony", 6.374, 0.01198),
+  summary_table, add_to_table("Częstochowa", "has_parking", 10.701, 0.00117),
+  summary_table, add_to_table("Częstochowa", "price_per_square_meter:has_balcony", 1.344, 0.2471),
+  summary_table, add_to_table("Częstochowa", "price_per_square_meter:has_parking", 5.567, 0.01881),
   
-  summary_table, add_to_table("Radom", "price_per_square_meter", 42.43, 6.27e-10),
-  summary_table, add_to_table("Radom", "has_parking", 37.21, 5.74e-09),
+  summary_table, add_to_table("Radom", "has_parking", 37.252, 5.67e-09),
+  summary_table, add_to_table("Radom", "price_per_square_meter:has_parking", 1.231, 0.269),
   
-  summary_table, add_to_table("Kraków", "price_per_square_meter", 768.644, 2e-16),
-  summary_table, add_to_table("Kraków", "has_balcony", 90.664, 2e-16),
-  summary_table, add_to_table("Kraków", "has_elevator", 18.914, 1.41e-05),
-  summary_table, add_to_table("Kraków", "has_parking", 25.931, 3.74e-07),
-  summary_table, add_to_table("Kraków", "has_security", 0.033, 0.8551),
-  summary_table, add_to_table("Kraków", "has_storage_room", 3.538, 0.0601),
+  summary_table, add_to_table("Kraków", "has_balcony", 90.922, "2e-16"),
+  summary_table, add_to_table("Kraków", "has_elevator", 18.968, 1.37e-05),
+  summary_table, add_to_table("Kraków", "has_parking", 26.005, 3.60e-07),
+  summary_table, add_to_table("Kraków", "has_security", 0.032, 0.8549),
+  summary_table, add_to_table("Kraków", "has_storage_room", 3.548, 0.0597),
+  summary_table, add_to_table("Kraków", "price_per_square_meter:has_balcony", 0.351, 0.5536),
+  summary_table, add_to_table("Kraków", "price_per_square_meter:has_elevator", 6.220, 0.0127),
+  summary_table, add_to_table("Kraków", "price_per_square_meter:has_parking", 0.097, 0.7558),
+  summary_table, add_to_table("Kraków", "price_per_square_meter:has_security", 2.619, 0.1057),
+  summary_table, add_to_table("Kraków", "price_per_square_meter:has_storage_room", 4.951, 0.0261),
   
-  summary_table, add_to_table("Warszawa", "price_per_square_meter", 1566.379, 2e-16),
-  summary_table, add_to_table("Warszawa", "has_balcony", 128.391, 2e-16),
-  summary_table, add_to_table("Warszawa", "has_elevator", 1.026, 0.311),
-  summary_table, add_to_table("Warszawa", "has_parking", 221.770, 2e-16),
-  summary_table, add_to_table("Warszawa", "has_security", 37.404, 1.01e-09),
-  summary_table, add_to_table("Warszawa", "has_storage_room", 31.575, 1.99e-08),
+  summary_table, add_to_table("Warszawa", "has_balcony", 129.058, "2e-16"),
+  summary_table, add_to_table("Warszawa", "has_elevator", 1.031, 0.3099),
+  summary_table, add_to_table("Warszawa", "has_parking", 222.922, "2e-16"),
+  summary_table, add_to_table("Warszawa", "has_security", 37.599, "9.17e-10"),
+  summary_table, add_to_table("Warszawa", "has_storage_room", 31.739, "1.83e-08"),
+  summary_table, add_to_table("Warszawa", "price_per_square_meter:has_balcony", 5.165, 0.0231),
+  summary_table, add_to_table("Warszawa", "price_per_square_meter:has_elevator", 1.278, 0.2584),
+  summary_table, add_to_table("Warszawa", "price_per_square_meter:has_parking", 17.210, "3.39e-05"),
+  summary_table, add_to_table("Warszawa", "price_per_square_meter:has_security", 1.677, 0.1954),
+  summary_table, add_to_table("Warszawa", "price_per_square_meter:has_storage_room", 15.797, "7.12e-05"),
   
-  summary_table, add_to_table("Rzeszów", "price_per_sqaure_meter", 10.928, 0.00117),
-  summary_table, add_to_table("Rzeszów", "has_elevator", 0.230, 0.63226),
-  summary_table, add_to_table("Rzeszów", "has_storage_room", 3.587, 0.06004)
+  summary_table, add_to_table("Rzeszów", "has_elevator", 0.228, 0.63387),
+  summary_table, add_to_table("Rzeszów", "has_storage_room", 3.553, 0.06127),
+  summary_table, add_to_table("Rzeszów", "price_per_square_meter:has_elevator", 0.504, 0.47880),
+  summary_table, add_to_table("Rzeszów", "price_per_square_meter:has_storage_room", 0.002, 0.96371)
 )
 
 library(kableExtra)
 kable(summary_table, caption = "Podsumowanie wyników testów ANCOVA") %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 
+
 ```
 ### Interpretacja wyników testu ANCOVA
 
-### 1. **Białystok**:
-Zmienna **`price_per_square_meter`** jest statystycznie istotna na poziomie 0,01% 
-(p = 9.78e-05).Wartość F wynosząca 15,736 sugeruje, że cena za metr kwadratowy 
-ma znaczący wpływ na cenę nieruchomości w Białymstoku, nawet po uwzględnieniu 
-innych zmiennych.Trzy gwiazdki (***) wskazują na bardzo wysoką istotność 
-statystyczną (p < 0,001), co oznacza, że istnieje 99,9% pewności, że efekt ceny 
-za metr kwadratowy jest prawdziwy, a nie przypadkowy.
+### 1. **Białystok:**
 
-Zmienna **`has_balcony`** ma również istotny wpływ na cenę, przy wartościach p = 0,0329.
-Wartość F wynosząca 4,609 sugeruje, że posiadanie balkonu wpływa na cenę nieruchomości, 
-po uwzględnieniu ceny za metr kwadratowy. Jedna gwiazdka (*) wskazuje na 
-umiarkowaną istotność statystyczną (p < 0,05), co oznacza, że istnieje 95% pewności,
-że efekt posiadania balkonu na cenę nie jest przypadkowy.
+#### **Obecność balkonu (`has_balcony`)**:
+Zmienna **`has_balcony`** ma również istotny wpływ na cenę, przy p = 0.0294. Wartość F wynosząca 4,803 sugeruje, że posiadanie balkonu wpływa na cenę nieruchomości, po uwzględnieniu ceny za metr kwadratowy. 
 
-Zmienna **`has_elevator`** także ma istotny wpływ na cenę (p = 0,0291), 
-z wartością F 4,826. Posiadanie windy w nieruchomości w Białymstoku również wpływa 
-na cenę, po uwzględnieniu innych zmiennych. Jedna gwiazdka (*) w wynikach oznacza 
-istotność statystyczną na poziomie 5%, dając 95% pewności, że efekt obecności 
-windy w nieruchomości nie jest przypadkowy.
+#### **Obecność windy (`has_elevator`)**:
+Zmienna **`has_elevator`** także ma istotny wpływ na cenę (p = 0,0259), z wartością F wynoszącą 5,029. Posiadanie windy w nieruchomości w Białymstoku wpływa na cenę, po uwzględnieniu innych zmiennych. 
 
-Zmienna **`has_parking`** nie jest istotna statystycznie, ponieważ wartość p wynosi 0,4109.
-Wartość F 0,679 sugeruje, że dostępność parkingu nie ma statystycznie istotnego 
-wpływu na cenę nieruchomości w Białymstoku, po uwzględnieniu ceny za metr 
-kwadratowy i innych zmiennych. Brak gwiazdek wskazuje, że wpływ posiadania 
-parkingu na cenę nie jest statystycznie istotny.
+#### **Obecność parkingu (`has_parking`)**:
+Zmienna **`has_parking`** **nie jest istotna statystycznie**, ponieważ wartość p wynosi 0,4013. Wartość F 0,707 sugeruje, że dostępność parkingu nie ma statystycznie istotnego wpływu na cenę nieruchomości w Białymstoku, po uwzględnieniu ceny za metr kwadratowy i innych zmiennych.
 
-### 2. **Częstochowa**:
+#### **Interakcje**:
+- **`price_per_square_meter:has_balcony` (interakcja ceny za $m^2$ z obecnością balkonu)**: Wartość F wynosząca 0,597 i p = 0,4404 wskazują, że interakcja między ceną za $m^2$ a obecnością balkonu nie ma istotnego wpływu na cenę. P-wartość > 0,05 sugeruje, że efekt ceny za $m^2$ na cenę nieruchomości nie zmienia się w zależności od tego, czy mieszkanie ma balkon.
+  
+- **`price_per_square_meter:has_elevator` (interakcja ceny za $m^2$ z obecnością windy)**: Wartość F 0,547 i p = 0,4604 oznaczają, że interakcja między ceną za $m^2$ a obecnością windy także nie jest istotna. P-wartość > 0,05 sugeruje, że wpływ ceny za $m^2$ na cenę nie zależy od tego, czy mieszkanie ma windę.
 
-Zmienna **`has_balcony`** jest istotna na poziomie 5% (p = 0,01253). 
-Wartość F wynosząca 6,293 sugeruje, że posiadanie balkonu znacząco wpływa 
-na cenę nieruchomości, po uwzględnieniu efektu **`price_per_square_meter`**. 
-Wynik ten w tabeli podsumowania jest oznaczony jedną gwiazdką (*), co wskazuje 
-na umiarkowaną istotność statystyczną (p < 0,05). Oznacza to, że istnieje 95% 
-pewności, że efekt posiadania balkonu nie jest przypadkowy.
-
-Podobnie, **`has_parking`** jest również statystycznie istotne, z wartością p 0,00126 
-(znacznie mniejszą niż 0,05). Wartość F 10,564 sugeruje, że posiadanie parkingu
-ma znaczący wpływ na ceny nieruchomości, nawet po uwzględnieniu **`price_per_square_meter`**.
-W tabeli wynik ten jest oznaczony dwiema gwiazdkami (**), co oznacza wysoką 
-istotność statystyczną (p < 0,01), wskazującą, że istnieje 99% pewności, iż efekt 
-posiadania parkingu nie jest przypadkowy.
-
-Posiadanie balkonu (**`has_balcony`**) jest istotnym czynnikiem wpływającym na cenę, 
-przy czym wartość p wynosi 0,01253. Oznacza to, że nieruchomości z balkonem mają 
-statystycznie istotną różnicę w cenie w porównaniu do nieruchomości bez balkonu, 
-po uwzględnieniu ceny za metr kwadratowy. Jedna gwiazdka (*) widoczna w tabeli
-wyników dodatkowo podkreśla, że różnica ta jest istotna na poziomie 5%.
-
-Dostępność miejsc parkingowych (**`has_parking`**) jest również istotnym czynnikiem, 
-przy czym wartość p wynosi 0,00126. Oznacza to, że dostępność miejsc parkingowych 
-ma istotny wpływ na cenę, nawet po uwzględnieniu ceny za metr kwadratowy.
-Dwie gwiazdki (**) przy tej zmiennej w wynikach analizy wskazują na bardzo wysoką 
-istotność statystyczną (p < 0,01), co potwierdza, że wpływ miejsc parkingowych
-na cenę jest statystycznie bardzo wiarygodny.
+- **`price_per_square_meter:has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Z kolei interakcja między ceną za $m^2$ a obecnością parkingu ma istotny wpływ na cenę (F = 11.364, p = 0.000883). P-wartość mniejsza niż 0,001 oznacza, że wpływ ceny za m² na cenę nieruchomości różni się w zależności od obecności parkingu. W praktyce oznacza to, że zmiana ceny za $m^2$ może mieć inny wpływ na cenę nieruchomości w zależności od tego, czy mieszkanie ma parking.
 
 
-### 3. **Radom**:
+### 2. **Częstochowa:**
 
-Zmienna **`price_per_square_meter`** jest statystycznie istotna na poziomie 0,01% 
-(p = 6.27e-10).Wartość F wynosząca 42,43 sugeruje, że cena za metr kwadratowy 
-ma bardzo silny wpływ na cenę nieruchomości w Radomiu, nawet po uwzględnieniu 
-innych zmiennych. Trzy gwiazdki (***) oznaczają bardzo wysoką istotność statystyczną 
-(p < 0,001), co oznacza, że istnieje 99,9% pewności, że efekt ceny za metr 
-kwadratowy jest prawdziwy, a nie przypadkowy.
+#### **Obecność balkonu (`has_balcony`)**:
+Zmienna **`has_balcony`** również ma istotny wpływ na cenę (p = 0.01198). Wartość F wynosząca 6.374 sugeruje, że posiadanie balkonu wpływa na cenę nieruchomości, po uwzględnieniu ceny za metr kwadratowy. 
 
-Zmienna **`has_parking`** również jest statystycznie istotna na poziomie 0,01% (p = 5.74e-09).
-Wartość F wynosząca 37,21 sugeruje, że dostępność parkingu ma bardzo silny wpływ 
-na ceny nieruchomości w Radomiu, nawet po uwzględnieniu ceny za metr kwadratowy. 
-Dwie gwiazdki (**) wskazują na bardzo wysoką istotność statystyczną (p < 0,01), 
-co oznacza, że istnieje 99% pewności, że efekt posiadania parkingu nie jest przypadkowy.
+#### **Obecność parkingu (`has_parking`)**:
+Zmienna **`has_parking`** również ma **istotny wpływ** na cenę (p = 0.00117), z wartością F 10.701. Posiadanie parkingu zwiększa cenę nieruchomości, co oznacza, że dostępność parkingu wpływa na wartość nieruchomości w Częstochowie. 
+
+#### **Interakcje**:
+- **`price_per_square_meter:has_balcony` (interakcja ceny za m² z obecnością balkonu)**: Wartość F wynosząca 1.344 i p = 0.2471 oznaczają, że interakcja między ceną za $m^2$ a obecnością balkonu nie ma istotnego wpływu na cenę. P-wartość > 0.05 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości nie zmienia się w zależności od tego, czy mieszkanie ma balkon.
+  
+- **`price_per_square_meter:has_parking` (interakcja ceny za m² z obecnością parkingu)**: Wartość F 5.567 i p = 0.01881 wskazują, że interakcja między ceną za $m^2$ a obecnością parkingu jest istotna. P-wartość mniejsza niż 0,05 oznacza, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma parking. To sugeruje, że obecność parkingu może wzmacniać lub zmieniać efekt ceny za $m^2$ na cenę całkowitą.
+
+
+
+### 3. **Radom:**
+
+#### **Obecność parkingu (`has_parking`)**:
+Zmienna **`has_parking`** również ma istotny wpływ na cenę (p = 5.67e-09), z wartością F 37.252. Posiadanie parkingu zwiększa cenę nieruchomości, co oznacza, że dostępność parkingu ma bardzo silny wpływ na wartość nieruchomości w Radomiu. 
+
+#### **Interakcje**:
+- **`price_per_square_meter:has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Wartość F wynosząca 1.231 i p = 0.269 wskazują, że interakcja między ceną za $m^2$ a obecnością parkingu nie ma istotnego wpływu na cenę. P-wartość > 0,05 sugeruje, że efekt ceny za m² na cenę nieruchomości nie zmienia się w zależności od tego, czy mieszkanie ma parking.
 
 
 ### 4. **Kraków**:
 
-Zmienna **`price_per_square_meter`** jest statystycznie istotna na poziomie 
-0,01% (p < 2e-16).Wartość F wynosząca 768,644 sugeruje, że cena za metr kwadratowy 
-ma bardzo silny wpływ na cenę nieruchomości w Krakowie. Trzy gwiazdki (***) wskazują 
-na bardzo wysoką istotność statystyczną (p < 0,001), co oznacza, że istnieje 99,9% pewności, 
-że efekt ceny za metr kwadratowy jest prawdziwy, a nie przypadkowy.
+#### **Obecność balkonu (`has_balcony`)**:
+Zmienna **`has_balcony`** jest również bardzo istotna statystycznie (p < 2e-16). Wartość F wynosząca 90.922 sugeruje, że posiadanie balkonu ma bardzo silny wpływ na cenę nieruchomości. 
 
-Zmienna **`has_balcony`** jest również statystycznie istotna na poziomie 0,01% 
-(p < 2e-16). Wartość F wynosząca 90,664 sugeruje, że posiadanie balkonu ma silny 
-wpływ na cenę nieruchomości w Krakowie. Trzy gwiazdki ( ***) oznaczają bardzo 
-wysoką istotność statystyczną (p < 0,001), co oznacza, że istnieje 99,9% pewności, 
-że efekt posiadania balkonu na cenę jest prawdziwy, a nie przypadkowy.
+#### **Obecność windy (`has_elevator`)**:
+Zmienna **`has_elevator`** ma istotny wpływ na cenę (p = 1.37e-05). Wartość F wynosząca 18.968 sugeruje, że posiadanie windy wpływa na cenę nieruchomości, po uwzględnieniu ceny za $m^2$. 
 
-Zmienna **`has_elevator`** ma również statystycznie istotny wpływ na cenę, 
-z wartością F wynoszącą 18,914 i p = 1.41e-05. Posiadanie windy w nieruchomości 
-w Krakowie ma zauważalny wpływ na cenę. Trzy gwiazdki ( ***) wskazują na wysoką
-istotność statystyczną (p < 0,001), co oznacza, że efekt posiadania windy 
-jest prawdziwy, a nie przypadkowy.
+#### **Obecność parkingu (`has_parking`)**:
+Zmienna **`has_parking`** również ma istotny wpływ na cenę (p = 3.60e-07), z wartością F 26.005. Posiadanie parkingu zwiększa cenę nieruchomości, co oznacza, że dostępność parkingu ma bardzo silny wpływ na wartość nieruchomości w Krakowie. 
 
-Zmienna **`has_parking`** jest statystycznie istotna na poziomie 0,01% (p = 3.74e-07).  
-Wartość F wynosząca 25,931 sugeruje, że dostępność parkingu również ma silny 
-wpływ na cenę nieruchomości w Krakowie. Trzy gwiazdki ( ***) wskazują na bardzo
-wysoką istotność statystyczną (p < 0,001), co oznacza, że efekt dostępności 
-parkingu jest prawdziwy, a nie przypadkowy.
+#### **Obecność ochrony (`has_security`)**:
+Zmienna **`has_security`** nie jest istotna statystycznie (p = 0.8549), co oznacza, że obecność ochrony nie ma wpływu na cenę nieruchomości w Krakowie.
 
-Zmienna **`has_security`** nie jest istotna statystycznie, ponieważ 
-wartość p wynosi 0,8551. Oznacza to, że posiadanie ochrony w nieruchomości 
-nie wpływa na jej cenę w sposób statystycznie istotny w Krakowie.
+#### **Obecność pomieszczenia gospodarczego (`has_storage_room`)**:
+Zmienna **`has_storage_room`** ma marginalny wpływ na cenę (p = 0.0597), z wartością F 3.548. Chociaż p-wartość jest nieco większa niż 0.05, można uznać, że wpływ obecności pomieszczenia gospodarczego na cenę nieruchomości w Krakowie jest statystycznie marginalny, a efekt jest widoczny przy poziomie istotności 10%.
 
-Zmienna **`has_storage_room`** jest bliska poziomowi istotności na poziomie 
-10% (p = 0,0601). Wartość F wynosząca 3,538 sugeruje, że dostępność pomieszczenia 
-do przechowywania ma marginalny wpływ na cenę nieruchomości w Krakowie. 
-Jedna kropka (.) wskazuje na graniczną istotność statystyczną na poziomie 10% (p < 0,1).
+#### **Interakcje**:
+- **`price_per_square_meter:has_balcony` (interakcja ceny za $m^2$ z obecnością balkonu)**: Wartość F wynosząca 0.351 i p = 0.5536 oznaczają, że interakcja między ceną za $m^2$ a obecnością balkonu nie ma istotnego wpływu na cenę.
+  
+- **`price_per_square_meter:has_elevator` (interakcja ceny za $m^2$ z obecnością windy)**: Wartość F wynosząca 6.220 i p = 0.0127 wskazują, że interakcja między ceną za $m^2$ a obecnością windy jest istotna statystycznie. P-wartość mniejsza niż 0.05 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma windę.
+
+- **`price_per_square_meter:has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Wartość F wynosząca 0.097 i p = 0.7558 oznaczają, że interakcja między ceną za $m^2$ a obecnością parkingu nie ma istotnego wpływu na cenę.
+
+- **`price_per_square_meter:has_security` (interakcja ceny za $m^2$ z obecnością ochrony)**: Wartość F wynosząca 2.619 i p = 0.1057 sugerują, że interakcja między ceną za $m^2$ a obecnością ochrony nie ma istotnego wpływu na cenę.
+
+- **`price_per_square_meter:has_storage_room` (interakcja ceny za $m^2$ z obecnością pomieszczenia gospodarczego)**: Wartość F wynosząca 4.951 i p = 0.0261 wskazują, że interakcja między ceną za $m^2$ a obecnością pomieszczenia gospodarczego ma istotny wpływ na cenę nieruchomości w Krakowie. P-wartość mniejsza niż 0,05 sugeruje, że efekt ceny za $m^2$ jest różny w zależności od tego, czy mieszkanie ma pomieszczenie gospodarcze.
 
 
 ### 5. **Warszawa**:
 
-Zmienna **`price_per_square_meter`** jest statystycznie istotna na poziomie 
-0,01% (p < 2e-16). Wartość F wynosząca 1566,379 sugeruje, że cena za metr 
-kwadratowy ma bardzo silny wpływ na cenę nieruchomości w Warszawie. Trzy gwiazdki 
-( ***) wskazują na bardzo wysoką istotność statystyczną (p < 0,001), co oznacza, 
-że istnieje 99,9% pewności, że efekt ceny za metr kwadratowy jest prawdziwy,
-a nie przypadkowy.
+#### **Obecność balkonu (`warszawa$has_balcony`)**:
+Zmienna **`has_balcony`** jest bardzo istotna statystycznie (p < 2e-16). Wartość F wynosząca 129.058 sugeruje, że posiadanie balkonu ma bardzo silny wpływ na cenę nieruchomości. 
 
-Zmienna **`has_balcony`** jest również statystycznie istotna na poziomie 0,01% (p < 2e-16).  
-Wartość F wynosząca 128,391 sugeruje, że posiadanie balkonu ma bardzo silny wpływ 
-na cenę nieruchomości w Warszawie. Trzy gwiazdki ( ***) oznaczają bardzo wysoką 
-istotność statystyczną (p < 0,001), co oznacza, że istnieje 99,9% pewności, 
-że efekt posiadania balkonu na cenę jest prawdziwy, a nie przypadkowy.
+#### **Obecność windy (`warszawa$has_elevator`)**:
+Zmienna **`has_elevator`** nie jest **istotna statystycznie** (p = 0.3099). Wartość F 1.031 sugeruje, że obecność windy nie ma wpływu na cenę nieruchomości w Warszawie.
 
-Zmienna **`has_elevator`** nie jest statystycznie istotna, ponieważ 
-wartość p wynosi 0,311. Oznacza to, że posiadanie windy w nieruchomości w Warszawie 
-nie wpływa na jej cenę w sposób statystycznie istotny.
+#### **Obecność parkingu (`warszawa$has_parking`)**:
+Zmienna **`has_parking`** jest **bardzo istotna statystycznie** (p < 2e-16), z wartością F wynoszącą 222.922. Posiadanie parkingu ma bardzo silny wpływ na cenę nieruchomości w Warszawie.
 
-Zmienna **`has_parking`** jest statystycznie istotna na poziomie 0,01% (p < 2e-16).  
-Wartość F wynosząca 221,770 sugeruje, że dostępność parkingu ma bardzo silny wpływ 
-na ceny nieruchomości w Warszawie. Trzy gwiazdki ( ***) wskazują na bardzo wysoką 
-istotność statystyczną (p < 0,001), co oznacza, że efekt dostępności parkingu 
-jest prawdziwy, a nie przypadkowy.
+#### **Obecność ochrony (`warszawa$has_security`)**:
+Zmienna **`has_security`** ma istotny wpływ na cenę (p = 9.17e-10), z wartością F wynoszącą 37.599. Posiadanie ochrony wpływa na cenę nieruchomości, co oznacza, że dostępność ochrony ma bardzo silny wpływ na wartość nieruchomości w Warszawie. 
 
-Zmienna **`has_security`** jest statystycznie istotna na poziomie 0,01% (p = 1.01e-09).  
-Wartość F wynosząca 37,404 sugeruje, że posiadanie ochrony w nieruchomości
-w Warszawie ma bardzo silny wpływ na jej cenę. Trzy gwiazdki ( ***) wskazują na 
-bardzo wysoką istotność statystyczną (p < 0,001), co oznacza, że efekt posiadania 
-ochrony na cenę nieruchomości jest prawdziwy, a nie przypadkowy.
+#### **Obecność pomieszczenia gospodarczego (`warszawa$has_storage_room`)**:
+Zmienna **`has_storage_room`** również ma istotny wpływ na cenę (p = 1.83e-08), z wartością F 31.739. Posiadanie pomieszczenia gospodarczego zwiększa cenę nieruchomości. 
 
-Zmienna **`has_storage_room`** jest statystycznie istotna na poziomie 0,01% (p = 1.99e-08).  
-Wartość F wynosząca 31,575 sugeruje, że dostępność pomieszczenia do przechowywania 
-ma silny wpływ na cenę nieruchomości w Warszawie. Trzy gwiazdki ( ***) wskazują 
-na bardzo wysoką istotność statystyczną (p < 0,001), co oznacza, że efekt
-dostępności pomieszczenia do przechowywania na cenę nieruchomości jest prawdziwy, 
-a nie przypadkowy.
+#### **Interakcje**:
+- **`price_per_square_meter:warszawa$has_balcony` (interakcja ceny za $m^2$ z obecnością balkonu)**: Wartość F wynosząca 5.165 i p = 0.0231 wskazują, że **interakcja między ceną za $m^2$ a obecnością balkonu jest istotna statystycznie**. P-wartość mniejsza niż 0,05 sugeruje, że wpływ ceny za m² na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma balkon.
+  
+- **`price_per_square_meter:warszawa$has_elevator` (interakcja ceny za $m^2$ z obecnością windy)**: Wartość F wynosząca 1.278 i p = 0.2584 sugerują, że interakcja między ceną za $m^2$ a obecnością windy nie ma istotnego wpływu na cenę.
+
+- **`price_per_square_meter:warszawa$has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Wartość F wynosząca 17.210 i p = 3.39e-05 wskazują, że interakcja między ceną za $m^2$ a obecnością parkingu ma istotny wpływ na cenę. P-wartość mniejsza niż 0,001 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma parking.
+
+- **`price_per_square_meter:warszawa$has_security` (interakcja ceny za $m^2$ z obecnością ochrony)**: Wartość F wynosząca 1.677 i p = 0.1954 sugerują, że interakcja między ceną za $m^2$ a obecnością ochrony nie ma istotnego wpływu na cenę.
+
+- **`price_per_square_meter:warszawa$has_storage_room` (interakcja ceny za $m^2$ z obecnością pomieszczenia gospodarczego)**: Wartość F wynosząca 15.797 i p = 7.12e-05 wskazują, że interakcja między ceną za $m^2$ a obecnością pomieszczenia gospodarczego ma istotny wpływ na cenę nieruchomości. P-wartość mniejsza niż 0,001 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma pomieszczenie gospodarcze.
+
 
 
 ### 6. **Rzeszów**:
 
-Zmienna **`price_per_square_meter`** jest statystycznie istotna na poziomie
-0,1% (p = 0.00117). Wartość F wynosząca 10,928 sugeruje, że cena za metr kwadratowy
-ma istotny wpływ na cenę nieruchomości w Rzeszowie. Dwie gwiazdki (**) wskazują 
-na wysoką istotność statystyczną (p < 0,01), co oznacza, że istnieje 99% pewności, 
-że efekt ceny za metr kwadratowy jest prawdziwy, a nie przypadkowy.
+#### **Obecność windy (has_elevator)**:
+Zmienna has_elevator nie ma istotnego wpływu na cenę nieruchomości (p = 0.63387). Wartość F 0.228 sugeruje, że posiadanie windy nie wpływa znacząco na cenę nieruchomości w Rzeszowie.
 
-Zmienna **`has_elevator`** nie jest statystycznie istotna, ponieważ
-wartość p wynosi 0,63226. Oznacza to, że posiadanie windy w nieruchomości w Rzeszowie
-nie wpływa na jej cenę w sposób statystycznie istotny.
+#### **Obecność pomieszczenia gospodarczego (has_storage_room)**:
+Zmienna **has_storage_room** ma marginalny wpływ na cenę nieruchomości (p = 0.06127). Wartość F 3.553 sugeruje, że posiadanie pomieszczenia gospodarczego może mieć wpływ na cenę nieruchomości, ale jest na granicy istotności statystycznej.
 
-Zmienna **`has_storage_room`** jest bliska poziomowi istotności 
-na poziomie 10% (p = 0,06004).Wartość F wynosząca 3,587 sugeruje, że dostępność 
-pomieszczenia do przechowywania ma marginalny wpływ na cenę nieruchomości w Rzeszowie. 
-Jedna kropka (.) wskazuje na graniczną istotność statystyczną na poziomie 10% (p < 0,1).
+#### **Interakcje**:
+- **`price_per_square_meter:has_elevator (interakcja ceny za $m^2$ z obecnością windy)`**: Wartość F wynosząca 0.504 i p = 0.47880 oznaczają, że interakcja między ceną za $m^2$ a obecnością windy nie ma istotnego wpływu na cenę nieruchomości.
+
+- **`price_per_square_meter:has_storage_room (interakcja ceny za $m^2$ z obecnością pomieszczenia gospodarczego)`**: Wartość F 0.002 i p = 0.96371 sugerują, że interakcja między ceną za $m^2$ a obecnością pomieszczenia gospodarczego nie ma istotnego wpływu na cenę nieruchomości.
 
 
 ### **Wnioski z analizy:**
 
-**1. Wpływ ceny za metr kwadratowy (**`price_per_square_meter`**):**
+#### 1. **Białystok**
+- **Posiadanie balkonu** i **posiadanie windy** mają istotny wpływ na cenę nieruchomości, co sugerują wartości p < 0.05 i wartości F > 4. Posiadanie tych cech zwiększa cenę nieruchomości po uwzględnieniu innych czynników, takich jak cena za metr kwadratowy.
+- **Obecność parkingu** nie ma statystycznie istotnego wpływu na cenę nieruchomości w Białymstoku, co sugeruje wysoka wartość p (0,4013).
+- Interakcja **ceny za metr kwadratowy** z obecnością **parkingu** ma znaczący wpływ na cenę, co oznacza, że wpływ ceny za $m^2$ na cenę nieruchomości może się różnić w zależności od tego, czy mieszkanie ma parking.
 
-- We wszystkich badanych miastach zmienna **`price_per_square_meter`** miała silny,
-statystycznie istotny wpływ na cenę nieruchomości. Wartości p były bardzo niskie 
-(zwykle < 0,001), co sugeruje, że efekt ceny za metr kwadratowy jest bardzo wiarygodny.
-- Wartości F w różnych miastach wskazują na istotność tego efektu:
-np. w Warszawie wartość F wynosi 1566,379, co oznacza bardzo silny wpływ tej zmiennej na cenę.
+#### 2. **Częstochowa**
+- **Posiadanie balkonu** i **parkingu** mają istotny wpływ na cenę nieruchomości (p < 0.05). Zmienna **has_parking** ma silniejszy wpływ na cenę, z wartością F wynoszącą 10.701.
+- Interakcja ceny za $m^2$ z obecnością parkingu również jest istotna (p < 0.05), co sugeruje, że obecność parkingu może zmieniać sposób, w jaki cena za metr kwadratowy wpływa na cenę nieruchomości.
 
-**2. Wpływ balkonu na cenę (**`has_balcony`**):**
+#### 3. **Radom**
+- **Obecność parkingu** ma bardzo silny wpływ na cenę nieruchomości (p = 5.67e-09, F = 37.252), co wskazuje na ogromne znaczenie parkingu w tym mieście.
+- **Interakcja ceny za $m^2$ z obecnością parkingu** nie ma jednak istotnego wpływu na cenę nieruchomości, co może sugerować, że w Radomiu wpływ ceny za m² na cenę jest mniej wrażliwy na obecność parkingu.
 
-- Zmienna **`has_balcony`** miała statystycznie istotny wpływ na cenę nieruchomości 
-w większości miast. W **Białymstoku**, **Częstochowie**, **Krakowie**, **Warszawie** 
-i **Radomiu** posiadanie balkonu było związane ze wzrostem ceny nieruchomości,
-a wartości p były niskie, co oznacza wysoką istotność.** W Krakowie, Warszawie 
-i Częstochowie efekt posiadania balkonu był szczególnie silny, co sugerują ich
-wartości F.  W Białymstoku posiadanie balkonu miało bardziej umiarkowany wpływ, 
-ale nadal statystycznie istotny.
+#### 4. **Kraków**
+- **Posiadanie balkonu**, **windy** i **parkingu** mają bardzo silny wpływ na cenę nieruchomości (p < 0.05). Wartość F dla każdej z tych zmiennych jest bardzo wysoka, co podkreśla ich wpływ na cenę.
+- Interakcja ceny za m² z obecnością **windy** oraz **pomieszczenia gospodarczego** jest istotna statystycznie (p < 0.05). Oznacza to, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma windę lub pomieszczenie gospodarcze.
+  
+#### 5. **Warszawa**
+- **Posiadanie balkonu**, **parkingu**, **ochrony** i **pomieszczenia gospodarczego** mają bardzo silny wpływ na cenę nieruchomości (p < 0.05). Wartość F dla zmiennej **has_parking** wynosząca 222.922 jest najwyższa, co wskazuje, że dostępność parkingu ma szczególnie duże znaczenie w Warszawie.
+- Interakcje ceny za m² z obecnością **balkonu**, **parkingu** i **pomieszczenia gospodarczego** są istotne, co sugeruje, że zmiana ceny za $m^2$ może mieć różny wpływ na cenę nieruchomości w zależności od obecności tych cech.
 
+#### 6. **Rzeszów**
+- **Obecność windy** oraz **pomieszczenia gospodarczego** mają marginalny wpływ na cenę nieruchomości. Wartości p są bliskie granicy istotności, co sugeruje, że ich wpływ na cenę jest stosunkowo słaby, ale nie wykluczają one możliwości pewnego wpływu na cenę nieruchomości.
+- Interakcje ceny za $m^2$ z obecnością **windy** oraz **pomieszczenia gospodarczego** nie mają istotnego wpływu na cenę nieruchomości (p > 0.05), co oznacza, że te cechy nie zmieniają zależności między ceną za $m^2$ a ceną nieruchomości w Rzeszowie.
 
-**3. Wpływ parkingu na cenę (**`has_parking`**):**
-
-- Zmienna **`has_parking`** miała również silny wpływ na ceny nieruchomości 
-w wielu miastach. **Zmienna ta była istotna w Białymstoku, Częstochowie, Radomiu, 
-Krakowie i Warszawie**. Wartości p były niskie (w większości przypadków < 0,01), 
-co oznacza bardzo wysoką pewność, że efekt posiadania parkingu jest prawdziwy.
-**Najsilniejszy wpływ parkingu na cenę nieruchomości odnotowano w Warszawie 
-(F = 221,770), co sugeruje bardzo silny związek tej cechy z ceną.**
-
-**4. Wpływ windy na cenę (**`has_elevator`**):**
-
-- Wartości F wskazują, że **`has_elevator`** miało istotny wpływ na cenę
-nieruchomości tylko w niektórych miastach. **Największy wpływ odnotowano 
-w Krakowie (F = 18,914) oraz w Białymstoku (F = 4,826), gdzie zmienna ta 
-była statystycznie istotna.** W innych miastach, jak Warszawa i Rzeszów, 
-posiadanie windy nie miało istotnego wpływu na cenę (p > 0,05).
-
-**5. Wpływ pomieszczenia gospodarczego na cenę (**`has_storage_room`**):**
-
-- Wpływ  pomieszczenia gospodarczego **`has_storage_room`** miała marginalny wpływ na 
-cenę nieruchomości w niektórych miastach, zwłaszcza w **Rzeszowie** i **Krakowie**, 
-gdzie występowała graniczna istotność na poziomie 10% (p ≈ 0,06).
-W mieście  **Warszawa** zmienna ta miała bardzo silny wpływ,
-gdzie p wynosiło 1,99e-08, co sugeruje istotny związek z ceną nieruchomości.
+### **Podsumowanie głównych wniosków**
+- **Balkon i parking** są kluczowymi czynnikami wpływającymi na cenę nieruchomości w większości miast, choć ich wpływ może się różnić w zależności od lokalizacji. 
+- **Windy** są istotne w niektórych miastach, takich jak Kraków, ale nie mają tak silnego wpływu wszędzie (np. w Rzeszowie).
+- Interakcje między **ceną za metr kwadratowy** a obecnością **windy**, **parkingu** czy **balkonu** są istotne tylko w wybranych miastach, co sugeruje, że nie we wszystkich miastach te cechy wchodzą w interakcje z ceną za m² w sposób, który zmienia finalną cenę nieruchomości.
+- **Obecność ochrony** i **pomieszczenia gospodarczego** wpływają na ceny w miastach takich jak Warszawa i Kraków, ale ich wpływ jest mniej wyraźny w innych miastach.
 
 
-**6. Wpływ ochrony na cenę (**`has_security`**):**
-
-- Zmienna **`has_security`** nie była statystycznie istotna w **Białymstoku**, **Krakowie**
-i **Rzeszowie**, co oznacza, że posiadanie ochrony nie miało wpływu na cenę nieruchomości
-w tych miastach. W **Warszawie** natomiast zmienna ta była istotna, wskazując na wpływ ochrony na cenę.
-
+Na podstawie tych wyników, osoby inwestujące w nieruchomości w miastach takich jak Warszawa, Kraków i Częstochowa powinny szczególnie brać pod uwagę obecność parkingu, balkonu i windy, ponieważ te cechy mają najwięcej do powiedzenia w ustalaniu ceny nieruchomości. Z kolei w miastach takich jak Radom, Rzeszów czy Białystok, wpływ tych cech na cenę jest mniejszy, co może sugerować inne czynniki mogą mieć większe znaczenie przy wycenie nieruchomości.
 
 # **Analiza czynników geograficznych wpływających na ceny mieszkań**
 
