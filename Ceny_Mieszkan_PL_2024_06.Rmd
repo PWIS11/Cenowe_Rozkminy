@@ -2026,6 +2026,9 @@ statystyki <- dane %>%
 knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
 ```
 
+
+
+
 #### **Interpretacja wyników**
 
 1.  **Województwo mazowieckie jako lider cenowy**
@@ -2132,7 +2135,17 @@ Dzięki temu podziałowi możemy porównać, jakie cechy i trendy są unikalne
 dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 łączą te grupy.
 
+Zależności cenowe w wybranych miastach przedstawione zostały na poniższym wykresie
 
+```{r porównanie_miast, echo=FALSE, message = FALSE, fig.width=10, fig.height=6,}
+ggstatsplot::ggbetweenstats(
+  data = dane %>% filter(city %in% c("Warszawa", "Kraków", "Rzeszów", "Białystok", "Radom", "Częstochowa")),
+  x = city,
+  y = price_per_square_meter,
+  title = "Porównanie cen za m² w wybranych miastach"
+)
+```
+Wykres graficznie przedstawia wcześniej omówione różnice w cenach mieszkań za metr kwadratowy w wybranych miastach. Wizualizacja potwierdza podział na trzy grupy cenowe, ukazując wyraźne różnice między najdroższymi, średnimi i najtańszymi lokalizacjami.
 
 # **Analiza udogodnień w nieruchomościach**
 
@@ -2629,7 +2642,9 @@ pom_gosp_bialystok <- wilcox.test(bialystok$price ~ bialystok$has_storage_room, 
 
 ```
 
-```{r MW tabela, echo=FALSE}
+```{r MW tabela, echo=FALSE, escape=FALSE}
+# Wczytanie pakietu gt
+library(gt)
 
 # Funkcja do formatowania wartości p
 format_p <- function(p_value) {
@@ -2642,11 +2657,11 @@ format_p <- function(p_value) {
 
 # Tworzenie pustej tabeli wyników
 summary_table <- data.frame(
-  City = character(),
-  Variable = character(),
+  Miasto = character(),
+  Zmienna = character(),
   W_Statistic = numeric(),
   p_value = character(),  # Zmienione na character, aby przechowywać sformatowane p-value
-  Interpretation = character()
+  Interpretacja = character()
 )
 
 # Funkcja do dodania wyników do tabeli
@@ -2662,10 +2677,12 @@ add_to_table <- function(city, variable, test_result) {
     Zmienna = variable,
     W_Statistic = if (!is.na(test_result$statistic)) test_result$statistic else NA,
     p_value = if (!is.na(test_result$p.value)) format_p(test_result$p.value) else NA,
-    Interpretacja = interpretation
+    Interpretacja = interpretation,
+    stringsAsFactors = FALSE
   ))
 }
 
+# Dodanie danych do tabeli
 summary_table <- rbind(
   summary_table, add_to_table("Kraków", "has_elevator", winda_krakow),
   summary_table, add_to_table("Kraków", "has_parking", parking_krakow),
@@ -2704,7 +2721,20 @@ summary_table <- rbind(
   summary_table, add_to_table("Białystok", "has_storage_room", pom_gosp_bialystok)
 )
 
-kable(summary_table, caption = "Podsumowanie wyników testów Manna-Whitneya dla miast i zmiennych kategorycznych.")
+# Renderowanie tabeli w gt
+summary_table %>%
+  gt() %>%
+  tab_header(title = "Podsumowanie wyników testów Manna-Whitneya dla miast i zmiennych kategorycznych.") %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "red"),
+      cell_text(weight = "bold", color = "white")
+    ),
+    locations = cells_body(
+      columns = c(Interpretacja),  # Upewnienie się, że poprawnie wybieramy kolumnę
+      rows = Interpretacja == "Istotna różnica"
+    )
+  )
 ```
 
 #### Interpretacja wyników testu Mann-Whitneya
@@ -2851,7 +2881,7 @@ odpowiednio dla efektu między grupami i resztowego.
 2. Rozkład wyników w każdej grupie jest normalny.
 3. Wariancje w grupach są homogeniczne (jednakowe).
 
-```{r test_ANOVA, echo=FALSE}
+```{r test_ANOVA, echo=FALSE, warning=FALSE, message=FALSE}
 
 #Zmienne do przeprowadzenia testu ANOVA
 zmienne_do_testu_Anova <- data.frame(
