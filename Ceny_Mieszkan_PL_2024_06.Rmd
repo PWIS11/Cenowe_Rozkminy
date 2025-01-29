@@ -69,8 +69,8 @@ library(kableExtra)
 library(tibble)
 library(reshape2)
 library(car)
-library(ggstatsplot)
-library(rlang)
+# library(ggstatsplot)
+# library(rlang)
 ```
 
 # **Cel projektu**
@@ -2357,25 +2357,25 @@ wartości przy założeniu niezależności.
 ### Analiza zależności dla wielu zmiennych kategorycznych
 
 ```{r, echo=FALSE, message=FALSE}
-binary_vars <- c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room")
-
-for (i in 1:(length(binary_vars) - 1)) {
-  for (j in (i + 1):length(binary_vars)) {
-    var1 <- sym(binary_vars[i])
-    var2 <- sym(binary_vars[j])
-    
-    plot <- ggbarstats(
-      data = dane_filtr,
-      x = !!var1,
-      y = !!var2,
-      title = paste("Zależność między", binary_vars[i], "a", binary_vars[j])
-    ) +
-      scale_fill_manual(values = c("orchid", "lightyellow")) +
-      theme_minimal()
-    
-    print(plot)
-  }
-}
+# binary_vars <- c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room")
+# 
+# for (i in 1:(length(binary_vars) - 1)) {
+#   for (j in (i + 1):length(binary_vars)) {
+#     var1 <- sym(binary_vars[i])
+#     var2 <- sym(binary_vars[j])
+#     
+#     plot <- ggbarstats(
+#       data = dane_filtr,
+#       x = !!var1,
+#       y = !!var2,
+#       title = paste("Zależność między", binary_vars[i], "a", binary_vars[j])
+#     ) +
+#       scale_fill_manual(values = c("orchid", "lightyellow")) +
+#       theme_minimal()
+#     
+#     print(plot)
+#   }
+# }
 
 
 ```
@@ -4574,4 +4574,51 @@ Projekt pozwolił nam na rozwinięcie umiejętności analizy danych, interpretac
 
 ### **Wnioski końcowe**  
 Przeprowadzona analiza wykazała, że ceny mieszkań w dużym stopniu zależą od lokalizacji, charakterystyki mieszkania oraz dostępności usług w okolicy. Miasta takie jak Warszawa i Kraków dominują pod względem cen, co wynika z ich centralnej roli w gospodarce. Z kolei mniejsze miasta, takie jak Radom i Częstochowa, oferują tańsze mieszkania, ale z ograniczonym potencjałem inwestycyjnym.  
+
+
+```{r}
+library(leaflet)
+library(dplyr)
+
+# Wybranie top 5 najdroższych i top 5 najtańszych mieszkań dla każdego miasta
+dane_top <- dane_filtr %>%
+  group_by(city) %>%
+  arrange(desc(price)) %>%
+  slice_head(n = 5) %>%
+  bind_rows(
+    dane_filtr %>%
+      group_by(city) %>%
+      arrange(price) %>%
+      slice_head(n = 5)
+  ) %>%
+  ungroup()
+
+# Tworzenie mapy z filtrowanymi danymi
+leaflet(dane_top) %>%
+  addTiles() %>%
+  addCircleMarkers(
+    ~longitude, ~latitude,
+    radius = ~sqrt(price) / 200,
+    color = ~ifelse(price == max(price, na.rm = TRUE), "orange", "tomato"),
+    popup = ~paste0(
+      "<b>Cena:</b> ", price, " PLN<br>",
+      "<b>Miasto:</b> ", city, "<br>",
+      "<b>Odległość od centrum:</b> ", centre_distance, " km<br>",
+      "<b>Liczba pokoi:</b> ", rooms, "<br>",
+      "<b>Winda:</b> ", ifelse(has_elevator == "yes", "Tak", "Nie"), "<br>",
+      "<b>Balkon:</b> ", ifelse(has_balcony == "yes", "Tak", "Nie"), "<br>"
+    ),
+    fillOpacity = 0.7
+  ) %>%
+  addLegend(
+    position = "topright",
+    colors = c("tomato", "orange"),
+    labels = c("Top 5 najtańszych", "Top 5 najdroższych"),
+    title = "Legenda cen"
+  )
+
+
+```
+
+
 
