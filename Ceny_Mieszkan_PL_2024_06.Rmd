@@ -41,8 +41,8 @@ if (!requireNamespace("kableExtra", quietly = TRUE)) install.packages("kableExtr
 if (!requireNamespace("tibble", quietly = TRUE)) install.packages("tibble")
 if (!requireNamespace("reshape2", quietly = TRUE)) install.packages("reshape2")
 if (!requireNamespace("car", quietly = TRUE)) install.packages("car")
-if (!requireNamespace("ggstatsplot", quietly = TRUE)) install.packages("ggstatsplot")
-if (!requireNamespace("rlang", quietly = TRUE)) install.packages("rlang")
+#if (!requireNamespace("ggstatsplot", quietly = TRUE)) install.packages("ggstatsplot")
+#if (!requireNamespace("rlang", quietly = TRUE)) install.packages("rlang")
 ```
 
 ```{r libraries, include=FALSE}
@@ -2138,12 +2138,12 @@ dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 Zależności cenowe w wybranych miastach przedstawione zostały na poniższym wykresie
 
 ```{r porównanie_miast, echo=FALSE, message = FALSE, fig.width=10, fig.height=6,}
-ggstatsplot::ggbetweenstats(
-  data = dane %>% filter(city %in% c("Warszawa", "Kraków", "Rzeszów", "Białystok", "Radom", "Częstochowa")),
-  x = city,
-  y = price_per_square_meter,
-  title = "Porównanie cen za m² w wybranych miastach"
-)
+# ggstatsplot::ggbetweenstats(
+#   data = dane %>% filter(city %in% c("Warszawa", "Kraków", "Rzeszów", "Białystok", "Radom", "Częstochowa")),
+#   x = city,
+#   y = price_per_square_meter,
+#   title = "Porównanie cen za m² w wybranych miastach"
+# )
 ```
 Wykres graficznie przedstawia wcześniej omówione różnice w cenach mieszkań za metr kwadratowy w wybranych miastach. Wizualizacja potwierdza podział na trzy grupy cenowe, ukazując wyraźne różnice między najdroższymi, średnimi i najtańszymi lokalizacjami.
 
@@ -2883,7 +2883,7 @@ odpowiednio dla efektu między grupami i resztowego.
 
 ```{r test_ANOVA, echo=FALSE, warning=FALSE, message=FALSE}
 
-#Zmienne do przeprowadzenia testu ANOVA
+#Zmienne do przeprowadzenia testu ANcOVA
 zmienne_do_testu_Anova <- data.frame(
   city = c("Białystok", "Częstochowa", "Radom", "Kraków", "Warszawa", "Rzeszów"),
   has_balcony = c(TRUE, TRUE, FALSE, TRUE, TRUE, FALSE),
@@ -2893,46 +2893,49 @@ zmienne_do_testu_Anova <- data.frame(
   has_storage_room = c(FALSE, FALSE, FALSE, TRUE, TRUE, TRUE)
 )
 
-# Test Anovy dla Białegostoku: 
-aov_bialystok <- aov(bialystok$price~bialystok$has_balcony + bialystok$has_elevator + bialystok$has_parking)
-#summary(aov_bialystok)
-
-# Test Anovy dla Częstochowy: 
-aov_czestochowa <- aov(czestochowa$price~czestochowa$has_balcony + czestochowa$has_parking, type = 'III')
-#summary(aov_czestochowa)
-
-# Test Anovy dla Radomia: 
-aov_radom <- aov(radom$price~radom$has_parking)
-#summary(aov_radom)
-
-# Test Anovy dla Krakowa: 
-aov_krakow <- aov(krakow$price~krakow$has_balcony + krakow$has_elevator + krakow$has_parking + krakow$has_security + krakow$has_storage_room)
-#summary(aov_krakow) 
-
-# Test Anovy dla Warszawy: 
-aov_warszawa <- aov(warszawa$price~warszawa$has_balcony + warszawa$has_elevator + warszawa$has_parking + warszawa$has_security + warszawa$has_storage_room)
-#summary(aov_warszawa)
-
-# Test Anovy dla Rzeszowa: 
-aov_rzeszow <- aov(rzeszow$price~rzeszow$has_elevator + rzeszow$has_storage_room)
-#summary(aov_rzeszow)
+# Test Ancovy dla Białegostoku: 
+ancova_bialystok <- aov(price ~ price_per_square_meter + has_balcony + has_elevator + has_parking + 
+                         price_per_square_meter:has_balcony + price_per_square_meter:has_elevator + price_per_square_meter:has_parking, 
+                         data = bialystok)
+summary(ancova_bialystok)
 
 
+# Test Ancovy dla Częstochowy: 
+ancova_czestochowa <- aov(price ~ price_per_square_meter + has_balcony + has_parking + 
+                           price_per_square_meter:has_balcony + price_per_square_meter:has_parking, 
+                           data = czestochowa)
+summary(ancova_czestochowa)
 
 
-### PRZYKŁAD TESTU ANCOVA DLA MIASTA CZĘSTOCHOWA
+# Test Ancovy dla Radomia: 
+ancova_radom <- aov(price ~ price_per_square_meter + has_parking + 
+                    price_per_square_meter:has_parking, 
+                    data = radom)
+summary(ancova_radom)
 
-aov_czestochowa22 <- aov(price ~ price_per_square_meter + has_balcony + has_parking, data = czestochowa)
-summary(aov_czestochowa22)
+
+# Test Anocvy dla Krakowa: 
+ancova_krakow <- aov(price ~ price_per_square_meter + has_balcony + has_elevator + has_parking + has_security + has_storage_room + 
+                      price_per_square_meter:has_balcony + price_per_square_meter:has_elevator + price_per_square_meter:has_parking + 
+                      price_per_square_meter:has_security + price_per_square_meter:has_storage_room, 
+                      data = krakow)
+summary(ancova_krakow)
 
 
-#Zmienna has_balcony jest istotna na poziomie 5% (p = 0,01253). Wartość F wynosząca 6,293 sugeruje, że posiadanie balkonu znacząco wpływa na cenę nieruchomości, po uwzględnieniu efektu price_per_square_meter. Podobnie, has_parking jest również statystycznie istotne, z wartością p 0,00126 (znacznie mniejszą niż 0,05). Wartość F 10,564 sugeruje, że posiadanie parkingu ma znaczący wpływ na ceny nieruchomości, nawet po uwzględnieniu price_per_square_meter.
+# Test Anocvy dla Warszawy: 
+ancova_warszawa <- aov(warszawa$price ~ warszawa$price_per_square_meter + warszawa$has_balcony + warszawa$has_elevator + warszawa$has_parking + warszawa$has_security + warszawa$has_storage_room +
+                       warszawa$price_per_square_meter:warszawa$has_balcony + warszawa$price_per_square_meter:warszawa$has_elevator + 
+                       warszawa$price_per_square_meter:warszawa$has_parking + warszawa$price_per_square_meter:warszawa$has_security + 
+                       warszawa$price_per_square_meter:warszawa$has_storage_room, data = warszawa)
+summary(ancova_warszawa)
 
-#Posiadanie balkonu ( has_balcony) jest istotnym czynnikiem wpływającym na cenę, przy czym wartość p wynosi 0,01253. Oznacza to, że nieruchomości z balkonem mają statystycznie istotną różnicę w cenie w porównaniu do nieruchomości bez balkonu, po uwzględnieniu ceny za metr kwadratowy.
 
-#Dostępność miejsc parkingowych ( has_parking) jest również istotnym czynnikiem, przy czym wartość p wynosi 0,00126. Oznacza to, że dostępność miejsc parkingowych ma istotny wpływ na cenę, nawet po uwzględnieniu ceny za metr kwadratowy.
+# Test Anocvy dla Rzeszowa: 
+ancova_rzeszow <- aov(rzeszow$price ~ rzeszow$price_per_square_meter + rzeszow$has_elevator + rzeszow$has_storage_room + 
+                      rzeszow$price_per_square_meter:rzeszow$has_elevator + rzeszow$price_per_square_meter:rzeszow$has_storage_room, 
+                      data = rzeszow)
+summary(ancova_rzeszow)
 
-#Można również napisać o gwiazdkach które są przy zmiennych (oznaczają istotnosci zmiennych).
 
 ```
 
