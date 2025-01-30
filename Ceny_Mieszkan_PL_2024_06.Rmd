@@ -2231,12 +2231,12 @@ wartości przy założeniu niezależności.
 
 ```{r, echo=FALSE, message=FALSE}
 binary_vars <- c("has_parking", "has_balcony", "has_elevator", "has_security", "has_storage_room")
- 
+
 for (i in 1:(length(binary_vars) - 1)) {
 for (j in (i + 1):length(binary_vars)) {
      var1 <- sym(binary_vars[i])
      var2 <- sym(binary_vars[j])
-     
+
      plot <- ggbarstats(
        data = dane_filtr,
        x = !!var1,
@@ -2245,7 +2245,7 @@ for (j in (i + 1):length(binary_vars)) {
      ) +
        scale_fill_manual(values = c("orchid", "lightyellow")) +
        theme_minimal()
-     
+
      print(plot)
    }
  }
@@ -4382,36 +4382,51 @@ szczegółowe wnioski.
 
 Poniższy wykres prezentuje hierarchiczny podział ofert według trzech
 miast: Krakowa, Radomia, Rzeszowa, Warszawy, Częstochowy i Białegostoku.
-Każde miasto posiada swoje charakterystyczne „gałęzie” reprezentujące
+Każde miasto posiada swoje charakterystyczne połączenie reprezentujące
 dostępność określonych udogodnień, takich jak winda, balkon, parking czy
 komórka. Dzięki temu w prosty sposób można porównać, które elementy mają
 szczególny wpływ na ceny mieszkań.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, comment=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, comment=FALSE, fig.height=9, fig.width=15}
 
 library(ggraph)
 library(igraph)
 
 edges <- data.frame(
-  from = c("Miasta", "Miasta", "Miasta", "Kraków", "Kraków", "Kraków", "Radom", "Radom", "Radom", "Rzeszów", "Rzeszów", "Rzeszów"),
-  to   = c("Kraków", "Radom", "Rzeszów", "Winda", "Balkon", "Parking", "Balkon", "Winda", "Komórka", "Balkon", "Winda", "Komórka")
+  from = c("Miasta", "Miasta", "Miasta","Miasta", "Miasta", "Miasta",
+           "Kraków", "Kraków", "Kraków", "Kraków", "Kraków",
+           "Radom", 
+           "Rzeszów", "Rzeszów", "Rzeszów",
+           "Warszawa", "Warszawa", "Warszawa","Warszawa", "Warszawa",
+           "Częstochowa", "Częstochowa",
+           "Białystok", "Białystok"),
+  to   = c("Kraków", "Radom", "Rzeszów","Warszawa","Częstochowa","Białystok",
+           "Winda", "Balkon", "Parking", "Komórka", "Ochrona", 
+           "Parknig", 
+           "Parking", "Winda", "Komórka",
+           "Winda", "Balkon", "Parking", "Komórka", "Ochrona", 
+           "Balkon", "Winda",
+           "Balkon", "Parking")
 )
 
+# Dodanie kolumny 'color' z kolorami dla każdego miasta
+edges$color <- c("peachpuff", "lightgreen", "navyblue", "tomato", "yellow2", "brown",  # Miasta
+                 "peachpuff", "peachpuff", "peachpuff", "peachpuff", "peachpuff",                   # Kraków
+                 "lightgreen",                                              # Radom
+                 "navyblue", "navyblue", "navyblue",                           # Rzeszów
+                 "tomato", "tomato", "tomato", "tomato", "tomato",    # Warszawa
+                 "yellow2", "yellow2",                                  # Częstochowa
+                 "brown", "brown")                                    # Białystok
+
+
 graph <- graph_from_data_frame(edges)
-
-ggraph(graph, layout = "dendrogram") +
-  geom_edge_diagonal() +
-  geom_node_point(size = 14, color = "plum") +
-  geom_node_text(aes(label = name), vjust = 0.44, size=8) +
-  theme_void()
-
-#zmienne do uwzględnienia
-#Kraków – winda, parking, balkon, ochrona, komórka
-#Warszawa: winda, parking, balkon, ochrona, komórka
-#Rzeszów: winda, parking, komórka
-#Radom: parking
-#Białystok: balkon, winda
-#Częstochowa: balkon, parking
+ggraph(graph, layout = "tree") + 
+  geom_edge_diagonal(aes(color = color), width = 0.8) + 
+  scale_edge_color_identity() + 
+  geom_node_point(size = 10, color = "plum") + 
+  geom_node_text(aes(label = name), vjust = 1, size = 6) + 
+  theme_void() +
+  theme(plot.margin = margin(10, 10, 10, 10))
 
 
 ```
