@@ -18,29 +18,29 @@ editor_options:
 ## Global options
 knitr::opts_chunk$set(cache = TRUE)
 # Instalacja Pakietów
-if (!requireNamespace("httr", quietly = TRUE)) install.packages("httr")
-if (!requireNamespace("jsonlite", quietly = TRUE)) install.packages("jsonlite")
-if (!requireNamespace("tidygeocoder", quietly = TRUE)) install.packages("tidygeocoder")
-if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
-if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
-if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2")
-if (!requireNamespace("scales", quietly = TRUE)) install.packages("scales")
-if (!requireNamespace("tidyverse", quietly = TRUE)) install.packages("tidyverse")
-if (!requireNamespace("naniar", quietly = TRUE)) install.packages("naniar")
-if (!requireNamespace("VIM", quietly = TRUE)) install.packages("VIM")
-if (!requireNamespace("outliers", quietly = TRUE)) install.packages("outliers")
-if (!requireNamespace("caret", quietly = TRUE)) install.packages("caret")
-if (!requireNamespace("mice", quietly = TRUE)) install.packages("mice")
-if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
-if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
-if (!requireNamespace("validate", quietly = TRUE)) install.packages("validate")
-if (!requireNamespace("plotly", quietly = TRUE)) install.packages("plotly")
-if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")
-if (!requireNamespace("nortest", quietly = TRUE)) install.packages("nortest")
-if (!requireNamespace("kableExtra", quietly = TRUE)) install.packages("kableExtra")
-if (!requireNamespace("tibble", quietly = TRUE)) install.packages("tibble")
-if (!requireNamespace("reshape2", quietly = TRUE)) install.packages("reshape2")
-if (!requireNamespace("car", quietly = TRUE)) install.packages("car")
+# if (!requireNamespace("httr", quietly = TRUE)) install.packages("httr")
+# if (!requireNamespace("jsonlite", quietly = TRUE)) install.packages("jsonlite")
+# if (!requireNamespace("tidygeocoder", quietly = TRUE)) install.packages("tidygeocoder")
+# if (!requireNamespace("dplyr", quietly = TRUE)) install.packages("dplyr")
+# if (!requireNamespace("sf", quietly = TRUE)) install.packages("sf")
+# if (!requireNamespace("ggplot2", quietly = TRUE)) install.packages("ggplot2")
+# if (!requireNamespace("scales", quietly = TRUE)) install.packages("scales")
+# if (!requireNamespace("tidyverse", quietly = TRUE)) install.packages("tidyverse")
+# if (!requireNamespace("naniar", quietly = TRUE)) install.packages("naniar")
+# if (!requireNamespace("VIM", quietly = TRUE)) install.packages("VIM")
+# if (!requireNamespace("outliers", quietly = TRUE)) install.packages("outliers")
+# if (!requireNamespace("caret", quietly = TRUE)) install.packages("caret")
+# if (!requireNamespace("mice", quietly = TRUE)) install.packages("mice")
+# if (!requireNamespace("gridExtra", quietly = TRUE)) install.packages("gridExtra")
+# if (!requireNamespace("dlookr", quietly = TRUE)) install.packages("dlookr")
+# if (!requireNamespace("validate", quietly = TRUE)) install.packages("validate")
+# if (!requireNamespace("plotly", quietly = TRUE)) install.packages("plotly")
+# if (!requireNamespace("knitr", quietly = TRUE)) install.packages("knitr")
+# if (!requireNamespace("nortest", quietly = TRUE)) install.packages("nortest")
+# if (!requireNamespace("kableExtra", quietly = TRUE)) install.packages("kableExtra")
+# if (!requireNamespace("tibble", quietly = TRUE)) install.packages("tibble")
+# if (!requireNamespace("reshape2", quietly = TRUE)) install.packages("reshape2")
+# if (!requireNamespace("car", quietly = TRUE)) install.packages("car")
 #if (!requireNamespace("ggstatsplot", quietly = TRUE)) install.packages("ggstatsplot")
 #if (!requireNamespace("rlang", quietly = TRUE)) install.packages("rlang")
 ```
@@ -4869,46 +4869,25 @@ co wynika z ich centralnej roli w gospodarce. Z kolei mniejsze miasta,
 takie jak Radom i Częstochowa, oferują tańsze mieszkania, ale z
 ograniczonym potencjałem inwestycyjnym.
 
+
 ```{r}
-library(leaflet)
-library(dplyr)
+library(ggraph)
+library(igraph)
 
-# Wybranie top 5 najdroższych i top 5 najtańszych mieszkań dla każdego miasta
-dane_top <- dane_filtr %>%
-  group_by(city) %>%
-  arrange(desc(price)) %>%
-  slice_head(n = 5) %>%
-  bind_rows(
-    dane_filtr %>%
-      group_by(city) %>%
-      arrange(price) %>%
-      slice_head(n = 5)
-  ) %>%
-  ungroup()
+edges <- data.frame(
+  from = c("Miasta", "Miasta", "Miasta", "Kraków", "Kraków", "Kraków", "Radom", "Radom", "Radom", "Rzeszów", "Rzeszów", "Rzeszów"),
+  to   = c("Kraków", "Radom", "Rzeszów", "Winda", "Balkon", "Parking", "Balkon", "Winda", "Komórka", "Balkon", "Winda", "Komórka")
+)
 
-# Tworzenie mapy z filtrowanymi danymi
-leaflet(dane_top) %>%
-  addTiles() %>%
-  addCircleMarkers(
-    ~longitude, ~latitude,
-    radius = ~sqrt(price) / 200,
-    color = ~ifelse(price == max(price, na.rm = TRUE), "orange", "tomato"),
-    popup = ~paste0(
-      "<b>Cena:</b> ", price, " PLN<br>",
-      "<b>Miasto:</b> ", city, "<br>",
-      "<b>Odległość od centrum:</b> ", centre_distance, " km<br>",
-      "<b>Liczba pokoi:</b> ", rooms, "<br>",
-      "<b>Winda:</b> ", ifelse(has_elevator == "yes", "Tak", "Nie"), "<br>",
-      "<b>Balkon:</b> ", ifelse(has_balcony == "yes", "Tak", "Nie"), "<br>"
-    ),
-    fillOpacity = 0.7
-  ) %>%
-  addLegend(
-    position = "topright",
-    colors = c("tomato", "orange"),
-    labels = c("Top 5 najtańszych", "Top 5 najdroższych"),
-    title = "Legenda cen"
-  )
+graph <- graph_from_data_frame(edges)
+
+ggraph(graph, layout = "dendrogram") +
+  geom_edge_diagonal() +
+  geom_node_point(size = 9, color = "plum") +
+  geom_node_text(aes(label = name), vjust = -0.5) +
+  theme_void()
 
 
 ```
+
+
