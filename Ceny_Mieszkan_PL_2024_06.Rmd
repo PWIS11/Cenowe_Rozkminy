@@ -75,14 +75,10 @@ library(car)
 
 # **Cel projektu**
 
-
-
 Celem naszego projektu jest analiza cen mieszkań w największych miastach
 Polski, uwzględniając różnorodne czynniki, które mogą wpływać na wartość
 nieruchomości. Wykorzystamy metody analizy danych, aby odpowiedzieć na
 kluczowe pytania, takie jak:
-
-
 
 -   *Od czego zależy cena mieszkań?*
 
@@ -93,12 +89,8 @@ kluczowe pytania, takie jak:
 
 -   *Które cechy mieszkań (np. liczba pokoi, stan, udogodnienia) są
     najbardziej cenione?*
-    
-    
 
 ## **Analizy w projekcie**
-
-
 
 Planujemy zastosowanie narzędzi analizy danych oraz wizualizacji, aby
 lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
@@ -115,8 +107,6 @@ lepiej zrozumieć rynek nieruchomości w Polsce. Nasze analizy obejmą:
 
 -   Wykorzystanie interaktywnych wizualizacji, takich jak mapy i
     wykresy, aby przedstawić wyniki w przystępny sposób.
-    
-    
 
 ### **Hipotezy i oczekiwane wyniki**
 
@@ -139,19 +129,13 @@ Podsumowując, oczekujemy, że nasze analizy wskażą najważniejsze czynniki
 wpływające na ceny mieszkań oraz umożliwią stworzenie użytecznych modeli
 predykcyjnych, które mogą wspierać decyzje zakupowe lub inwestycyjne.
 
-
-
 ## **Opis danych**
-
-
 
 Zbiór danych pochodzi z ofert sprzedaży i wynajmu mieszkań z 15
 największych polskich miast, zgromadzonych w czerwcu 2024 roku. Dane te
 obejmują szerokie spektrum cech nieruchomości oraz dodatkowe informacje
 z Open Street Map, które pozwalają uwzględnić kontekst sąsiedztwa
 mieszkań.
-
-
 
 **Miasta w zbiorze danych:** Warszawa, Łódź, Kraków, Wrocław, Poznań,
 Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
@@ -180,8 +164,6 @@ Gdańsk, Szczecin, Bydgoszcz, Lublin, Katowice, Białystok, Częstochowa.
 
 ## **Dane dodatkowe**
 
-
-
 W celu wykonania bardziej szczegółowej analizy zdecydowaliśmy się
 wzbogacić nasz zbiór o **granice administracyjne województw** oraz dane
 dotyczące **wynagrodzeń**. Dane te zostały pobrane z pliku
@@ -192,8 +174,6 @@ nieruchomości. Dzięki temu możliwe jest badanie, czy wysokość
 wynagrodzeń ma związek z cenami nieruchomości w poszczególnych regionach
 Polski.
 
-
-
 ### **Cel dodania danych:**
 
 -   **Przypisanie lokalizacji mieszkań do województw**,\
@@ -203,18 +183,12 @@ Polski.
     nieruchomości**, aby sprawdzić, czy wyższe wynagrodzenia są
     powiązane z wyższymi cenami mieszkań.
 
-
-
 Dzięki temu możliwe jest nie tylko szczegółowe badanie rynku
 nieruchomości na poziomie miast, ale także **porównanie wyników w
 kontekście regionalnym** oraz uwzględnienie czynników ekonomicznych,
 takich jak wynagrodzenia, które mogą wpływać na ceny mieszkań.
 
-
-
 ## **Znaczenie projektu**
-
-
 
 Rynek nieruchomości jest dynamiczny i podlega wpływowi wielu czynników,
 takich jak lokalizacja, liczba pokoi, dostępność udogodnień czy bliskość
@@ -222,19 +196,13 @@ kluczowych miejsc. Analiza tych danych pozwoli lepiej zrozumieć
 mechanizmy kształtowania się cen mieszkań oraz stworzyć narzędzia
 wspomagające decyzje zakupowe i inwestycyjne.
 
-
-
 # **Brudne dane i ich znaczenie w analizie**
 
 ## **Czym są brudne dane?**
 
-
-
 Brudne dane to dane, które są niekompletne, nieprawidłowe, niespójne lub
 w inny sposób niezgodne z wymaganiami jakościowymi potrzebnymi do ich
 analizy. Przykłady brudnych danych obejmują:
-
-
 
 -   **Braki danych (NA):** Puste komórki w zestawie danych, które mogą
     być spowodowane błędami w zbieraniu danych lub brakiem odpowiednich
@@ -247,12 +215,8 @@ analizy. Przykłady brudnych danych obejmują:
 
 ## **Dlaczego należy walczyć z brudnymi danymi?**
 
-
-
 Analiza danych oparta na brudnych danych prowadzi do błędnych wniosków i
 modeli. Wysoka jakość danych jest kluczowa, ponieważ:
-
-
 
 1.  **Zapewnia wiarygodność wyników:** Poprawne dane umożliwiają
     uzyskanie rzetelnych wniosków.
@@ -263,12 +227,8 @@ modeli. Wysoka jakość danych jest kluczowa, ponieważ:
 
 ## **Działania naprawcze dla brudnych danych**
 
-
-
 W naszym projekcie podjęliśmy działania w celu naprawy brudnych danych,
 obejmujące:
-
-
 
 1.  **Ujednolicenie nazw miast:** Naprawimy niezgodności w zapisie nazw,
     aby zapewnić spójność.
@@ -288,14 +248,10 @@ obejmujące:
 
 ## **Planowane działania techniczne**
 
-
-
 Przegląd kolumn w poszukiwaniu braków, niezgodności oraz błędów
 logicznych. Transformacja danych, aby były zgodne z wymaganiami do
 analizy i modelowania. Sprawdzenie zgodności z przyjętymi regułami
 walidacyjnymi oraz weryfikacja efektów imputacji i transformacji danych.
-
-
 
 **Zmiana nazw kolumn** Poniżej znajduje się tabela z przekształconymi
 nazwami kolumn:
@@ -474,15 +430,11 @@ dane$building_material <- case_when(
 
 # **Walidacja danych**
 
-
-
 Walidacja danych to kluczowy etap przygotowania zbioru, który następuje
 po wstępnym oczyszczeniu danych. Jej celem jest sprawdzenie **zgodności
 danych** z określonymi **regułami logicznymi** i **jakościowymi**, aby
 upewnić się, że dane są **kompletne**, **spójne** i gotowe do dalszej
 analizy oraz modelowania.
-
-
 
 Proces ten polega na weryfikacji, czy dane spełniają określone
 **kryteria**, zapewniając ich **poprawność**, **spójność** oraz
@@ -492,14 +444,10 @@ kolumna powinna mieć odpowiedni **typ danych** (np.**numeryczny**,
 **tekstowy**, **całkowity**), a liczba unikalnych wartości powinna być
 zgodna z oczekiwaniami.
 
-
-
 Dzięki takiej analizie można wykryć potencjalne błędy w **strukturze
 danych**, takie jak niewłaściwe przypisanie typu do kolumny czy
 nieoczekiwane wartości. Zapewnia to odpowiednie przygotowanie danych do
 dalszych etapów analizy i modelowania.
-
-
 
 ### Typy danych oraz ich charakterystyka
 
@@ -538,15 +486,11 @@ knitr::kable(data_types, caption = "Typy danych")
 
 ```
 
-
-
 Zbiór danych składa się z **28 kolumn**, które charakteryzują się
 następującymi typami: **18 zmiennych numerycznych (typ numeric)**,
 **6zmiennych tekstowych (typ character)**, **3 zmiennymi kategorycznymi
 (typ factor)**, **2 zmiennymi całkowitymi (typ integer)** oraz **brakiem
 zmiennych logicznych.**
-
-
 
 -   Zmienne **numeryczne**, takie jak `square_meters`, `price` czy
     `centre_distance`, mają dużą liczbę unikalnych wartości, co
@@ -560,25 +504,17 @@ zmiennych logicznych.**
 -   Kolumny z typem **integer**, jak np. `price` mogą być również
     używane w analizach numerycznych.
 
-
-
 Dzięki tej weryfikacji możemy odpowiednio przygotować dane do dalszej
 analizy i modelowania. Zmienne numeryczne będą wykorzystywane w
 analizach regresyjnych, zmienne typu factor w klasyfikacyjnych, a
 zmienne character mogą wymagać kodowania na typ factor, aby mogły być
 wykorzystane w dalszej analizie.
 
-
-
-
-
 Na podstawie tej analizy możemy przejść do przygotowania danych do
 modelowania, dobierając odpowiednie metody przetwarzania, takie jak
 kodowanie zmiennych kategorycznych, normalizację zmiennych numerycznych
 czy tworzenie nowych zmiennych,w zależności od typu danych i celu
 analizy.
-
-
 
 Kolejnym krokiem w procesie walidacji jest zastosowanie określonych
 reguł logicznych, które zapewniają spójność danych. <br> <br>**W
@@ -692,25 +628,15 @@ te zostaną zastąpione:
 
 # **Data wrangling**
 
-
-
 Proces **data wrangling** umożliwia przekształcenie surowego zbioru
 danych w uporządkowaną i spójną strukturę gotową do dalszych badań. W
 ramach tego etapu skoncentrowaliśmy się na dwóch głównych aspektach:
 analizie wartości brakujących oraz obserwacji odstających.
 
-
-
-
-
 W tej części projektu podjęliśmy działania mające na celu: - zrozumienie
 i klasyfikację braków danych (MCAR, MAR, MNAR), - wybór odpowiednich
 strategii imputacji brakujących wartości, - wykrycie i obsługę
 obserwacji odstających, które mogą zaburzać statystyczne wnioski.
-
-
-
-
 
 Dzięki zastosowaniu odpowiednich metod wizualizacji (np. wykresów
 pudełkowych i macierzy braków) oraz technik statystycznych (np. Z-score)
@@ -718,19 +644,11 @@ możliwe było zarówno dokładne zrozumienie problemów związanych z danymi,
 jak i zaplanowanie działań korygujących. Tak przygotowany zbiór danych
 stanowi podstawę do przeprowadzenia dalszych analiz i modelowania.
 
-
-
-
-
 W kolejnych sekcjach przedstawimy szczegółowe kroki przeprowadzone w
 ramach tego etapu, w tym wyniki analizy braków danych oraz identyfikacji
 wartości odstających, a także opis zastosowanych metod ich obsługi.
 
-
-
 ## **Obserwacje brakujące**
-
-
 
 Do analizy brakujących danych zdecydowaliśmy się wykorzystać zarówno
 wizualizacje które pozwolą zrozumieć skalę oraz potencjalne przyczyny
@@ -741,8 +659,6 @@ zidentyfikowanie kolumn najbardziej dotkniętych problemem brakujących
 danych. Dodatkowo zastosowanie **macierzy braków** pozwala na analizę
 współwystępowania braków pomiędzy zmiennymi, co może wskazać na możliwe
 zależności w danych.
-
-
 
 Na podstawie klasyfikacji braków danych (MCAR, MAR, MNAR) możemy lepiej
 zrozumieć przyczyny ich występowania.
@@ -851,19 +767,20 @@ kable(
 Analiza brakujących danych wskazuje, że kolumny w zbiorze można
 podzielić na kilka grup pod względem liczby braków:
 
--   **Bardzo duża liczba braków:** `condition` (74.0%) i `building_material`
-    (40.9%). Ze względu na ich wysoką niekompletność zdecydowaliśmy się
-    usunąć kolumnę condition, a dla building_material zastosujemy
-    imputację najczęstszą wartością.
+-   **Bardzo duża liczba braków:** `condition` (74.0%) i
+    `building_material` (40.9%). Ze względu na ich wysoką niekompletność
+    zdecydowaliśmy się usunąć kolumnę condition, a dla building_material
+    zastosujemy imputację najczęstszą wartością.
 
--   **Umiarkowana liczba braków:** `building_type` (20.5%), `floor` (16.6%),
-    `build_year` (15.7%). Uzupełnimy brakujące wartości odpowiednio metodą
-    najczęstszej wartości dla zmiennych kategorycznych (`building_type`)
-    oraz medianą dla zmiennych liczbowych (`floor`, `build_year`).
+-   **Umiarkowana liczba braków:** `building_type` (20.5%), `floor`
+    (16.6%), `build_year` (15.7%). Uzupełnimy brakujące wartości
+    odpowiednio metodą najczęstszej wartości dla zmiennych
+    kategorycznych (`building_type`) oraz medianą dla zmiennych
+    liczbowych (`floor`, `build_year`).
 
--   **Niewielka liczba braków:** Kolumny takie jak `has_elevator` (4.46%)
-    czy `college_distance` (2.72%) zostaną uzupełnione odpowiednio modą i
-    medianą.
+-   **Niewielka liczba braków:** Kolumny takie jak `has_elevator`
+    (4.46%) czy `college_distance` (2.72%) zostaną uzupełnione
+    odpowiednio modą i medianą.
 
 -   **Bardzo mała liczba braków:** Pozostałe kolumny z mniej niż 1%
     braków zostaną imputowane prostymi metodami (medianą lub najczęstszą
@@ -919,8 +836,6 @@ dane$building_age <- ifelse(is.na(dane$build_year), NA, as.numeric(currentYear) 
 
 ## **Obserwacje odstające**
 
-
-
 Do analizy obserwacji odstających decydowaliśmy się użyć **wykresów
 pudełkowych**, ponieważ są one prostym i skutecznym narzędziem
 wizualizacyjnym, które pozwala szybko zidentyfikować wartości odstające.
@@ -934,15 +849,9 @@ odległości od różnych punktów użyteczności publicznej. Dzięki temu możn
 szybko zidentyfikować zmienne, które mogą zawierać nietypowe wartości i
 potencjalnie wpłynąć na dalsze analizy lub modelowanie danych.
 
-
-
-
-
 Dodatkowo, aby potwierdzić statystycznie obecność obserwacji odstających
 zastosowaliśmy metodę Z-score oraz zbadaliśmy czy rozkład danych jest
 zbliżony do rozkładu normalnego.
-
-
 
 Metoda **Z-score**, polega na identyfikowaniu obserwacji odstających na
 podstawie odchylenia standardowego od średniej. Wyraża się wzorem: $$
@@ -1376,16 +1285,12 @@ curve(dnorm(x, mean = mean(na.omit(dane$build_year)),
 
 #### **Interpretacja wyników histogramów**
 
-
-
 Przeprowadzona analiza histogramów pozwoliła na dokładne przyjrzenie się
 rozkładom badanych cech mieszkań, takich jak powierzchnia, cena, liczba
 pięter oraz odległości do punktów użyteczności publicznej. Wykresy te
 umożliwiły identyfikację wartości **typowych** (dominanty, gęstość
 wartości) oraz **wartości odstających**, które znajdują się na krańcach
 rozkładów.
-
-
 
 Linie rozkładu normalnego, nałożone na histogramy, stanowią dodatkowy
 punkt odniesienia do oceny kształtu rozkładów. Pozwalają one
@@ -1635,8 +1540,6 @@ wyniki <- data.frame(
 knitr::kable(wyniki, caption = "Wyniki Z-Score")
 ```
 
-
-
 Standaryzacja przy użyciu z-score umożliwia identyfikację wartości
 odstających. Wartości, które są znacznie większe lub mniejsze niż 3
 odchylenia standardowe, mogą być traktowane jako odstające. Zastosowanie
@@ -1644,8 +1547,6 @@ z-score zapewniło, że wszystkie analizowane zmienne są zbalansowane
 wokół średniej, co stanowi podstawę do dalszych, bardziej szczegółowych
 analiz. Większość wartości w danych jest symetrycznie rozłożona wokół
 średniej i nie dominuje żaden zbiór ekstremalnych wartości.
-
-
 
 ### Transformacje
 
@@ -1810,8 +1711,6 @@ rzeczywistości i kontekstu analizy.
 
 # **Ponowna walidacja danych**
 
-
-
 Po przeprowadzeniu **pierwszej, wstępnej walidacji**, która ujawniła
 **znaczną liczbę brakujących danych (NA)** w zbiorze, zdecydowano się na
 przeprowadzenie **kolejnej, bardziej szczegółowej analizy**, aby upewnić
@@ -1819,10 +1718,6 @@ się, że dokonana **imputacja** została prawidłowo wykonana, a dane są
 spójne i gotowe do dalszej obróbki. **Celem ponownej walidacji** jest
 weryfikacja skuteczności uzupełniania brakujących wartości oraz
 sprawdzenie, czy po tej operacji dane są spójne z przyjętymi regułami.
-
-
-
-
 
 W ramach tej walidacji sprawdzono czy wartości imputowane dla zmiennych
 numerycznych i kategorycznych **(mediana i moda)** zostały odpowiednio
@@ -1832,16 +1727,10 @@ korektach, dane są logicznie spójne, a reguły dotyczące relacji między
 zmiennymi, takie jak zgodność zmiennych `floor` i `floor_count`, zostały
 właściwie zastosowane.
 
-
-
-
-
 **Druga walidacja** ma na celu zapewnienie, że dane są w pełni spójne i
 zgodne z wymaganiami, eliminując ryzyko wystąpienia problemów, które
 mogłyby wpływać na jakość dalszej analizy. Dzięki tym czynnościom dane
 będą gotowe do kolejnych etapów analizy i przetwarzania.
-
-
 
 ```{r walidacja_kontrolna_danych, echo=FALSE}
 
@@ -1879,8 +1768,6 @@ ggplot(addwwfw, aes(x = expression, y = fails, fill = fails > 0)) +
 
 ```
 
-
-
 W procesie walidacji danych większość reguł została spełniona, jednak w
 przypadku jednej reguły, dotyczącej zgodności zmiennych `floor` i
 `floor_count`, wykryto **545 nieprawidłowych obserwacji**, które
@@ -1890,18 +1777,10 @@ spójności danych. Pozostałe reguły zostały prawidłowo zastosowane i
 **nie wykryto żadnych innych istotnych problemów** w analizowanych
 danych.
 
-
-
-
-
 Przed rozpoczęciem walidacji **brakujące wartości (NA)** zostały
 uzupełnione, co pozwoliło na przeprowadzenie pełnej analizy zgodności z
 regułami. **Imputacja brakujących danych** była kluczowym krokiem,
 umożliwiającym dalsze etapy weryfikacji danych.
-
-
-
-
 
 Błędy w danych `floor` i `floor_count` mogą wynikać z błędnie
 uzupełnionych wartości lub **nieaktualnych danych** (budynki mogły
@@ -1912,8 +1791,6 @@ wartość liczby kondygnacji była równa lub większa od wartości piętra,
 dane pozostały niezmienione. Taka korekta zapewnia **spójność danych** i
 eliminuje przypadki, w których piętro przewyższa liczbę kondygnacji w
 budynku.**Nie znaleziono duplikatów wierszy w danych**.
-
-
 
 ```{r walidacja_i_korekta_wartości;floor_floor_count,flitracja_duplikatów, echo=FALSE}
 
@@ -1968,8 +1845,6 @@ voivodeship_centroids <- suppressWarnings({
 })
 ```
 
-
-
 Celem analizy regionalnej cen mieszkań jest zrozumienie zróżnicowania
 poziomu cen nieruchomości w Polsce. Wykorzystanie mapy województw
 pozwala zobrazować różnice w średnich cenach za metr kwadratowy w
@@ -1978,8 +1853,6 @@ identyfikację obszarów o najwyższych oraz najniższych cenach, co może
 stanowić punkt wyjścia do dalszej analizy rynku nieruchomości,
 uwzględniającej czynniki wpływające na cenę, takie jak urbanizacja,
 poziom dochodów czy lokalna infrastruktura.
-
-
 
 ```{r wykres_choropleth srednia cena mieszk na wojew, echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(data = voivodeship) +
@@ -2026,14 +1899,9 @@ statystyki <- dane %>%
 knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
 ```
 
-
-
-
 #### **Interpretacja wyników**
 
 1.  **Województwo mazowieckie jako lider cenowy**
-
-    
 
     Z wykresu wynika, że województwo mazowieckie, w szczególności
     Warszawa, dominuje pod względem średnich cen za metr kwadratowy,
@@ -2041,22 +1909,14 @@ knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
     odzwierciedleniem centralnej roli stolicy w gospodarce, jej
     rozwiniętego rynku pracy oraz wysokiego popytu na mieszkania.
 
-    
-
 2.  **Regiony o najniższych cenach**
-
-    
 
     Województwa takie jak podkarpackie, lubelskie i podlaskie
     charakteryzują się znacznie niższymi cenami, oscylującymi wokół **10
     000 PLN/m²**. Są to regiony o mniejszym stopniu urbanizacji oraz
     niższym popycie na nieruchomości w porównaniu do dużych miast.
 
-    
-
 3.  **Regiony o średnich cenach**
-
-    
 
     Województwa dolnośląskie, pomorskie i wielkopolskie znajdują się w
     średnim przedziale cenowym, wynoszącym od **12 000 PLN/m² do 16 000
@@ -2064,22 +1924,14 @@ knitr::kable(statystyki, caption = "Poszczególne statystyki dla miast")
     Wrocław, Gdańsk czy Poznań, które są istotnymi ośrodkami
     akademickimi i biznesowymi.
 
-    
-
 4.  **Różnice między regionami**
-
-    
 
     Mapa podkreśla wyraźne różnice w rozwoju regionalnym. Województwa
     takie jak opolskie czy świętokrzyskie należą do najtańszych, co może
     być związane z niższym stopniem urbanizacji, mniejszym popytem oraz
     ograniczoną dostępnością pracy w tych regionach.
 
-    
-
 #### **Wnioski**
-
-
 
 Wykres średnich cen mieszkań za metr kwadratowy w podziale na
 województwa jasno pokazuje istotne różnice regionalne. Najwyższe ceny
@@ -2090,8 +1942,6 @@ się niższymi cenami, co wskazuje na ich mniejszy potencjał rynkowy.
 Wyniki te sugerują, że dalsze badania powinny uwzględnić czynniki
 demograficzne, ekonomiczne i infrastrukturalne, które kształtują rynek
 nieruchomości w Polsce.
-
-
 
 ### Wybór miast do dalszej analizy
 
@@ -2135,7 +1985,8 @@ Dzięki temu podziałowi możemy porównać, jakie cechy i trendy są unikalne
 dla różnych segmentów cenowych, oraz czy istnieją wspólne wzorce, które
 łączą te grupy.
 
-Zależności cenowe w wybranych miastach przedstawione zostały na poniższym wykresie
+Zależności cenowe w wybranych miastach przedstawione zostały na
+poniższym wykresie
 
 ```{r porównanie_miast, echo=FALSE, message = FALSE, fig.width=10, fig.height=6,}
 # ggstatsplot::ggbetweenstats(
@@ -2145,11 +1996,20 @@ Zależności cenowe w wybranych miastach przedstawione zostały na poniższym wy
 #   title = "Porównanie cen za m² w wybranych miastach"
 # )
 ```
-Wykres graficznie przedstawia wcześniej omówione różnice w cenach mieszkań za metr kwadratowy w wybranych miastach. Wizualizacja potwierdza podział na trzy grupy cenowe, ukazując wyraźne różnice między najdroższymi, średnimi i najtańszymi lokalizacjami.
+
+Wykres graficznie przedstawia wcześniej omówione różnice w cenach
+mieszkań za metr kwadratowy w wybranych miastach. Wizualizacja
+potwierdza podział na trzy grupy cenowe, ukazując wyraźne różnice między
+najdroższymi, średnimi i najtańszymi lokalizacjami.
 
 # **Analiza udogodnień w nieruchomościach**
 
-Wykonamy analizę, aby sprawdzić, w jaki sposób różne udogodnienia, takie jak balkon, winda, parking, ochrona czy komórka lokatorska, wpływają na ceny mieszkań w wybranych miastach. Za pomocą wykresów pudełkowych ocenimy, czy obecność tych udogodnień ma znaczący wpływ na wartość nieruchomości oraz jak różnice te kształtują się w zależności od lokalizacji.
+Wykonamy analizę, aby sprawdzić, w jaki sposób różne udogodnienia, takie
+jak balkon, winda, parking, ochrona czy komórka lokatorska, wpływają na
+ceny mieszkań w wybranych miastach. Za pomocą wykresów pudełkowych
+ocenimy, czy obecność tych udogodnień ma znaczący wpływ na wartość
+nieruchomości oraz jak różnice te kształtują się w zależności od
+lokalizacji.
 
 ## Wykresy pudełkowe udogodnień
 
@@ -2393,11 +2253,10 @@ wartości przy założeniu niezależności.
 
 ```
 
-
 #### Ogólne wnioski:
 
-Na podstawie przeprowadzonych testów Chi-kwadrat oraz wykresów możemy sformułować
-następujące wnioski:
+Na podstawie przeprowadzonych testów Chi-kwadrat oraz wykresów możemy
+sformułować następujące wnioski:
 
 1.  **Silne powiązania**:
     -   Najsilniejsze zależności występują między zmiennymi związanymi z
@@ -2514,8 +2373,8 @@ kable(levene_results, caption = "Podsumowanie wyników testów Levene’a dla zm
 
 ### Interpretacja
 
--   `has_parking` (p = 0.8754) -- nie ma podstaw do odrzucenia
-    hipotezy zerowej o jednorodności wariancji, dlatego **wariancje są
+-   `has_parking` (p = 0.8754) -- nie ma podstaw do odrzucenia hipotezy
+    zerowej o jednorodności wariancji, dlatego **wariancje są
     jednorodne**.
 
 -   `has_balcony` (p \< 0.0001) -- występują istotne statystycznie
@@ -2762,8 +2621,8 @@ do jej odrzucenia (p ≥ 0.05).
 
 ### Kraków
 
--   `has_elevator`, `has_parking`, `has_balcony`: stwierdzono
-    istotne różnice w rozkładach cen (p \< 0.05).
+-   `has_elevator`, `has_parking`, `has_balcony`: stwierdzono istotne
+    różnice w rozkładach cen (p \< 0.05).
 
 -   `has_security`, `has_storage_room`: brak istotnych różnic (p ≥
     0.05).
@@ -2775,8 +2634,8 @@ statystycznie istotnego wpływu na rozkład cen.
 
 ### Warszawa
 
--   `has_elevator`, `has_parking`, `has_balcony`,
-    `has_security`: istotna różnica (p \< 0.05).
+-   `has_elevator`, `has_parking`, `has_balcony`, `has_security`:
+    istotna różnica (p \< 0.05).
 
 -   `has_storage_room`: brak istotnej różnicy (p ≥ 0.05).
 
@@ -2787,8 +2646,8 @@ pomieszczeniem gospodarczym) istotnie różnicują medianę ceny.
 
 -   `has_parking`: istotna różnica (p \< 0.05).
 
--   `has_elevator`, `has_balcony`, `has_security`,
-    `has_storage_room`: brak istotnej różnicy (p ≥ 0.05).
+-   `has_elevator`, `has_balcony`, `has_security`, `has_storage_room`:
+    brak istotnej różnicy (p ≥ 0.05).
 
 Dla mieszkań w Radomiu tylko parking istotnie wpływa na ceny w ujęciu
 statystycznym.
@@ -2797,8 +2656,8 @@ statystycznym.
 
 -   `has_parking`, `has_balcony`: istotna różnica (p \< 0.05).
 
--   `has_elevator`, `has_security`, `has_storage_room`: brak
-    istotnej różnicy (p ≥ 0.05).
+-   `has_elevator`, `has_security`, `has_storage_room`: brak istotnej
+    różnicy (p ≥ 0.05).
 
 Tutaj ważnymi czynnikami wpływającymi na ceny (w sensie statystycznym)
 okazały się posiadanie parkingu oraz balkonu.
@@ -2813,8 +2672,8 @@ kategorycznych na rozkład cen w testach Manna--Whitneya.
 
 ### Białystok
 
--   `has_elevator`, `has_parking`, `has_balcony`: istotna różnica
-    (p \< 0.05).
+-   `has_elevator`, `has_parking`, `has_balcony`: istotna różnica (p \<
+    0.05).
 
 -   `has_security`, `has_storage_room`: brak istotnej różnicy (p ≥
     0.05).
@@ -2841,56 +2700,59 @@ statystycznie istotne różnice -- wyjątkiem był Radom, gdzie jedynie
 parking się wyróżnił. W Rzeszowie z kolei żaden z badanych czynników nie
 wpłynął istotnie na medianę cen.
 
-
-
 ## Test ANCOVA
 
 ### Cel
-Zdecydowaliśmy się na przeprowadzenie testu Ancova na podstawie zmiennych:
-`has_balcony`, `has_elevator`, `has_parking`, `has_security` oraz 
-`has_storage_room` ze względu na to, że w naszych poprzednich analizach okazały 
-się one być najbardziej kluczowe w kształtowaniu się cen nieruchomości. 
 
-Test ANCOVA pozwoli zbadać, w jakim stopniu te czynniki oddziałują na ceny nieruchomości 
-po uwzględnieniu efektu zmiennej `price_per_square_meter`, czyli ceny za metr kwadratowy.
-Dzięki temu możliwe będzie kontrolowanie wpływu tej zmiennej oraz ocena, czy pozostałe 
-cechy mają istotne znaczenie w modelowaniu cen mieszkań. Dodatkowo test umożliwi określenie,
-czy wpływ analizowanych czynników jest statystycznie potwierdzony.
+Zdecydowaliśmy się na przeprowadzenie testu Ancova na podstawie
+zmiennych: `has_balcony`, `has_elevator`, `has_parking`, `has_security`
+oraz `has_storage_room` ze względu na to, że w naszych poprzednich
+analizach okazały się one być najbardziej kluczowe w kształtowaniu się
+cen nieruchomości.
+
+Test ANCOVA pozwoli zbadać, w jakim stopniu te czynniki oddziałują na
+ceny nieruchomości po uwzględnieniu efektu zmiennej
+`price_per_square_meter`, czyli ceny za metr kwadratowy. Dzięki temu
+możliwe będzie kontrolowanie wpływu tej zmiennej oraz ocena, czy
+pozostałe cechy mają istotne znaczenie w modelowaniu cen mieszkań.
+Dodatkowo test umożliwi określenie, czy wpływ analizowanych czynników
+jest statystycznie potwierdzony.
 
 ### Definicja Testu ANCOVA
-Test ANCOVA  to statystyczna metoda łącząca analizę wariancji z analizą regresji. 
-Pozwala na ocenę różnic między średnimi wartościami w różnych grupach, jednocześnie 
-kontrolując wpływ jednej lub więcej zmiennych ciągłych (kowariantów). <br>
 
-- **Hipoteza zerowa (H₀):** Po uwzględnieniu wpływu kowariantu nie ma istotnych
-różnic między grupami.<br>
-- **Hipoteza alternatywna (H₁):** Po uwzględnieniu wpływu kowariantu istnieją
-istotne różnice między grupami.
+Test ANCOVA to statystyczna metoda łącząca analizę wariancji z analizą
+regresji. Pozwala na ocenę różnic między średnimi wartościami w różnych
+grupach, jednocześnie kontrolując wpływ jednej lub więcej zmiennych
+ciągłych (kowariantów). <br>
 
+-   **Hipoteza zerowa (H₀):** Po uwzględnieniu wpływu kowariantu nie ma
+    istotnych różnic między grupami.<br>
+-   **Hipoteza alternatywna (H₁):** Po uwzględnieniu wpływu kowariantu
+    istnieją istotne różnice między grupami.
 
-<br>
-Statystyka testu **F** wyrażana jest wzorem:
+<br> Statystyka testu **F** wyrażana jest wzorem:
 
-\[
+$$
 F = \frac{\text{MS}_{\text{effect}}}{\text{MS}_{\text{error}}}
-\]
+$$
 
-gdzie: <br>
-- \(\text{MS}_{\text{effect}} = \frac{\text{SS}_{\text{effect}}}{df_{\text
-{effect}}}\) – średni kwadrat efektu,<br>
-- \(\text{MS}_{\text{error}} = \frac{\text{SS}_{\text{error}}}{df_{\text
-{error}}}\) – średni kwadrat błędu,<br>
-- \(\text{SS}_{\text{effect}}\) – suma kwadratów związana z efektem czynnika, <br>
-- \(\text{SS}_{\text{error}}\) – suma kwadratów błędu resztowego,<br>
-- \(df_{\text{effect}}\) i \(df_{\text{error}}\) – liczby stopni swobody
-odpowiednio dla efektu czynnika i błędu resztowego. 
+gdzie: <br> -
+$\text{MS}_{\text{effect}} = \frac{\text{SS}_{\text{effect}}}{df_{\text
+{effect}}}$ – średni kwadrat efektu,<br> -
+$\text{MS}_{\text{error}} = \frac{\text{SS}_{\text{error}}}{df_{\text
+{error}}}$ – średni kwadrat błędu,<br> - $\text{SS}_{\text{effect}}$ –
+suma kwadratów związana z efektem czynnika, <br> -
+$\text{SS}_{\text{error}}$ – suma kwadratów błędu resztowego,<br> -
+$df_{\text{effect}}$ i $df_{\text{error}}$ – liczby stopni swobody
+odpowiednio dla efektu czynnika i błędu resztowego.
 
 ### Wymagania Testu ANCOVA
-1. Zmienne w grupach są niezależne.
-2. Rozkład wyników w każdej grupie jest normalny.
-3. Wariancje w grupach są homogeniczne (jednakowe).
-4. Kowariant jest niezależny od czynnika.
-5. Kowariat powinien wykazywać liniową relację ze zmienną zależną.
+
+1.  Zmienne w grupach są niezależne.
+2.  Rozkład wyników w każdej grupie jest normalny.
+3.  Wariancje w grupach są homogeniczne (jednakowe).
+4.  Kowariant jest niezależny od czynnika.
+5.  Kowariat powinien wykazywać liniową relację ze zmienną zależną.
 
 ```{r test_ANOVA, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -2949,8 +2811,8 @@ ancova_rzeszow <- aov(rzeszow$price ~ rzeszow$price_per_square_meter + rzeszow$h
 
 ```
 
-
 ### Wyniki testu
+
 ```{r wizualizacja_wyników_ANCOVY, echo=FALSE}
 # Funkcja do dodania wyników do tabeli
 add_to_table <- function(city, variable, f_value, p_value) {
@@ -3017,159 +2879,425 @@ kable(summary_table, caption = "Podsumowanie wyników testów ANCOVA") %>%
 
 
 ```
+
 ### Interpretacja wyników testu ANCOVA
 
 ### 1. **Białystok:**
 
 #### **Obecność balkonu (`has_balcony`)**:
-Zmienna **`has_balcony`** ma również istotny wpływ na cenę, przy p = 0.0294. Wartość F wynosząca 4,803 sugeruje, że posiadanie balkonu wpływa na cenę nieruchomości, po uwzględnieniu ceny za metr kwadratowy. 
+
+Zmienna **`has_balcony`** ma również istotny wpływ na cenę, przy p =
+0.0294. Wartość F wynosząca 4,803 sugeruje, że posiadanie balkonu wpływa
+na cenę nieruchomości, po uwzględnieniu ceny za metr kwadratowy.
 
 #### **Obecność windy (`has_elevator`)**:
-Zmienna **`has_elevator`** także ma istotny wpływ na cenę (p = 0,0259), z wartością F wynoszącą 5,029. Posiadanie windy w nieruchomości w Białymstoku wpływa na cenę, po uwzględnieniu innych zmiennych. 
+
+Zmienna **`has_elevator`** także ma istotny wpływ na cenę (p = 0,0259),
+z wartością F wynoszącą 5,029. Posiadanie windy w nieruchomości w
+Białymstoku wpływa na cenę, po uwzględnieniu innych zmiennych.
 
 #### **Obecność parkingu (`has_parking`)**:
-Zmienna **`has_parking`** **nie jest istotna statystycznie**, ponieważ wartość p wynosi 0,4013. Wartość F 0,707 sugeruje, że dostępność parkingu nie ma statystycznie istotnego wpływu na cenę nieruchomości w Białymstoku, po uwzględnieniu ceny za metr kwadratowy i innych zmiennych.
+
+Zmienna **`has_parking`** **nie jest istotna statystycznie**, ponieważ
+wartość p wynosi 0,4013. Wartość F 0,707 sugeruje, że dostępność
+parkingu nie ma statystycznie istotnego wpływu na cenę nieruchomości w
+Białymstoku, po uwzględnieniu ceny za metr kwadratowy i innych
+zmiennych.
 
 #### **Interakcje**:
-- **`price_per_square_meter:has_balcony` (interakcja ceny za $m^2$ z obecnością balkonu)**: Wartość F wynosząca 0,597 i p = 0,4404 wskazują, że interakcja między ceną za $m^2$ a obecnością balkonu nie ma istotnego wpływu na cenę. P-wartość > 0,05 sugeruje, że efekt ceny za $m^2$ na cenę nieruchomości nie zmienia się w zależności od tego, czy mieszkanie ma balkon.
-  
-- **`price_per_square_meter:has_elevator` (interakcja ceny za $m^2$ z obecnością windy)**: Wartość F 0,547 i p = 0,4604 oznaczają, że interakcja między ceną za $m^2$ a obecnością windy także nie jest istotna. P-wartość > 0,05 sugeruje, że wpływ ceny za $m^2$ na cenę nie zależy od tego, czy mieszkanie ma windę.
 
-- **`price_per_square_meter:has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Z kolei interakcja między ceną za $m^2$ a obecnością parkingu ma istotny wpływ na cenę (F = 11.364, p = 0.000883). P-wartość mniejsza niż 0,001 oznacza, że wpływ ceny za m² na cenę nieruchomości różni się w zależności od obecności parkingu. W praktyce oznacza to, że zmiana ceny za $m^2$ może mieć inny wpływ na cenę nieruchomości w zależności od tego, czy mieszkanie ma parking.
+-   **`price_per_square_meter:has_balcony` (interakcja ceny za** $m^2$ z
+    obecnością balkonu): Wartość F wynosząca 0,597 i p = 0,4404
+    wskazują, że interakcja między ceną za $m^2$ a obecnością balkonu
+    nie ma istotnego wpływu na cenę. P-wartość \> 0,05 sugeruje, że
+    efekt ceny za $m^2$ na cenę nieruchomości nie zmienia się w
+    zależności od tego, czy mieszkanie ma balkon.
 
+-   **`price_per_square_meter:has_elevator` (interakcja ceny za** $m^2$
+    z obecnością windy): Wartość F 0,547 i p = 0,4604 oznaczają, że
+    interakcja między ceną za $m^2$ a obecnością windy także nie jest
+    istotna. P-wartość \> 0,05 sugeruje, że wpływ ceny za $m^2$ na cenę
+    nie zależy od tego, czy mieszkanie ma windę.
+
+-   **`price_per_square_meter:has_parking` (interakcja ceny za** $m^2$ z
+    obecnością parkingu): Z kolei interakcja między ceną za $m^2$ a
+    obecnością parkingu ma istotny wpływ na cenę (F = 11.364, p =
+    0.000883). P-wartość mniejsza niż 0,001 oznacza, że wpływ ceny za m²
+    na cenę nieruchomości różni się w zależności od obecności parkingu.
+    W praktyce oznacza to, że zmiana ceny za $m^2$ może mieć inny wpływ
+    na cenę nieruchomości w zależności od tego, czy mieszkanie ma
+    parking.
 
 ### 2. **Częstochowa:**
 
 #### **Obecność balkonu (`has_balcony`)**:
-Zmienna **`has_balcony`** również ma istotny wpływ na cenę (p = 0.01198). Wartość F wynosząca 6.374 sugeruje, że posiadanie balkonu wpływa na cenę nieruchomości, po uwzględnieniu ceny za metr kwadratowy. 
+
+Zmienna **`has_balcony`** również ma istotny wpływ na cenę (p =
+0.01198). Wartość F wynosząca 6.374 sugeruje, że posiadanie balkonu
+wpływa na cenę nieruchomości, po uwzględnieniu ceny za metr kwadratowy.
 
 #### **Obecność parkingu (`has_parking`)**:
-Zmienna **`has_parking`** również ma **istotny wpływ** na cenę (p = 0.00117), z wartością F 10.701. Posiadanie parkingu zwiększa cenę nieruchomości, co oznacza, że dostępność parkingu wpływa na wartość nieruchomości w Częstochowie. 
+
+Zmienna **`has_parking`** również ma **istotny wpływ** na cenę (p =
+0.00117), z wartością F 10.701. Posiadanie parkingu zwiększa cenę
+nieruchomości, co oznacza, że dostępność parkingu wpływa na wartość
+nieruchomości w Częstochowie.
 
 #### **Interakcje**:
-- **`price_per_square_meter:has_balcony` (interakcja ceny za m² z obecnością balkonu)**: Wartość F wynosząca 1.344 i p = 0.2471 oznaczają, że interakcja między ceną za $m^2$ a obecnością balkonu nie ma istotnego wpływu na cenę. P-wartość > 0.05 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości nie zmienia się w zależności od tego, czy mieszkanie ma balkon.
-  
-- **`price_per_square_meter:has_parking` (interakcja ceny za m² z obecnością parkingu)**: Wartość F 5.567 i p = 0.01881 wskazują, że interakcja między ceną za $m^2$ a obecnością parkingu jest istotna. P-wartość mniejsza niż 0,05 oznacza, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma parking. To sugeruje, że obecność parkingu może wzmacniać lub zmieniać efekt ceny za $m^2$ na cenę całkowitą.
 
+-   **`price_per_square_meter:has_balcony` (interakcja ceny za m² z
+    obecnością balkonu)**: Wartość F wynosząca 1.344 i p = 0.2471
+    oznaczają, że interakcja między ceną za $m^2$ a obecnością balkonu
+    nie ma istotnego wpływu na cenę. P-wartość \> 0.05 sugeruje, że
+    wpływ ceny za $m^2$ na cenę nieruchomości nie zmienia się w
+    zależności od tego, czy mieszkanie ma balkon.
 
+-   **`price_per_square_meter:has_parking` (interakcja ceny za m² z
+    obecnością parkingu)**: Wartość F 5.567 i p = 0.01881 wskazują, że
+    interakcja między ceną za $m^2$ a obecnością parkingu jest istotna.
+    P-wartość mniejsza niż 0,05 oznacza, że wpływ ceny za $m^2$ na cenę
+    nieruchomości różni się w zależności od tego, czy mieszkanie ma
+    parking. To sugeruje, że obecność parkingu może wzmacniać lub
+    zmieniać efekt ceny za $m^2$ na cenę całkowitą.
 
 ### 3. **Radom:**
 
 #### **Obecność parkingu (`has_parking`)**:
-Zmienna **`has_parking`** również ma istotny wpływ na cenę (p = 5.67e-09), z wartością F 37.252. Posiadanie parkingu zwiększa cenę nieruchomości, co oznacza, że dostępność parkingu ma bardzo silny wpływ na wartość nieruchomości w Radomiu. 
+
+Zmienna **`has_parking`** również ma istotny wpływ na cenę (p =
+5.67e-09), z wartością F 37.252. Posiadanie parkingu zwiększa cenę
+nieruchomości, co oznacza, że dostępność parkingu ma bardzo silny wpływ
+na wartość nieruchomości w Radomiu.
 
 #### **Interakcje**:
-- **`price_per_square_meter:has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Wartość F wynosząca 1.231 i p = 0.269 wskazują, że interakcja między ceną za $m^2$ a obecnością parkingu nie ma istotnego wpływu na cenę. P-wartość > 0,05 sugeruje, że efekt ceny za m² na cenę nieruchomości nie zmienia się w zależności od tego, czy mieszkanie ma parking.
 
+-   **`price_per_square_meter:has_parking` (interakcja ceny za** $m^2$ z
+    obecnością parkingu): Wartość F wynosząca 1.231 i p = 0.269
+    wskazują, że interakcja między ceną za $m^2$ a obecnością parkingu
+    nie ma istotnego wpływu na cenę. P-wartość \> 0,05 sugeruje, że
+    efekt ceny za m² na cenę nieruchomości nie zmienia się w zależności
+    od tego, czy mieszkanie ma parking.
 
 ### 4. **Kraków**:
 
 #### **Obecność balkonu (`has_balcony`)**:
-Zmienna **`has_balcony`** jest również bardzo istotna statystycznie (p < 2e-16). Wartość F wynosząca 90.922 sugeruje, że posiadanie balkonu ma bardzo silny wpływ na cenę nieruchomości. 
+
+Zmienna **`has_balcony`** jest również bardzo istotna statystycznie (p
+\< 2e-16). Wartość F wynosząca 90.922 sugeruje, że posiadanie balkonu ma
+bardzo silny wpływ na cenę nieruchomości.
 
 #### **Obecność windy (`has_elevator`)**:
-Zmienna **`has_elevator`** ma istotny wpływ na cenę (p = 1.37e-05). Wartość F wynosząca 18.968 sugeruje, że posiadanie windy wpływa na cenę nieruchomości, po uwzględnieniu ceny za $m^2$. 
+
+Zmienna **`has_elevator`** ma istotny wpływ na cenę (p = 1.37e-05).
+Wartość F wynosząca 18.968 sugeruje, że posiadanie windy wpływa na cenę
+nieruchomości, po uwzględnieniu ceny za $m^2$.
 
 #### **Obecność parkingu (`has_parking`)**:
-Zmienna **`has_parking`** również ma istotny wpływ na cenę (p = 3.60e-07), z wartością F 26.005. Posiadanie parkingu zwiększa cenę nieruchomości, co oznacza, że dostępność parkingu ma bardzo silny wpływ na wartość nieruchomości w Krakowie. 
+
+Zmienna **`has_parking`** również ma istotny wpływ na cenę (p =
+3.60e-07), z wartością F 26.005. Posiadanie parkingu zwiększa cenę
+nieruchomości, co oznacza, że dostępność parkingu ma bardzo silny wpływ
+na wartość nieruchomości w Krakowie.
 
 #### **Obecność ochrony (`has_security`)**:
-Zmienna **`has_security`** nie jest istotna statystycznie (p = 0.8549), co oznacza, że obecność ochrony nie ma wpływu na cenę nieruchomości w Krakowie.
+
+Zmienna **`has_security`** nie jest istotna statystycznie (p = 0.8549),
+co oznacza, że obecność ochrony nie ma wpływu na cenę nieruchomości w
+Krakowie.
 
 #### **Obecność pomieszczenia gospodarczego (`has_storage_room`)**:
-Zmienna **`has_storage_room`** ma marginalny wpływ na cenę (p = 0.0597), z wartością F 3.548. Chociaż p-wartość jest nieco większa niż 0.05, można uznać, że wpływ obecności pomieszczenia gospodarczego na cenę nieruchomości w Krakowie jest statystycznie marginalny, a efekt jest widoczny przy poziomie istotności 10%.
+
+Zmienna **`has_storage_room`** ma marginalny wpływ na cenę (p = 0.0597),
+z wartością F 3.548. Chociaż p-wartość jest nieco większa niż 0.05,
+można uznać, że wpływ obecności pomieszczenia gospodarczego na cenę
+nieruchomości w Krakowie jest statystycznie marginalny, a efekt jest
+widoczny przy poziomie istotności 10%.
 
 #### **Interakcje**:
-- **`price_per_square_meter:has_balcony` (interakcja ceny za $m^2$ z obecnością balkonu)**: Wartość F wynosząca 0.351 i p = 0.5536 oznaczają, że interakcja między ceną za $m^2$ a obecnością balkonu nie ma istotnego wpływu na cenę.
-  
-- **`price_per_square_meter:has_elevator` (interakcja ceny za $m^2$ z obecnością windy)**: Wartość F wynosząca 6.220 i p = 0.0127 wskazują, że interakcja między ceną za $m^2$ a obecnością windy jest istotna statystycznie. P-wartość mniejsza niż 0.05 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma windę.
 
-- **`price_per_square_meter:has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Wartość F wynosząca 0.097 i p = 0.7558 oznaczają, że interakcja między ceną za $m^2$ a obecnością parkingu nie ma istotnego wpływu na cenę.
+-   **`price_per_square_meter:has_balcony` (interakcja ceny za** $m^2$ z
+    obecnością balkonu): Wartość F wynosząca 0.351 i p = 0.5536
+    oznaczają, że interakcja między ceną za $m^2$ a obecnością balkonu
+    nie ma istotnego wpływu na cenę.
 
-- **`price_per_square_meter:has_security` (interakcja ceny za $m^2$ z obecnością ochrony)**: Wartość F wynosząca 2.619 i p = 0.1057 sugerują, że interakcja między ceną za $m^2$ a obecnością ochrony nie ma istotnego wpływu na cenę.
+-   **`price_per_square_meter:has_elevator` (interakcja ceny za** $m^2$
+    z obecnością windy): Wartość F wynosząca 6.220 i p = 0.0127
+    wskazują, że interakcja między ceną za $m^2$ a obecnością windy jest
+    istotna statystycznie. P-wartość mniejsza niż 0.05 sugeruje, że
+    wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od
+    tego, czy mieszkanie ma windę.
 
-- **`price_per_square_meter:has_storage_room` (interakcja ceny za $m^2$ z obecnością pomieszczenia gospodarczego)**: Wartość F wynosząca 4.951 i p = 0.0261 wskazują, że interakcja między ceną za $m^2$ a obecnością pomieszczenia gospodarczego ma istotny wpływ na cenę nieruchomości w Krakowie. P-wartość mniejsza niż 0,05 sugeruje, że efekt ceny za $m^2$ jest różny w zależności od tego, czy mieszkanie ma pomieszczenie gospodarcze.
+-   **`price_per_square_meter:has_parking` (interakcja ceny za** $m^2$ z
+    obecnością parkingu): Wartość F wynosząca 0.097 i p = 0.7558
+    oznaczają, że interakcja między ceną za $m^2$ a obecnością parkingu
+    nie ma istotnego wpływu na cenę.
 
+-   **`price_per_square_meter:has_security` (interakcja ceny za** $m^2$
+    z obecnością ochrony): Wartość F wynosząca 2.619 i p = 0.1057
+    sugerują, że interakcja między ceną za $m^2$ a obecnością ochrony
+    nie ma istotnego wpływu na cenę.
+
+-   **`price_per_square_meter:has_storage_room` (interakcja ceny za**
+    $m^2$ z obecnością pomieszczenia gospodarczego): Wartość F wynosząca
+    4.951 i p = 0.0261 wskazują, że interakcja między ceną za $m^2$ a
+    obecnością pomieszczenia gospodarczego ma istotny wpływ na cenę
+    nieruchomości w Krakowie. P-wartość mniejsza niż 0,05 sugeruje, że
+    efekt ceny za $m^2$ jest różny w zależności od tego, czy mieszkanie
+    ma pomieszczenie gospodarcze.
 
 ### 5. **Warszawa**:
 
 #### **Obecność balkonu (`warszawa$has_balcony`)**:
-Zmienna **`has_balcony`** jest bardzo istotna statystycznie (p < 2e-16). Wartość F wynosząca 129.058 sugeruje, że posiadanie balkonu ma bardzo silny wpływ na cenę nieruchomości. 
+
+Zmienna **`has_balcony`** jest bardzo istotna statystycznie (p \<
+2e-16). Wartość F wynosząca 129.058 sugeruje, że posiadanie balkonu ma
+bardzo silny wpływ na cenę nieruchomości.
 
 #### **Obecność windy (`warszawa$has_elevator`)**:
-Zmienna **`has_elevator`** nie jest **istotna statystycznie** (p = 0.3099). Wartość F 1.031 sugeruje, że obecność windy nie ma wpływu na cenę nieruchomości w Warszawie.
+
+Zmienna **`has_elevator`** nie jest **istotna statystycznie** (p =
+0.3099). Wartość F 1.031 sugeruje, że obecność windy nie ma wpływu na
+cenę nieruchomości w Warszawie.
 
 #### **Obecność parkingu (`warszawa$has_parking`)**:
-Zmienna **`has_parking`** jest **bardzo istotna statystycznie** (p < 2e-16), z wartością F wynoszącą 222.922. Posiadanie parkingu ma bardzo silny wpływ na cenę nieruchomości w Warszawie.
+
+Zmienna **`has_parking`** jest **bardzo istotna statystycznie** (p \<
+2e-16), z wartością F wynoszącą 222.922. Posiadanie parkingu ma bardzo
+silny wpływ na cenę nieruchomości w Warszawie.
 
 #### **Obecność ochrony (`warszawa$has_security`)**:
-Zmienna **`has_security`** ma istotny wpływ na cenę (p = 9.17e-10), z wartością F wynoszącą 37.599. Posiadanie ochrony wpływa na cenę nieruchomości, co oznacza, że dostępność ochrony ma bardzo silny wpływ na wartość nieruchomości w Warszawie. 
+
+Zmienna **`has_security`** ma istotny wpływ na cenę (p = 9.17e-10), z
+wartością F wynoszącą 37.599. Posiadanie ochrony wpływa na cenę
+nieruchomości, co oznacza, że dostępność ochrony ma bardzo silny wpływ
+na wartość nieruchomości w Warszawie.
 
 #### **Obecność pomieszczenia gospodarczego (`warszawa$has_storage_room`)**:
-Zmienna **`has_storage_room`** również ma istotny wpływ na cenę (p = 1.83e-08), z wartością F 31.739. Posiadanie pomieszczenia gospodarczego zwiększa cenę nieruchomości. 
+
+Zmienna **`has_storage_room`** również ma istotny wpływ na cenę (p =
+1.83e-08), z wartością F 31.739. Posiadanie pomieszczenia gospodarczego
+zwiększa cenę nieruchomości.
 
 #### **Interakcje**:
-- **`price_per_square_meter:warszawa$has_balcony` (interakcja ceny za $m^2$ z obecnością balkonu)**: Wartość F wynosząca 5.165 i p = 0.0231 wskazują, że **interakcja między ceną za $m^2$ a obecnością balkonu jest istotna statystycznie**. P-wartość mniejsza niż 0,05 sugeruje, że wpływ ceny za m² na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma balkon.
-  
-- **`price_per_square_meter:warszawa$has_elevator` (interakcja ceny za $m^2$ z obecnością windy)**: Wartość F wynosząca 1.278 i p = 0.2584 sugerują, że interakcja między ceną za $m^2$ a obecnością windy nie ma istotnego wpływu na cenę.
 
-- **`price_per_square_meter:warszawa$has_parking` (interakcja ceny za $m^2$ z obecnością parkingu)**: Wartość F wynosząca 17.210 i p = 3.39e-05 wskazują, że interakcja między ceną za $m^2$ a obecnością parkingu ma istotny wpływ na cenę. P-wartość mniejsza niż 0,001 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma parking.
+-   **`price_per_square_meter:warszawa$has_balcony` (interakcja ceny
+    za** $m^2$ z obecnością balkonu): Wartość F wynosząca 5.165 i p =
+    0.0231 wskazują, że **interakcja między ceną za** $m^2$ a obecnością
+    balkonu jest istotna statystycznie. P-wartość mniejsza niż 0,05
+    sugeruje, że wpływ ceny za m² na cenę nieruchomości różni się w
+    zależności od tego, czy mieszkanie ma balkon.
 
-- **`price_per_square_meter:warszawa$has_security` (interakcja ceny za $m^2$ z obecnością ochrony)**: Wartość F wynosząca 1.677 i p = 0.1954 sugerują, że interakcja między ceną za $m^2$ a obecnością ochrony nie ma istotnego wpływu na cenę.
+-   **`price_per_square_meter:warszawa$has_elevator` (interakcja ceny
+    za** $m^2$ z obecnością windy): Wartość F wynosząca 1.278 i p =
+    0.2584 sugerują, że interakcja między ceną za $m^2$ a obecnością
+    windy nie ma istotnego wpływu na cenę.
 
-- **`price_per_square_meter:warszawa$has_storage_room` (interakcja ceny za $m^2$ z obecnością pomieszczenia gospodarczego)**: Wartość F wynosząca 15.797 i p = 7.12e-05 wskazują, że interakcja między ceną za $m^2$ a obecnością pomieszczenia gospodarczego ma istotny wpływ na cenę nieruchomości. P-wartość mniejsza niż 0,001 sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma pomieszczenie gospodarcze.
+-   **`price_per_square_meter:warszawa$has_parking` (interakcja ceny
+    za** $m^2$ z obecnością parkingu): Wartość F wynosząca 17.210 i p =
+    3.39e-05 wskazują, że interakcja między ceną za $m^2$ a obecnością
+    parkingu ma istotny wpływ na cenę. P-wartość mniejsza niż 0,001
+    sugeruje, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w
+    zależności od tego, czy mieszkanie ma parking.
 
+-   **`price_per_square_meter:warszawa$has_security` (interakcja ceny
+    za** $m^2$ z obecnością ochrony): Wartość F wynosząca 1.677 i p =
+    0.1954 sugerują, że interakcja między ceną za $m^2$ a obecnością
+    ochrony nie ma istotnego wpływu na cenę.
 
+-   **`price_per_square_meter:warszawa$has_storage_room` (interakcja
+    ceny za** $m^2$ z obecnością pomieszczenia gospodarczego): Wartość F
+    wynosząca 15.797 i p = 7.12e-05 wskazują, że interakcja między ceną
+    za $m^2$ a obecnością pomieszczenia gospodarczego ma istotny wpływ
+    na cenę nieruchomości. P-wartość mniejsza niż 0,001 sugeruje, że
+    wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od
+    tego, czy mieszkanie ma pomieszczenie gospodarcze.
 
 ### 6. **Rzeszów**:
 
 #### **Obecność windy (has_elevator)**:
-Zmienna has_elevator nie ma istotnego wpływu na cenę nieruchomości (p = 0.63387). Wartość F 0.228 sugeruje, że posiadanie windy nie wpływa znacząco na cenę nieruchomości w Rzeszowie.
+
+Zmienna has_elevator nie ma istotnego wpływu na cenę nieruchomości (p =
+0.63387). Wartość F 0.228 sugeruje, że posiadanie windy nie wpływa
+znacząco na cenę nieruchomości w Rzeszowie.
 
 #### **Obecność pomieszczenia gospodarczego (has_storage_room)**:
-Zmienna **has_storage_room** ma marginalny wpływ na cenę nieruchomości (p = 0.06127). Wartość F 3.553 sugeruje, że posiadanie pomieszczenia gospodarczego może mieć wpływ na cenę nieruchomości, ale jest na granicy istotności statystycznej.
+
+Zmienna **has_storage_room** ma marginalny wpływ na cenę nieruchomości
+(p = 0.06127). Wartość F 3.553 sugeruje, że posiadanie pomieszczenia
+gospodarczego może mieć wpływ na cenę nieruchomości, ale jest na granicy
+istotności statystycznej.
 
 #### **Interakcje**:
-- **`price_per_square_meter:has_elevator (interakcja ceny za $m^2$ z obecnością windy)`**: Wartość F wynosząca 0.504 i p = 0.47880 oznaczają, że interakcja między ceną za $m^2$ a obecnością windy nie ma istotnego wpływu na cenę nieruchomości.
 
-- **`price_per_square_meter:has_storage_room (interakcja ceny za $m^2$ z obecnością pomieszczenia gospodarczego)`**: Wartość F 0.002 i p = 0.96371 sugerują, że interakcja między ceną za $m^2$ a obecnością pomieszczenia gospodarczego nie ma istotnego wpływu na cenę nieruchomości.
+-   **`price_per_square_meter:has_elevator (interakcja ceny za $m^2$ z obecnością windy)`**:
+    Wartość F wynosząca 0.504 i p = 0.47880 oznaczają, że interakcja
+    między ceną za $m^2$ a obecnością windy nie ma istotnego wpływu na
+    cenę nieruchomości.
 
+-   **`price_per_square_meter:has_storage_room (interakcja ceny za $m^2$ z obecnością pomieszczenia gospodarczego)`**:
+    Wartość F 0.002 i p = 0.96371 sugerują, że interakcja między ceną za
+    $m^2$ a obecnością pomieszczenia gospodarczego nie ma istotnego
+    wpływu na cenę nieruchomości.
 
 ### **Wnioski z analizy:**
 
 #### 1. **Białystok**
-- **Posiadanie balkonu** i **posiadanie windy** mają istotny wpływ na cenę nieruchomości, co sugerują wartości p < 0.05 i wartości F > 4. Posiadanie tych cech zwiększa cenę nieruchomości po uwzględnieniu innych czynników, takich jak cena za metr kwadratowy.
-- **Obecność parkingu** nie ma statystycznie istotnego wpływu na cenę nieruchomości w Białymstoku, co sugeruje wysoka wartość p (0,4013).
-- Interakcja **ceny za metr kwadratowy** z obecnością **parkingu** ma znaczący wpływ na cenę, co oznacza, że wpływ ceny za $m^2$ na cenę nieruchomości może się różnić w zależności od tego, czy mieszkanie ma parking.
+
+-   **Posiadanie balkonu** i **posiadanie windy** mają istotny wpływ na
+    cenę nieruchomości, co sugerują wartości p \< 0.05 i wartości F
+    \> 4. Posiadanie tych cech zwiększa cenę nieruchomości po
+    uwzględnieniu innych czynników, takich jak cena za metr kwadratowy.
+-   **Obecność parkingu** nie ma statystycznie istotnego wpływu na cenę
+    nieruchomości w Białymstoku, co sugeruje wysoka wartość p (0,4013).
+-   Interakcja **ceny za metr kwadratowy** z obecnością **parkingu** ma
+    znaczący wpływ na cenę, co oznacza, że wpływ ceny za $m^2$ na cenę
+    nieruchomości może się różnić w zależności od tego, czy mieszkanie
+    ma parking.
 
 #### 2. **Częstochowa**
-- **Posiadanie balkonu** i **parkingu** mają istotny wpływ na cenę nieruchomości (p < 0.05). Zmienna **has_parking** ma silniejszy wpływ na cenę, z wartością F wynoszącą 10.701.
-- Interakcja ceny za $m^2$ z obecnością parkingu również jest istotna (p < 0.05), co sugeruje, że obecność parkingu może zmieniać sposób, w jaki cena za metr kwadratowy wpływa na cenę nieruchomości.
+
+-   **Posiadanie balkonu** i **parkingu** mają istotny wpływ na cenę
+    nieruchomości (p \< 0.05). Zmienna **has_parking** ma silniejszy
+    wpływ na cenę, z wartością F wynoszącą 10.701.
+-   Interakcja ceny za $m^2$ z obecnością parkingu również jest istotna
+    (p \< 0.05), co sugeruje, że obecność parkingu może zmieniać sposób,
+    w jaki cena za metr kwadratowy wpływa na cenę nieruchomości.
 
 #### 3. **Radom**
-- **Obecność parkingu** ma bardzo silny wpływ na cenę nieruchomości (p = 5.67e-09, F = 37.252), co wskazuje na ogromne znaczenie parkingu w tym mieście.
-- **Interakcja ceny za $m^2$ z obecnością parkingu** nie ma jednak istotnego wpływu na cenę nieruchomości, co może sugerować, że w Radomiu wpływ ceny za m² na cenę jest mniej wrażliwy na obecność parkingu.
+
+-   **Obecność parkingu** ma bardzo silny wpływ na cenę nieruchomości (p
+    = 5.67e-09, F = 37.252), co wskazuje na ogromne znaczenie parkingu w
+    tym mieście.
+-   **Interakcja ceny za** $m^2$ z obecnością parkingu nie ma jednak
+    istotnego wpływu na cenę nieruchomości, co może sugerować, że w
+    Radomiu wpływ ceny za m² na cenę jest mniej wrażliwy na obecność
+    parkingu.
 
 #### 4. **Kraków**
-- **Posiadanie balkonu**, **windy** i **parkingu** mają bardzo silny wpływ na cenę nieruchomości (p < 0.05). Wartość F dla każdej z tych zmiennych jest bardzo wysoka, co podkreśla ich wpływ na cenę.
-- Interakcja ceny za m² z obecnością **windy** oraz **pomieszczenia gospodarczego** jest istotna statystycznie (p < 0.05). Oznacza to, że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności od tego, czy mieszkanie ma windę lub pomieszczenie gospodarcze.
-  
+
+-   **Posiadanie balkonu**, **windy** i **parkingu** mają bardzo silny
+    wpływ na cenę nieruchomości (p \< 0.05). Wartość F dla każdej z tych
+    zmiennych jest bardzo wysoka, co podkreśla ich wpływ na cenę.
+-   Interakcja ceny za m² z obecnością **windy** oraz **pomieszczenia
+    gospodarczego** jest istotna statystycznie (p \< 0.05). Oznacza to,
+    że wpływ ceny za $m^2$ na cenę nieruchomości różni się w zależności
+    od tego, czy mieszkanie ma windę lub pomieszczenie gospodarcze.
+
 #### 5. **Warszawa**
-- **Posiadanie balkonu**, **parkingu**, **ochrony** i **pomieszczenia gospodarczego** mają bardzo silny wpływ na cenę nieruchomości (p < 0.05). Wartość F dla zmiennej **has_parking** wynosząca 222.922 jest najwyższa, co wskazuje, że dostępność parkingu ma szczególnie duże znaczenie w Warszawie.
-- Interakcje ceny za m² z obecnością **balkonu**, **parkingu** i **pomieszczenia gospodarczego** są istotne, co sugeruje, że zmiana ceny za $m^2$ może mieć różny wpływ na cenę nieruchomości w zależności od obecności tych cech.
+
+-   **Posiadanie balkonu**, **parkingu**, **ochrony** i **pomieszczenia
+    gospodarczego** mają bardzo silny wpływ na cenę nieruchomości (p \<
+    0.05). Wartość F dla zmiennej **has_parking** wynosząca 222.922 jest
+    najwyższa, co wskazuje, że dostępność parkingu ma szczególnie duże
+    znaczenie w Warszawie.
+-   Interakcje ceny za m² z obecnością **balkonu**, **parkingu** i
+    **pomieszczenia gospodarczego** są istotne, co sugeruje, że zmiana
+    ceny za $m^2$ może mieć różny wpływ na cenę nieruchomości w
+    zależności od obecności tych cech.
 
 #### 6. **Rzeszów**
-- **Obecność windy** oraz **pomieszczenia gospodarczego** mają marginalny wpływ na cenę nieruchomości. Wartości p są bliskie granicy istotności, co sugeruje, że ich wpływ na cenę jest stosunkowo słaby, ale nie wykluczają one możliwości pewnego wpływu na cenę nieruchomości.
-- Interakcje ceny za $m^2$ z obecnością **windy** oraz **pomieszczenia gospodarczego** nie mają istotnego wpływu na cenę nieruchomości (p > 0.05), co oznacza, że te cechy nie zmieniają zależności między ceną za $m^2$ a ceną nieruchomości w Rzeszowie.
+
+-   **Obecność windy** oraz **pomieszczenia gospodarczego** mają
+    marginalny wpływ na cenę nieruchomości. Wartości p są bliskie
+    granicy istotności, co sugeruje, że ich wpływ na cenę jest
+    stosunkowo słaby, ale nie wykluczają one możliwości pewnego wpływu
+    na cenę nieruchomości.
+-   Interakcje ceny za $m^2$ z obecnością **windy** oraz **pomieszczenia
+    gospodarczego** nie mają istotnego wpływu na cenę nieruchomości (p
+    \> 0.05), co oznacza, że te cechy nie zmieniają zależności między
+    ceną za $m^2$ a ceną nieruchomości w Rzeszowie.
 
 ### **Podsumowanie głównych wniosków**
-- **Balkon i parking** są kluczowymi czynnikami wpływającymi na cenę nieruchomości w większości miast, choć ich wpływ może się różnić w zależności od lokalizacji. 
-- **Windy** są istotne w niektórych miastach, takich jak Kraków, ale nie mają tak silnego wpływu wszędzie (np. w Rzeszowie).
-- Interakcje między **ceną za metr kwadratowy** a obecnością **windy**, **parkingu** czy **balkonu** są istotne tylko w wybranych miastach, co sugeruje, że nie we wszystkich miastach te cechy wchodzą w interakcje z ceną za m² w sposób, który zmienia finalną cenę nieruchomości.
-- **Obecność ochrony** i **pomieszczenia gospodarczego** wpływają na ceny w miastach takich jak Warszawa i Kraków, ale ich wpływ jest mniej wyraźny w innych miastach.
 
+-   **Balkon i parking** są kluczowymi czynnikami wpływającymi na cenę
+    nieruchomości w większości miast, choć ich wpływ może się różnić w
+    zależności od lokalizacji.
+-   **Windy** są istotne w niektórych miastach, takich jak Kraków, ale
+    nie mają tak silnego wpływu wszędzie (np. w Rzeszowie).
+-   Interakcje między **ceną za metr kwadratowy** a obecnością
+    **windy**, **parkingu** czy **balkonu** są istotne tylko w wybranych
+    miastach, co sugeruje, że nie we wszystkich miastach te cechy
+    wchodzą w interakcje z ceną za m² w sposób, który zmienia finalną
+    cenę nieruchomości.
+-   **Obecność ochrony** i **pomieszczenia gospodarczego** wpływają na
+    ceny w miastach takich jak Warszawa i Kraków, ale ich wpływ jest
+    mniej wyraźny w innych miastach.
 
-Na podstawie tych wyników, osoby inwestujące w nieruchomości w miastach takich jak Warszawa, Kraków i Częstochowa powinny szczególnie brać pod uwagę obecność parkingu, balkonu i windy, ponieważ te cechy mają najwięcej do powiedzenia w ustalaniu ceny nieruchomości. Z kolei w miastach takich jak Radom, Rzeszów czy Białystok, wpływ tych cech na cenę jest mniejszy, co może sugerować inne czynniki mogą mieć większe znaczenie przy wycenie nieruchomości.
+Na podstawie tych wyników, osoby inwestujące w nieruchomości w miastach
+takich jak Warszawa, Kraków i Częstochowa powinny szczególnie brać pod
+uwagę obecność parkingu, balkonu i windy, ponieważ te cechy mają
+najwięcej do powiedzenia w ustalaniu ceny nieruchomości. Z kolei w
+miastach takich jak Radom, Rzeszów czy Białystok, wpływ tych cech na
+cenę jest mniejszy, co może sugerować inne czynniki mogą mieć większe
+znaczenie przy wycenie nieruchomości.
+
+### **Krótka wersja podsumowania wyników ANCOVA**
+
++-----------+----------------------------+----------------------------+
+| *         | **Główne wnioski**         | **Interakcje**             |
+| *Miasto** |                            |                            |
++===========+============================+============================+
+| **Bi      | \- Balkon (p=0.0294) i     | \- Interakcja cena/m² ×    |
+| ałystok** | winda (p=0.0259) znacząco  | parking (p=0.000883) jest  |
+|           | podnoszą cenę \            | istotna – wpływ ceny/m² na |
+|           | - Parking (p=0.4013) nie   | cenę zależy od obecności   |
+|           | ma istotnego wpływu        | parkingu                   |
++-----------+----------------------------+----------------------------+
+| **Częs    | \- Balkon (p=0.01198) i    | \- Interakcja cena/m² ×    |
+| tochowa** | parking (p=0.00117)        | parking (p=0.01881) jest   |
+|           | istotnie podnoszą cenę     | istotna                    |
++-----------+----------------------------+----------------------------+
+| **Radom** | \- Parking (p=5.67e-09) ma | \- Interakcja cena/m² ×    |
+|           | bardzo silny wpływ na cenę | parking (p=0.269)          |
+|           |                            | nieistotna                 |
++-----------+----------------------------+----------------------------+
+| *         | \- Balkon (p\<2e-16),      | \- Istotne interakcje z    |
+| *Kraków** | winda (p=1.37e-05) i       | windą (p=0.0127) i         |
+|           | parking (p=3.60e-07) mocno | pomieszczeniem gosp.       |
+|           | wpływają na cenę \         | (p=0.0261) – wpływ ceny/m² |
+|           | - Ochrona (p=0.8549) nie   | różni się w zależności od  |
+|           | ma wpływu \                | obecności tych udogodnień  |
+|           | - Pomieszczenie            |                            |
+|           | gospodarcze (p=0.0597) –   |                            |
+|           | efekt graniczny            |                            |
++-----------+----------------------------+----------------------------+
+| **W       | \- Balkon (p\<2e-16),      | \- Istotne interakcje z    |
+| arszawa** | parking (p\<2e-16),        | balkonem (p=0.0231),       |
+|           | ochrona (p=9.17e-10) i     | parkingiem (p=3.39e-05) i  |
+|           | pomieszczenie gospodarcze  | pomieszczeniem gosp.       |
+|           | (p=1.83e-08) wyraźnie      | (p=7.12e-05)               |
+|           | zwiększają cenę \          |                            |
+|           | - Winda (p=0.3099) nie     |                            |
+|           | jest istotna               |                            |
++-----------+----------------------------+----------------------------+
+| **        | \- Winda (p=0.63387) nie   | \- Brak istotnych          |
+| Rzeszów** | ma wpływu \                | interakcji                 |
+|           | - Pomieszczenie            |                            |
+|           | gospodarcze (p=0.06127) –  |                            |
+|           | marginalne znaczenie       |                            |
++-----------+----------------------------+----------------------------+
+
+### Główne obserwacje:
+
+-   **Balkon i parking** często najmocniej podwyższają cenę (np.
+    Warszawa, Kraków, Radom, Częstochowa, Białystok).
+
+-   **Winda** ma znaczenie w niektórych miastach (Kraków, Białystok),
+    ale bywa nieistotna w innych (Warszawa, Rzeszów).
+
+-   **Ochrona i pomieszczenie gospodarcze** wyraźnie działają zwłaszcza
+    w Warszawie i Krakowie; gdzie indziej są mniej ważne lub nieistotne.
+
+-   **Interakcje** (czyli wpływ danej cechy w zależności od ceny za m²)
+    są czasem istotne, głównie w przypadku **parkingu** (Białystok,
+    Częstochowa, Warszawa), a także **balkonu** (Warszawa) oraz **windy
+    i pomieszczenia gosp.** (Kraków).
+
+W praktyce oznacza to, że znaczenie konkretnych udogodnień (balkon,
+parking, winda, ochrona, pomieszczenie gospodarcze) różni się w
+zależności od miasta. Inwestorzy powinni więc zwrócić szczególną uwagę
+na te cechy, które w danej lokalizacji najmocniej wpływają na wycenę
+nieruchomości.
 
 # **Analiza czynników geograficznych wpływających na ceny mieszkań**
 
@@ -4414,25 +4542,17 @@ mieszkania w sześciu miastach Polski przy uwzględnieniu cen minimalnych,
 knitr::include_graphics("Gdansk_zdjecie.jpg")
 ```
 
-
-
 Gdańsk, jedno z najstarszych miast Polski, charakteryzuje się nie tylko
 bogatą historią i malowniczym położeniem nad Bałtykiem, ale również
 dynamicznie rozwijającym się rynkiem nieruchomości. W ramach tej analizy
 dokonaliśmy podziału miasta na 35 dzielnic, aby dokładniej przyjrzeć
 sięzróżnicowaniu średnich cen mieszkań za metr kwadratowy.
 
-
-
-
-
 Mapa wizualizuje ceny mieszkań w różnych obszarach, uwzględniając
 zarówno centralne, historyczne części miasta, jak Śródmieście, jak i
 peryferyjne, bardziej spokojne dzielnice. Zaznaczenie Śródmieścia jako
 centrum miasta pozwala łatwiej interpretować wyniki i lokalizować
 najważniejsze obszary urbanistyczne Gdańska.
-
-
 
 ```{r wczytanie dzielnic Gdańska, echo=FALSE, comment=FALSE, warning=FALSE, message = FALSE}
 # Wczytanie danych dzielnic Gdańska
@@ -4536,8 +4656,6 @@ knitr::kable(
 
 #### Interpretacja wyników analizy cen mieszkań per dzielnica:
 
-
-
 Analiza wykazała znaczne zróżnicowanie cen mieszkań w poszczególnych
 dzielnicach Gdańska. Najwyższe średnie ceny za metr kwadratowy występują
 w centralnych obszarach miasta, takich jak Śródmieście oraz nadmorskie
@@ -4561,7 +4679,11 @@ infrastruktury.
 
 ## Cel projektu
 
-Celem projektu było zrozumienie, jakie czynniki wpływają na ceny mieszkań w sześciu wybranych polskich miastach: Warszawie, Krakowie, Rzeszowie, Białymstoku, Radomiu i Częstochowie. Przeprowadzona analiza pozwoliła odpowiedzieć na kluczowe pytania badawcze oraz wyciągnąć szczegółowe wnioski.
+Celem projektu było zrozumienie, jakie czynniki wpływają na ceny
+mieszkań w sześciu wybranych polskich miastach: Warszawie, Krakowie,
+Rzeszowie, Białymstoku, Radomiu i Częstochowie. Przeprowadzona analiza
+pozwoliła odpowiedzieć na kluczowe pytania badawcze oraz wyciągnąć
+szczegółowe wnioski.
 
 -   *Od czego zależy cena mieszkań?*
 
@@ -4577,103 +4699,175 @@ Celem projektu było zrozumienie, jakie czynniki wpływają na ceny mieszkań w 
 
 W ramach realizacji projektu zespół podjął następujące kroki:
 
-1. **Zbieranie danych**: Przeanalizowaliśmy dostępne dane rynkowe obejmujące ceny mieszkań w różnych lokalizacjach Polski. Dane pochodziły z wiarygodnych źródeł, takich jak raporty rynkowe i bazy nieruchomości.
-2. **Przygotowanie danych**: Dane zostały oczyszczone i znormalizowane, aby umożliwić ich właściwą analizę. Dane poddane zostały imputacji, zaktualizowano nazwy kolumn czy zmiennych.
-3. **Analiza statystyczna**: Wykorzystaliśmy różne techniki analizy statystycznej, w tym:
-   - Testy istotności, takie jak ANOVA, w celu porównania średnich cen mieszkań w różnych regionach, test Chi-kwadrat czy Levene'a.
-   - Analizę korelacji, aby zidentyfikować zależności między zmiennymi, takimi jak powierzchnia mieszkania a cena za metr kwadratowy czy odległość do POI.
-   - Testy normalności, takie jak test Andersona-Darlinga, aby sprawdzić rozkład danych.
-4. **Wizualizacja danych**: Wyniki zostały przedstawione za pomocą interaktywnych wykresów i map, aby ułatwić zrozumienie wyników.
-5. **Wnioski i rekomendacje**: Opracowaliśmy wnioski, które mogą być użyteczne dla różnych grup interesariuszy, takich jak kupujący, deweloperzy i inwestorzy.
+1.  **Zbieranie danych**: Przeanalizowaliśmy dostępne dane rynkowe
+    obejmujące ceny mieszkań w różnych lokalizacjach Polski. Dane
+    pochodziły z wiarygodnych źródeł, takich jak raporty rynkowe i bazy
+    nieruchomości.
+2.  **Przygotowanie danych**: Dane zostały oczyszczone i znormalizowane,
+    aby umożliwić ich właściwą analizę. Dane poddane zostały imputacji,
+    zaktualizowano nazwy kolumn czy zmiennych.
+3.  **Analiza statystyczna**: Wykorzystaliśmy różne techniki analizy
+    statystycznej, w tym:
+    -   Testy istotności, takie jak ANOVA, w celu porównania średnich
+        cen mieszkań w różnych regionach, test Chi-kwadrat czy Levene'a.
+    -   Analizę korelacji, aby zidentyfikować zależności między
+        zmiennymi, takimi jak powierzchnia mieszkania a cena za metr
+        kwadratowy czy odległość do POI.
+    -   Testy normalności, takie jak test Andersona-Darlinga, aby
+        sprawdzić rozkład danych.
+4.  **Wizualizacja danych**: Wyniki zostały przedstawione za pomocą
+    interaktywnych wykresów i map, aby ułatwić zrozumienie wyników.
+5.  **Wnioski i rekomendacje**: Opracowaliśmy wnioski, które mogą być
+    użyteczne dla różnych grup interesariuszy, takich jak kupujący,
+    deweloperzy i inwestorzy.
 
 ## Wyniki
 
-1. **Czynniki wpływające na ceny**:
-   - **Lokalizacja**: Lokalizacja nieruchomości okazała się kluczowym czynnikiem wpływającym na cenę. Mieszkania położone w centrum miast były wyceniane znacznie wyżej niż te na obrzeżach. Dostęp do infrastruktury, takich jak szkoły, sklepy i transport publiczny, dodatkowo zwiększał wartość nieruchomości.
-   - **Powierzchnia**: Cena za metr kwadratowy malała wraz ze wzrostem powierzchni mieszkania, co sugeruje, że większe mieszkania oferują lepszy stosunek ceny do metrażu.
-   - **Rok budowy**: Nowe mieszkania, zwłaszcza te zbudowane po 2015 roku, były wyceniane wyżej ze względu na nowoczesne technologie budowlane, lepszą efektywność energetyczną i atrakcyjne projekty architektoniczne.
-   - **Stan techniczny**: Stan mieszkania, w tym jakość wykończenia oraz ewentualne potrzeby remontowe, istotnie wpływały na cenę. Mieszkania w stanie "do wprowadzenia" osiągały wyższe ceny niż te wymagające generalnego remontu.
-   - **Czynniki makroekonomiczne**: Wzrost stóp procentowych oraz inflacja miały pośredni wpływ na poziom cen, ograniczając zdolności nabywcze części klientów.
-   - **Udogodnienia i odległość od infrastruktury**: Bliskość do szkół, sklepów, parków czy transportu publicznego miała istotny wpływ na ceny mieszkań. Mieszkania zlokalizowane w pobliżu tych udogodnień były wyceniane wyżej.
-
-2. **Regionalne różnice**: Wschodnia Polska wykazywała znacząco niższe ceny w porównaniu z regionami zachodnimi.
+1.  **Czynniki wpływające na ceny**:
+    -   **Lokalizacja**: Lokalizacja nieruchomości okazała się kluczowym
+        czynnikiem wpływającym na cenę. Mieszkania położone w centrum
+        miast były wyceniane znacznie wyżej niż te na obrzeżach. Dostęp
+        do infrastruktury, takich jak szkoły, sklepy i transport
+        publiczny, dodatkowo zwiększał wartość nieruchomości.
+    -   **Powierzchnia**: Cena za metr kwadratowy malała wraz ze
+        wzrostem powierzchni mieszkania, co sugeruje, że większe
+        mieszkania oferują lepszy stosunek ceny do metrażu.
+    -   **Rok budowy**: Nowe mieszkania, zwłaszcza te zbudowane po 2015
+        roku, były wyceniane wyżej ze względu na nowoczesne technologie
+        budowlane, lepszą efektywność energetyczną i atrakcyjne projekty
+        architektoniczne.
+    -   **Stan techniczny**: Stan mieszkania, w tym jakość wykończenia
+        oraz ewentualne potrzeby remontowe, istotnie wpływały na cenę.
+        Mieszkania w stanie "do wprowadzenia" osiągały wyższe ceny niż
+        te wymagające generalnego remontu.
+    -   **Czynniki makroekonomiczne**: Wzrost stóp procentowych oraz
+        inflacja miały pośredni wpływ na poziom cen, ograniczając
+        zdolności nabywcze części klientów.
+    -   **Udogodnienia i odległość od infrastruktury**: Bliskość do
+        szkół, sklepów, parków czy transportu publicznego miała istotny
+        wpływ na ceny mieszkań. Mieszkania zlokalizowane w pobliżu tych
+        udogodnień były wyceniane wyżej.
+2.  **Regionalne różnice**: Wschodnia Polska wykazywała znacząco niższe
+    ceny w porównaniu z regionami zachodnimi.
 
 ## Wnioski
 
-- Dla inwestorów rekomendujemy koncentrację na rozwijających się miastach o wysokim potencjale wzrostu, takich jak Wrocław i Rzeszów.
-- Dla osób poszukujących mieszkań, mniejsze miasta oferują bardziej przystępne ceny przy zachowaniu stosunkowo dobrej infrastruktury.
+-   Dla inwestorów rekomendujemy koncentrację na rozwijających się
+    miastach o wysokim potencjale wzrostu, takich jak Wrocław i Rzeszów.
+-   Dla osób poszukujących mieszkań, mniejsze miasta oferują bardziej
+    przystępne ceny przy zachowaniu stosunkowo dobrej infrastruktury.
 
 ## Refleksje
 
-Projekt pozwolił nam na rozwinięcie umiejętności analizy danych, interpretacji wyników oraz pracy zespołowej. W szczególności praca w **RStudio** umożliwiła sprawne przetwarzanie danych, ich analizę i wizualizację, co znacząco przyczyniło się do realizacji naszych celów.
+Projekt pozwolił nam na rozwinięcie umiejętności analizy danych,
+interpretacji wyników oraz pracy zespołowej. W szczególności praca w
+**RStudio** umożliwiła sprawne przetwarzanie danych, ich analizę i
+wizualizację, co znacząco przyczyniło się do realizacji naszych celów.
 
+------------------------------------------------------------------------
 
----
+## Odpowiedzi na kluczowe pytania
 
-## Odpowiedzi na kluczowe pytania 
+1.  **Od czego zależy cena mieszkań?**\
+    Cena mieszkań zależy od kilku kluczowych czynników:
 
-1. **Od czego zależy cena mieszkań?**  
-   Cena mieszkań zależy od kilku kluczowych czynników:  
-   - **Lokalizacji** (bliskość centrum, rozwinięta infrastruktura).  
-   - **Cech mieszkania**, takich jak liczba pokoi, powierzchnia, rok budowy oraz obecność udogodnień (balkon, winda, parking).  
-   - **Charakterystyki okolicy**, m.in. liczby punktów użyteczności publicznej (POI) w pobliżu, takich jak szkoły, restauracje czy kliniki.  
+    -   **Lokalizacji** (bliskość centrum, rozwinięta infrastruktura).\
+    -   **Cech mieszkania**, takich jak liczba pokoi, powierzchnia, rok
+        budowy oraz obecność udogodnień (balkon, winda, parking).\
+    -   **Charakterystyki okolicy**, m.in. liczby punktów użyteczności
+        publicznej (POI) w pobliżu, takich jak szkoły, restauracje czy
+        kliniki.
 
-2. **Jakie różnice w cenach występują pomiędzy miastami?**  
-   Miasta zostały podzielone na trzy grupy cenowe:  
-   - **Najdroższe:** Warszawa (18 503 PLN/m²) i Kraków (17 135 PLN/m²).  
-   - **Średnie:** Rzeszów (10 803 PLN/m²) i Białystok (10 089 PLN/m²).  
-   - **Najtańsze:** Radom (6 929 PLN/m²) i Częstochowa (7 034 PLN/m²).  
-   Różnice w cenach wynikają z poziomu urbanizacji, rozwoju gospodarczego i dostępności infrastruktury w każdym mieście.  
+2.  **Jakie różnice w cenach występują pomiędzy miastami?**\
+    Miasta zostały podzielone na trzy grupy cenowe:
 
-3. **Czy odległość od centrum ma znaczenie?**  
-   Odległość od centrum miasta istotnie wpływa na ceny mieszkań. Najbardziej zauważalne jest to w Warszawie i Krakowie, gdzie mieszkania w centralnych lokalizacjach osiągają najwyższe ceny. W mniejszych miastach, takich jak Radom czy Częstochowa, ten wpływ jest mniej wyraźny.  
+    -   **Najdroższe:** Warszawa (18 503 PLN/m²) i Kraków (17 135
+        PLN/m²).\
+    -   **Średnie:** Rzeszów (10 803 PLN/m²) i Białystok (10 089
+        PLN/m²).\
+    -   **Najtańsze:** Radom (6 929 PLN/m²) i Częstochowa (7 034
+        PLN/m²).\
+        Różnice w cenach wynikają z poziomu urbanizacji, rozwoju
+        gospodarczego i dostępności infrastruktury w każdym mieście.
 
-4. **Które cechy mieszkań są najbardziej cenione?**  
-   Najbardziej cenione cechy to:  
-   - Obecność balkonu, windy i miejsca parkingowego.  
-   - Lokalizacja w centrum, bliskość szkół.  
-   - Powierzchnia mieszkania oraz liczba pokoi, co przekłada się na funkcjonalność nieruchomości.  
+3.  **Czy odległość od centrum ma znaczenie?**\
+    Odległość od centrum miasta istotnie wpływa na ceny mieszkań.
+    Najbardziej zauważalne jest to w Warszawie i Krakowie, gdzie
+    mieszkania w centralnych lokalizacjach osiągają najwyższe ceny. W
+    mniejszych miastach, takich jak Radom czy Częstochowa, ten wpływ
+    jest mniej wyraźny.
 
+4.  **Które cechy mieszkań są najbardziej cenione?**\
+    Najbardziej cenione cechy to:
 
----
+    -   Obecność balkonu, windy i miejsca parkingowego.\
+    -   Lokalizacja w centrum, bliskość szkół.\
+    -   Powierzchnia mieszkania oraz liczba pokoi, co przekłada się na
+        funkcjonalność nieruchomości.
 
-### Dodatkowe obserwacje 
+------------------------------------------------------------------------
 
-2. **Odległość od centrum**  
-   - W dużych miastach, takich jak Warszawa i Kraków, ceny spadają wraz z odległością od centrum. W mniejszych miastach, takich jak Radom i Częstochowa, wpływ ten jest mniej zauważalny.  
+### Dodatkowe obserwacje
 
-3. **Rola udogodnień**  
-   - Mieszkania z balkonem, miejscem parkingowym lub windą osiągają ceny wyższe niż te bez takich udogodnień, zwłaszcza w dużych aglomeracjach.  
-   - W miastach takich jak Warszawa i Kraków kluczowym czynnikiem wpływającym na wartość nieruchomości są również dodatkowe usługi w budynkach, np. ochrona czy komórki lokatorskie.  
+2.  **Odległość od centrum**
+    -   W dużych miastach, takich jak Warszawa i Kraków, ceny spadają
+        wraz z odległością od centrum. W mniejszych miastach, takich jak
+        Radom i Częstochowa, wpływ ten jest mniej zauważalny.
+3.  **Rola udogodnień**
+    -   Mieszkania z balkonem, miejscem parkingowym lub windą osiągają
+        ceny wyższe niż te bez takich udogodnień, zwłaszcza w dużych
+        aglomeracjach.\
+    -   W miastach takich jak Warszawa i Kraków kluczowym czynnikiem
+        wpływającym na wartość nieruchomości są również dodatkowe usługi
+        w budynkach, np. ochrona czy komórki lokatorskie.
+4.  **Powierzchnia i liczba pokoi**
+    -   Typowe mieszkania w analizowanych miastach mają 2-3 pokoje i
+        powierzchnię 50–60 m².
+5.  **Wpływ demografii i wynagrodzeń**
+    -   W miastach o wyższych średnich wynagrodzeniach (np. Warszawa,
+        Kraków) ceny mieszkań są proporcjonalnie wyższe, co wskazuje na
+        związek między lokalnym rynkiem pracy a wartością
+        nieruchomości.\
+    -   Regiony o niższych dochodach, takie jak Radom czy Częstochowa,
+        oferują tańsze nieruchomości, ale mają również mniejszy
+        potencjał inwestycyjny.
+6.  **Obserwacje dotyczące rynku**
+    -   Rynek w Warszawie i Krakowie charakteryzuje się dużą zmiennością
+        cen, podczas gdy w Radomiu i Częstochowie jest bardziej
+        stabilny.\
+    -   W miastach średnich, takich jak Rzeszów i Białystok, zauważalny
+        jest trend wzrostowy, co wskazuje na rosnący potencjał
+        inwestycyjny.
 
-4. **Powierzchnia i liczba pokoi**  
-   - Typowe mieszkania w analizowanych miastach mają 2-3 pokoje i powierzchnię 50–60 m². 
+------------------------------------------------------------------------
 
-5. **Wpływ demografii i wynagrodzeń**  
-   - W miastach o wyższych średnich wynagrodzeniach (np. Warszawa, Kraków) ceny mieszkań są proporcjonalnie wyższe, co wskazuje na związek między lokalnym rynkiem pracy a wartością nieruchomości.  
-   - Regiony o niższych dochodach, takie jak Radom czy Częstochowa, oferują tańsze nieruchomości, ale mają również mniejszy potencjał inwestycyjny.  
+### **Podsumowanie według miast**
 
-6. **Obserwacje dotyczące rynku**  
-   - Rynek w Warszawie i Krakowie charakteryzuje się dużą zmiennością cen, podczas gdy w Radomiu i Częstochowie jest bardziej stabilny.  
-   - W miastach średnich, takich jak Rzeszów i Białystok, zauważalny jest trend wzrostowy, co wskazuje na rosnący potencjał inwestycyjny.  
+1.  **Warszawa:** Najwyższe ceny wynikają z dużego zapotrzebowania na
+    mieszkania w prestiżowych lokalizacjach, rozwiniętej infrastruktury
+    i szerokiego dostępu do usług.\
+2.  **Kraków:** Drugie najdroższe miasto, gdzie ceny są determinowane
+    bliskością atrakcji turystycznych oraz rozwiniętym rynkiem wynajmu.\
+3.  **Rzeszów:** Miasto w średnim przedziale cenowym, które rozwija się
+    jako lokalne centrum biznesowe.\
+4.  **Białystok:** Charakteryzuje się umiarkowanymi cenami, wynikającymi
+    z mniejszego zapotrzebowania i niższego poziomu urbanizacji.\
+5.  **Radom:** Najtańsze miast, zdominowane przez starsze budynki i
+    ograniczone możliwości inwestycyjne.\
+6.  **Częstochowa:** Drugie najtańsze miasto w badaniu, gdzie ceny są
+    najniższe z uwagi na mniejszą atrakcyjność inwestycyjną i
+    ograniczoną infrastrukturę.
 
+------------------------------------------------------------------------
 
----
+### **Wnioski końcowe**
 
-### **Podsumowanie według miast**  
-
-1. **Warszawa:** Najwyższe ceny wynikają z dużego zapotrzebowania na mieszkania w prestiżowych lokalizacjach, rozwiniętej infrastruktury i szerokiego dostępu do usług.  
-2. **Kraków:** Drugie najdroższe miasto, gdzie ceny są determinowane bliskością atrakcji turystycznych oraz rozwiniętym rynkiem wynajmu.  
-3. **Rzeszów:** Miasto w średnim przedziale cenowym, które rozwija się jako lokalne centrum biznesowe.  
-4. **Białystok:** Charakteryzuje się umiarkowanymi cenami, wynikającymi z mniejszego zapotrzebowania i niższego poziomu urbanizacji.  
-5. **Radom:** Najtańsze miast, zdominowane przez starsze budynki i ograniczone możliwości inwestycyjne.  
-6. **Częstochowa:** Drugie najtańsze miasto w badaniu, gdzie ceny są najniższe z uwagi na mniejszą atrakcyjność inwestycyjną i ograniczoną infrastrukturę.  
-
----
-
-### **Wnioski końcowe**  
-Przeprowadzona analiza wykazała, że ceny mieszkań w dużym stopniu zależą od lokalizacji, charakterystyki mieszkania oraz dostępności usług w okolicy. Miasta takie jak Warszawa i Kraków dominują pod względem cen, co wynika z ich centralnej roli w gospodarce. Z kolei mniejsze miasta, takie jak Radom i Częstochowa, oferują tańsze mieszkania, ale z ograniczonym potencjałem inwestycyjnym.  
-
+Przeprowadzona analiza wykazała, że ceny mieszkań w dużym stopniu zależą
+od lokalizacji, charakterystyki mieszkania oraz dostępności usług w
+okolicy. Miasta takie jak Warszawa i Kraków dominują pod względem cen,
+co wynika z ich centralnej roli w gospodarce. Z kolei mniejsze miasta,
+takie jak Radom i Częstochowa, oferują tańsze mieszkania, ale z
+ograniczonym potencjałem inwestycyjnym.
 
 ```{r}
 library(leaflet)
@@ -4718,6 +4912,3 @@ leaflet(dane_top) %>%
 
 
 ```
-
-
-
