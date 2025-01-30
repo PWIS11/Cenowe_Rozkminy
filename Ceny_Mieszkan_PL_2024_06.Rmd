@@ -2882,67 +2882,70 @@ kable(summary_table, caption = "Podsumowanie wyników testów ANCOVA") %>%
 
 ### Interpretacja wyników testu ANCOVA
 
-+----------------+--------------------+--------------------+
-| Miasto         | **Główne wnioski** | **Interakcje**     |
-+================+====================+====================+
-| **Białystok**  | \- Balkon          | \- Interakcja      |
-|                | (p=0.0294) i winda | cena/m² × parking  |
-|                | (p=0.0259)         | (p=0.000883) jest  |
-|                | znacząco podnoszą  | istotna – wpływ    |
-|                | cenę\              | ceny/m² na cenę    |
-|                | - Parking          | zależy od          |
-|                | (p=0.4013) nie ma  | obecności parkingu |
-|                | istotnego wpływu   |                    |
-+----------------+--------------------+--------------------+
-| -   \*C        | \- Balkon          | \- Interakcja      |
-|                | (p=0.01198) i      | cena/m² × parking  |
-| zęstochowa\*\* | parking            | (p=0.01881) jest   |
-|                | (p=0.00117)        | istotna            |
-|                | istotnie podnoszą  |                    |
-|                | cenę               |                    |
-+----------------+--------------------+--------------------+
-| **Radom**      | \- Parking         | \- Interakcja      |
-|                | (p=5.67e-09) ma    | cena/m² × parking  |
-|                | bardzo silny wpływ | (p=0.269)          |
-|                | na cenę            | nieistotna         |
-+----------------+--------------------+--------------------+
-| **Kraków**     | \- Balkon          | \- Istotne         |
-|                | (p\<2e-16), winda  | interakcje z windą |
-|                | (p=1.37e-05) i     | (p=0.0127) i       |
-|                | parking            | pomieszczeniem     |
-|                | (p=3.60e-07) mocno | gosp. (p=0.0261) – |
-|                | wpływają na cenę\  | wpływ ceny/m²      |
-|                | - Ochrona          | różni się w        |
-|                | (p=0.8549) nie ma  | zależności od      |
-|                | wpływu\            | obecności tych     |
-|                | - Pomieszczenie    | udogodnień         |
-|                | gospodarcze        |                    |
-|                | (p=0.0597) – efekt |                    |
-|                | graniczny          |                    |
-+----------------+--------------------+--------------------+
-| **Warszawa**   | \- Balkon          | \- Istotne         |
-|                | (p\<2e-16),        | interakcje z       |
-|                | parking            | balkonem           |
-|                | (p\<2e-16),        | (p=0.0231),        |
-|                | ochrona            | parkingiem         |
-|                | (p=9.17e-10) i     | (p=3.39e-05) i     |
-|                | pomieszczenie      | pomieszczeniem     |
-|                | gospodarcze        | gosp. (p=7.12e-05) |
-|                | (p=1.83e-08)       |                    |
-|                | wyraźnie           |                    |
-|                | zwiększają cenę\   |                    |
-|                | - Winda (p=0.3099) |                    |
-|                | nie jest istotna   |                    |
-+----------------+--------------------+--------------------+
-| **Rzeszów**    | \- Winda           | \- Brak istotnych  |
-|                | (p=0.63387) nie ma | interakcji         |
-|                | wpływu\            |                    |
-|                | - Pomieszczenie    |                    |
-|                | gospodarcze        |                    |
-|                | (p=0.06127) –      |                    |
-|                | marginalne         |                    |
-|                | znaczenie          |                    |
-+----------------+--------------------+--------------------+
++-----------------+-------------------+-------------------+
+| Miasto          | **Główne          | **Interakcje**    |
+|                 | wnioski**         |                   |
++=================+===================+===================+
+| **Białystok**   | \- Balkon         | \- Interakcja     |
+|                 | (p=0.0294) i      | cena/m² × parking |
+|                 | winda (p=0.0259)  | (p=0.000883) jest |
+|                 | znacząco podnoszą | istotna – wpływ   |
+|                 | cenę\             | ceny/m² na cenę   |
+|                 | - Parking         | zależy od         |
+|                 | (p=0.4013) nie ma | obecności         |
+|                 | istotnego wpływu  | parkingu          |
++-----------------+-------------------+-------------------+
+| **Częstochowa** | \- Balkon         | \- Interakcja     |
+|                 | (p=0.01198) i     | cena/m² × parking |
+|                 | parking           | (p=0.01881) jest  |
+|                 | (p=0.00117)       | istotna           |
+|                 | istotnie podnoszą |                   |
+|                 | cenę              |                   |
++-----------------+-------------------+-------------------+
+| **Radom**       | \- Parking        | \- Interakcja     |
+|                 | (p=5.67e-09) ma   | cena/m² × parking |
+|                 | bardzo silny      | (p=0.269)         |
+|                 | wpływ na cenę     | nieistotna        |
++-----------------+-------------------+-------------------+
+| **Kraków**      | \- Balkon         | \- Istotne        |
+|                 | (p\<2e-16), winda | interakcje z      |
+|                 | (p=1.37e-05) i    | windą (p=0.0127)  |
+|                 | parking           | i pomieszczeniem  |
+|                 | (p=3.60e-07)      | gosp. (p=0.0261)  |
+|                 | mocno wpływają na | – wpływ ceny/m²   |
+|                 | cenę\             | różni się w       |
+|                 | - Ochrona         | zależności od     |
+|                 | (p=0.8549) nie ma | obecności tych    |
+|                 | wpływu\           | udogodnień        |
+|                 | - Pomieszczenie   |                   |
+|                 | gospodarcze       |                   |
+|                 | (p=0.0597) –      |                   |
+|                 | efekt graniczny   |                   |
++-----------------+-------------------+-------------------+
+| **Warszawa**    | \- Balkon         | \- Istotne        |
+|                 | (p\<2e-16),       | interakcje z      |
+|                 | parking           | balkonem          |
+|                 | (p\<2e-16),       | (p=0.0231),       |
+|                 | ochrona           | parkingiem        |
+|                 | (p=9.17e-10) i    | (p=3.39e-05) i    |
+|                 | pomieszczenie     | pomieszczeniem    |
+|                 | gospodarcze       | gosp.             |
+|                 | (p=1.83e-08)      | (p=7.12e-05)      |
+|                 | wyraźnie          |                   |
+|                 | zwiększają cenę\  |                   |
+|                 | - Winda           |                   |
+|                 | (p=0.3099) nie    |                   |
+|                 | jest istotna      |                   |
++-----------------+-------------------+-------------------+
+| **Rzeszów**     | \- Winda          | \- Brak istotnych |
+|                 | (p=0.63387) nie   | interakcji        |
+|                 | ma wpływu\        |                   |
+|                 | - Pomieszczenie   |                   |
+|                 | gospodarcze       |                   |
+|                 | (p=0.06127) –     |                   |
+|                 | marginalne        |                   |
+|                 | znaczenie         |                   |
++-----------------+-------------------+-------------------+
 
 ### Główne obserwacje:
 
